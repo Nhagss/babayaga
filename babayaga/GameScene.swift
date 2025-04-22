@@ -1,109 +1,263 @@
-//
-//  GameScene.swift
-//  babayaga
-//
-//  Created by Yago Souza Ramos on 4/22/25.
-//
-
 import SpriteKit
 import GameplayKit
+import SwiftUI
 
-class GameScene: SKScene {
-    
-    var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
-    
-    private var lastUpdateTime : TimeInterval = 0
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    
-    override func sceneDidLoad() {
 
-        self.lastUpdateTime = 0
+struct PhysicsCategory {
+    static let player: UInt32 = 0x1 << 0
+    static let stairs: UInt32 = 0x1 << 1
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
+    var planets: [Planet] = []
+    var currentPlanetIndex = 0
+    var gameWorld = SKNode()
+    var cameraNode = SKCameraNode()
+    var stairs: [SKShapeNode] = []
+    
+    override func didMove(to view: SKView) {
+        camera = cameraNode
+        addChild(cameraNode)
+        gameWorld.position = CGPoint(x: frame.midX, y: frame.midY)
+        addChild(gameWorld)
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+        planets.append(Planet())
+        planets.append(Planet())
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        physicsWorld.contactDelegate = self
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        let spacing: CGFloat = 300
+        for i in 0..<planets.count {
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+            makePlanet(p: planets[i], gameWorld: gameWorld)
+            let path = CGMutablePath()
+            let planetY = CGFloat(i) * spacing
+            planets[i].positioner.position = CGPoint(x: 0, y: planetY)
+            if i > 0 {
+                
+                let from = planets[0].playerAnchor.convert(CGPoint.zero, to: gameWorld)
+                let to = planets[i].playerAnchor.convert(CGPoint.zero, to: gameWorld)
+                
+                path.move(to: from)
+                
+                path.addLine(to: to)
+                
+                let line = SKShapeNode(path: path)
+                line.strokeColor = .gray
+                line.alpha = 0.7
+                line.lineWidth = 30
+                line.zPosition = -10
+                
+                // Só visual, sem física agora
+                gameWorld.addChild(line)
+                
+                // Guarda no array para checar no update
+                stairs.append(line)
+            }
+            
+            planets[i].positioner.position = CGPoint(x: 0, y: CGFloat(i) * spacing)
+            
         }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        cameraNode.position = CGPoint(x: planets[0].positioner.position.x + (scene?.bounds.width ?? 0)/2, y: planets[0].positioner.position.y + (scene?.bounds.height ?? 0)/2)
+        
+        // Roda o mundo
+        let angleInDegrees: CGFloat = 0
+        let angleInRadians = angleInDegrees * .pi / 180
+        gameWorld.zRotation = angleInRadians
+        
+        
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+        return set == Set([a, b])
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        let player = planets[currentPlanetIndex].player
         
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
+        var isTouchingStair = false
+        
+        for stair in stairs {
+            if player!.intersects(stair) {
+                isTouchingStair = true
+                break
+            }
         }
         
-        // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        for entity in self.entities {
-            entity.update(deltaTime: dt)
+        if isTouchingStair && !planets[currentPlanetIndex].isContactingStair {
+            planets[currentPlanetIndex].isContactingStair = true
+            planets[currentPlanetIndex].slowDownRotation()
+        } else if !isTouchingStair && planets[currentPlanetIndex].isContactingStair {
+            planets[currentPlanetIndex].isContactingStair = false
+            planets[currentPlanetIndex].regularRotation()
         }
-        
-        self.lastUpdateTime = currentTime
     }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let nodesAtPoint = nodes(at: location)
+        
+        for node in nodesAtPoint {
+        }
+    }
+    
+    //Creates on the current parent
+    func makePlanet(p: Planet, isCurrent: Bool = false, gameWorld: SKNode) -> Void {
+        // Coloca o positioner no centro da cena
+        p.positioner = SKSpriteNode()
+        //        p.positioner.position = CGPoint(x: frame.midX, y: frame.midY)
+        gameWorld.addChild(p.positioner)
+        
+        // Mundo (no centro do positioner)
+        p.world = SKShapeNode(circleOfRadius: 100)
+        p.world.position = .zero  // porque já tá no centro via positioner
+        p.world.fillColor = .black
+        p.positioner.addChild(p.world)
+        
+        // Âncora (também no centro do positioner)
+        p.playerAnchor = SKSpriteNode()
+        p.playerAnchor.physicsBody = SKPhysicsBody(circleOfRadius: 100)
+        p.playerAnchor.physicsBody?.isDynamic = true
+        p.playerAnchor.physicsBody?.friction = 0
+        p.playerAnchor.physicsBody?.affectedByGravity = false
+        p.playerAnchor.physicsBody?.allowsRotation = true
+        p.playerAnchor.position = .zero
+        
+        p.positioner.addChild(p.playerAnchor)
+        
+        // Player (posição relativa ao playerAnchor)
+        p.player = SKSpriteNode(color: .white, size: CGSize(width: 30, height: 40))
+        p.player.physicsBody?.friction = 0
+        p.player.physicsBody?.usesPreciseCollisionDetection = true
+        p.player.physicsBody = SKPhysicsBody(rectangleOf: p.player.size)
+        p.player.physicsBody?.affectedByGravity = false
+        
+        
+        p.player.physicsBody?.categoryBitMask = PhysicsCategory.player
+        p.player.physicsBody?.contactTestBitMask = PhysicsCategory.stairs
+        p.player.physicsBody?.collisionBitMask = 0
+        
+        p.player.position = CGPoint(x: 0, y: 120)
+        
+        p.playerAnchor.addChild(p.player)
+    }
+    
+    func changeDirection(planet: Planet) -> Void {
+        planet.changeDirection()
+    }
+    
+    func jumpOrChangePlanet() {
+        if(planets[currentPlanetIndex].isContactingStair) {
+            planets[currentPlanetIndex].isContactingStair = false
+            // Hide current player
+            planets[currentPlanetIndex].pauseRotation()
+            //planets[currentPlanetIndex].player.isHidden = true
+            // Update index
+            currentPlanetIndex = (currentPlanetIndex + 1) % planets.count
+            
+            // Show new one
+            planets[currentPlanetIndex].unPauseRotation()
+            //planets[currentPlanetIndex].player.isHidden = false
+            
+            moveCameraToCurrentPlanet()
+        } else {
+            planets[currentPlanetIndex].jump()
+        }
+    }
+    
+    func moveCameraToCurrentPlanet() {
+        let planet = planets[currentPlanetIndex]
+        let newPosition = CGPoint(
+            x: planet.positioner.position.x + (scene?.size.width ?? 0) / 2,
+            y: planet.positioner.position.y + (scene?.size.height ?? 0) / 2
+        )
+        
+        let moveAction = SKAction.move(to: newPosition, duration: 0.5)
+        moveAction.timingMode = .easeOut
+        camera?.run(moveAction)
+    }
+    
+    
+}
+
+class Planet {
+    var player: SKSpriteNode!
+    var world: SKShapeNode!
+    var playerAnchor: SKSpriteNode!
+    var rotationSpeed: CGFloat = 3
+    var positioner: SKSpriteNode!
+    var isContactingStair: Bool = false
+    
+    func changeDirection(){
+        // Reverte o valor da velocidade de rotação
+        rotationSpeed = -rotationSpeed
+        
+        // Apaga a rotação anterior
+        playerAnchor.removeAction(forKey: "playerRotation")
+        
+        // Cria uma rotação para o objeto
+        let rotateAction = SKAction.rotate(byAngle: rotationSpeed, duration: 1)
+        let repeatAction = SKAction.repeatForever(rotateAction)
+        
+        // sobrescreve a direção de rotação anterior
+        playerAnchor.run(repeatAction, withKey: "playerRotation")
+    }
+    
+    func pauseRotation() {
+        playerAnchor.removeAction(forKey: "playerRotation")
+    }
+    
+    func unPauseRotation() {
+        // Cria uma rotação para o objeto
+        let rotateAction = SKAction.rotate(byAngle: rotationSpeed, duration: 1)
+        let repeatAction = SKAction.repeatForever(rotateAction)
+        
+        // sobrescreve a direção de rotação anterior
+        playerAnchor.run(repeatAction, withKey: "playerRotation")
+        
+    }
+    
+    func slowDownRotation() {
+        let sign = rotationSpeed > 0 ? 1 : -1
+        playerAnchor.removeAction(forKey: "playerRotation")
+        // Cria uma rotação para o objeto
+        let rotateAction = SKAction.rotate(byAngle: 1  * CGFloat(sign), duration: 1)
+        let repeatAction = SKAction.repeatForever(rotateAction)
+        
+        // sobrescreve a direção de rotação anterior
+        playerAnchor.run(repeatAction, withKey: "playerRotation")
+    }
+    
+    func regularRotation() {
+        
+        let sign = rotationSpeed > 0 ? 1 : -1
+        playerAnchor.removeAction(forKey: "playerRotation")
+        
+        // Cria uma rotação para o objeto
+        let rotateAction = SKAction.rotate(byAngle: 3 * CGFloat(sign), duration: 1)
+        let repeatAction = SKAction.repeatForever(rotateAction)
+        
+        // sobrescreve a direção de rotação anterior
+        playerAnchor.run(repeatAction, withKey: "playerRotation")
+    }
+    
+    func jump() {
+        let jumpAction = SKAction.move(by: CGVector(dx: 0, dy: 20), duration: 0.1)
+        let returnAction = SKAction.move(by: CGVector(dx: 0, dy: -20), duration: 0.1)
+        jumpAction.timingMode = .easeOut
+        returnAction.timingMode = .easeIn
+        let wait = SKAction.wait(forDuration: 0.1)
+        let jumpSequence = SKAction.sequence([jumpAction, wait, returnAction])
+        
+        player.run(jumpSequence)
+    }
+    
+}
+
+#Preview {
+    GameViewController()
 }
