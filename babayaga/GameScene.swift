@@ -2,13 +2,7 @@ import SpriteKit
 import GameplayKit
 import SwiftUI
 
-
-struct PhysicsCategory {
-    static let player: UInt32 = 0x1 << 0
-    static let stairs: UInt32 = 0x1 << 1
-}
-
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene {
     var planets: [Planet] = []
     var currentPlanetIndex = 0
     var gameWorld = SKNode()
@@ -101,7 +95,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
         
-        for node in nodesAtPoint {
+        for _ in nodesAtPoint {
         }
     }
     
@@ -184,78 +178,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
 }
 
-class Planet {
-    var player: SKSpriteNode!
-    var world: SKShapeNode!
-    var playerAnchor: SKSpriteNode!
-    var rotationSpeed: CGFloat = 3
-    var positioner: SKSpriteNode!
-    var isContactingStair: Bool = false
-    
-    func changeDirection(){
-        // Reverte o valor da velocidade de rotação
-        rotationSpeed = -rotationSpeed
-        
-        // Apaga a rotação anterior
-        playerAnchor.removeAction(forKey: "playerRotation")
-        
-        // Cria uma rotação para o objeto
-        let rotateAction = SKAction.rotate(byAngle: rotationSpeed, duration: 1)
-        let repeatAction = SKAction.repeatForever(rotateAction)
-        
-        // sobrescreve a direção de rotação anterior
-        playerAnchor.run(repeatAction, withKey: "playerRotation")
+extension GameScene: SKPhysicsContactDelegate {
+    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+        return set == Set([a, b])
     }
-    
-    func pauseRotation() {
-        playerAnchor.removeAction(forKey: "playerRotation")
-    }
-    
-    func unPauseRotation() {
-        // Cria uma rotação para o objeto
-        let rotateAction = SKAction.rotate(byAngle: rotationSpeed, duration: 1)
-        let repeatAction = SKAction.repeatForever(rotateAction)
-        
-        // sobrescreve a direção de rotação anterior
-        playerAnchor.run(repeatAction, withKey: "playerRotation")
-        
-    }
-    
-    func slowDownRotation() {
-        let sign = rotationSpeed > 0 ? 1 : -1
-        playerAnchor.removeAction(forKey: "playerRotation")
-        // Cria uma rotação para o objeto
-        let rotateAction = SKAction.rotate(byAngle: 1  * CGFloat(sign), duration: 1)
-        let repeatAction = SKAction.repeatForever(rotateAction)
-        
-        // sobrescreve a direção de rotação anterior
-        playerAnchor.run(repeatAction, withKey: "playerRotation")
-    }
-    
-    func regularRotation() {
-        
-        let sign = rotationSpeed > 0 ? 1 : -1
-        playerAnchor.removeAction(forKey: "playerRotation")
-        
-        // Cria uma rotação para o objeto
-        let rotateAction = SKAction.rotate(byAngle: 3 * CGFloat(sign), duration: 1)
-        let repeatAction = SKAction.repeatForever(rotateAction)
-        
-        // sobrescreve a direção de rotação anterior
-        playerAnchor.run(repeatAction, withKey: "playerRotation")
-    }
-    
-    func jump() {
-        let jumpAction = SKAction.move(by: CGVector(dx: 0, dy: 20), duration: 0.1)
-        let returnAction = SKAction.move(by: CGVector(dx: 0, dy: -20), duration: 0.1)
-        jumpAction.timingMode = .easeOut
-        returnAction.timingMode = .easeIn
-        let wait = SKAction.wait(forDuration: 0.1)
-        let jumpSequence = SKAction.sequence([jumpAction, wait, returnAction])
-        
-        player.run(jumpSequence)
-    }
-    
 }
 
 #Preview {

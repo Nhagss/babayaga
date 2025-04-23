@@ -7,12 +7,12 @@
 
 import UIKit
 import SpriteKit
-import GameplayKit
 
 class GameViewController: UIViewController {
     
     var spriteKitView = SKView()
     let scene = GameScene()
+    
     var changeDirectionBTN: UIButton! = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -45,12 +45,19 @@ class GameViewController: UIViewController {
         scene.scaleMode = .aspectFill
         spriteKitView.presentScene(scene)
         spriteKitView.frame = view.bounds
-        spriteKitView.scene?.backgroundColor = .black
+        
+        //spriteKitView.scene?.backgroundColor = .black
         //        spriteKitView.layer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY - 100)
         
         view.addSubview(spriteKitView)
         view.addSubview(changeDirectionBTN)
         view.addSubview(changePlanetButton)
+        
+        #if DEBUG
+        spriteKitView.ignoresSiblingOrder = true
+        spriteKitView.showsFPS = true
+        spriteKitView.showsNodeCount = true
+        #endif
         
         
         changeDirectionBTN.addTarget(self, action: #selector(changeDirection), for: .touchUpInside)
@@ -80,6 +87,7 @@ class GameViewController: UIViewController {
         
     }
     
+    // Funções de orientação e status bar (mantidas como antes)
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return [.portrait]
