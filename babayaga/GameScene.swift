@@ -1,3 +1,10 @@
+//
+//  GameScene.swift
+//  babayaga
+//
+//  Created by Yago Souza Ramos on 4/22/25.
+//
+
 import SpriteKit
 import GameplayKit
 import SwiftUI
