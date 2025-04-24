@@ -14,6 +14,7 @@ class GameScene: SKScene {
     private var listLabel: SKLabelNode?
     private var collectedIngredients = 0
     private let totalIngredients = 8
+    private var helloLabel: SKLabelNode?
     
     private var ingredientes: [Ingredient] = []
     private var pilha = PilhaDeIngredientes()
@@ -21,7 +22,17 @@ class GameScene: SKScene {
     private let ordemCorreta = [8, 5, 4, 6, 3, 2, 7, 1]
     
     
+    
+    
     override func didMove(to view: SKView) {
+        self.helloLabel = self.childNode(withName: "//helloLabel") as? SKLabelNode
+        helloLabel?.alpha = 0.0
+        helloLabel?.run(SKAction.fadeIn(withDuration: 2.0))
+        
+        self.listLabel = self.childNode(withName: "//listLabel") as? SKLabelNode
+        listLabel?.alpha = 0.0
+        listLabel?.run(SKAction.fadeIn(withDuration: 2.0))
+        listLabel?.text = "Coletados: 0"
         setupPersonagem()
         spawnIngredients()
         mostrarOrdemCorretaVisual()
@@ -40,7 +51,7 @@ class GameScene: SKScene {
         personagem.addChild(circle)
         addChild(personagem)
     }
-    
+
     private func spawnIngredients() {
         let nomes = [
             (1, "Pó de fada"), (2, "Suor de globin"), (3, "Pena de corvo"),
@@ -57,6 +68,20 @@ class GameScene: SKScene {
             addChild(ingrediente.node)
         }
     }
+
+    //Para que o ingrediente nunca spawne onde o personagem começa
+    private func randomPosition() -> CGPoint {
+        var position: CGPoint
+        let avoidZone = CGRect(x: -50, y: -50, width: 100, height: 100)
+        repeat {
+            let x = CGFloat.random(in: -250...250)
+            let y = CGFloat.random(in: -250...250)
+            position = CGPoint(x: x, y: y)
+        } while avoidZone.contains(position)
+        
+        return position
+    }
+
     
     private func mostrarOrdemCorretaVisual() {
         let spacing: CGFloat = 45
@@ -71,9 +96,6 @@ class GameScene: SKScene {
         }
     }
     
-    private func randomPosition() -> CGPoint {
-        CGPoint(x: Int.random(in: -250...250), y: Int.random(in: -250...250))
-    }
     
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -95,13 +117,28 @@ class GameScene: SKScene {
     }
     
     private func processarIngrediente(_ ingrediente: Ingredient) {
-        let id = ingrediente.id
+        _ = ingrediente.id
         
-        if id == ordemCorreta[pilha.quantidade] {
-            coletarIngrediente(ingrediente)
+        guard ingrediente.node.parent != nil else { return }
+
+        ingrediente.node.removeFromParent()
+        pilha.empilhar(ingrediente)
+        collectedIngredients += 1
+        listLabel?.text = "Coletados: \(collectedIngredients)"
+        
+        mostrarIngredienteColetado(ingrediente)
+        
+        if pilha.quantidade == totalIngredients {
+            if pilha.verificarSeCorreta(com: ordemCorreta) {
+                listLabel?.text = "Parabéns! Ordem correta!"
+            } else {
+                listLabel?.text = "Ordem errada! Tente novamente."
+            }
         }
     }
-    
+
+
+    //leo was here
     private func coletarIngrediente(_ ingrediente: Ingredient) {
         ingrediente.node.removeFromParent()
         pilha.empilhar(ingrediente)
@@ -109,7 +146,7 @@ class GameScene: SKScene {
         mostrarIngredienteColetado(ingrediente)
         
         if pilha.quantidade == totalIngredients {
-            let correto = pilha.verificarSeCorreta(com: ordemCorreta)
+            _ = pilha.verificarSeCorreta(com: ordemCorreta)
         }
     }
     

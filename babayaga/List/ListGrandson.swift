@@ -13,7 +13,7 @@ struct PilhaDeIngredientes {
 
     mutating func empilhar(_ ingrediente: Ingredient) {
         pilha.append(ingrediente)
-        print("Empilhou: \(ingrediente.nome)")
+        //print("Empilhou: \(ingrediente.nome)")
     }
 
     func verificarSeCorreta(com ordem: [Int]) -> Bool {
