@@ -1,8 +1,8 @@
 //
 //  GameScene.swift
-//  babayaga
+//  POC_game
 //
-//  Created by Yago Souza Ramos on 4/22/25.
+//  Created by Joao Roberto Fernandes Magalhaes on 12/04/25.
 //
 
 import SpriteKit
@@ -10,100 +10,117 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
+    private var personagem: SKSpriteNode!
+    private var listLabel: SKLabelNode?
+    private var collectedIngredients = 0
+    private let totalIngredients = 8
     
-    private var lastUpdateTime : TimeInterval = 0
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    private var ingredientes: [Ingredient] = []
+    private var pilha = PilhaDeIngredientes()
+    private var spritesColetados: [SKSpriteNode] = []
+    private let ordemCorreta = [8, 5, 4, 6, 3, 2, 7, 1]
     
-    override func sceneDidLoad() {
-
-        self.lastUpdateTime = 0
+    
+    override func didMove(to view: SKView) {
+        setupPersonagem()
+        spawnIngredients()
+        mostrarOrdemCorretaVisual()
+    }
+    
+    private func setupPersonagem() {
+        let circle = SKShapeNode(circleOfRadius: 30)
+        circle.fillColor = .purple
+        circle.name = "Personagem"
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+        personagem = SKSpriteNode(color: .clear, size: CGSize(width: 2, height: 2))
+        personagem.name = "Personagem"
+        personagem.position = .zero
+        personagem.zPosition = 1
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        personagem.addChild(circle)
+        addChild(personagem)
+    }
+    
+    private func spawnIngredients() {
+        let nomes = [
+            (1, "Pó de fada"), (2, "Suor de globin"), (3, "Pena de corvo"),
+            (4, "Água da lua cheia"), (5, "Escama de Dragão"), (6, "Mel de flores silvestres"),
+            (7, "Sal negro do Himalaia"), (8, "Artemísia")
+        ]
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        for (id, nome) in nomes.shuffled() {
+            let ingrediente = Ingredient(id: id, nome: nome, texture: SKTexture(imageNamed: "goldCoin\(id)"))
+            ingrediente.node.position = randomPosition()
+            ingrediente.node.name = "Ingredient_\(id)"
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
+            ingredientes.append(ingrediente)
+            addChild(ingrediente.node)
         }
     }
     
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
+    private func mostrarOrdemCorretaVisual() {
+        let spacing: CGFloat = 45
+        let baseX = -(spacing * CGFloat(ordemCorreta.count - 1) / 2)
+        let posY = size.height / 2 - 50
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        for (index, id) in ordemCorreta.enumerated() {
+            let sprite = SKSpriteNode(texture: SKTexture(imageNamed: "goldCoin\(id)"))
+            sprite.setScale(0.4)
+            sprite.position = CGPoint(x: baseX + spacing * CGFloat(index), y: posY)
+            addChild(sprite)
+        }
     }
+    
+    private func randomPosition() -> CGPoint {
+        CGPoint(x: Int.random(in: -250...250), y: Int.random(in: -250...250))
+    }
+    
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+        guard let location = touches.first?.location(in: self) else { return }
+        personagem.position = location
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
+        verificarColisoes()
+    }
+    
+    
+    private func verificarColisoes() {
+        for ingrediente in ingredientes where ingrediente.node.parent != nil {
+            if personagem.frame.intersects(ingrediente.node.frame) {
+                processarIngrediente(ingrediente)
+            }
         }
+    }
+    
+    private func processarIngrediente(_ ingrediente: Ingredient) {
+        let id = ingrediente.id
         
-        // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        for entity in self.entities {
-            entity.update(deltaTime: dt)
+        if id == ordemCorreta[pilha.quantidade] {
+            coletarIngrediente(ingrediente)
         }
+    }
+    
+    private func coletarIngrediente(_ ingrediente: Ingredient) {
+        ingrediente.node.removeFromParent()
+        pilha.empilhar(ingrediente)
+        collectedIngredients += 1
+        mostrarIngredienteColetado(ingrediente)
         
-        self.lastUpdateTime = currentTime
+        if pilha.quantidade == totalIngredients {
+            let correto = pilha.verificarSeCorreta(com: ordemCorreta)
+        }
+    }
+    
+    private func mostrarIngredienteColetado(_ ingrediente: Ingredient) {
+        let posX = CGFloat(pilha.quantidade - 1) * 45 - 160
+        let posY = -size.height / 2 + 50
+        let sprite = SKSpriteNode(texture: ingrediente.node.texture)
+        
+        sprite.position = CGPoint(x: posX, y: posY)
+        sprite.setScale(0.4)
+        spritesColetados.append(sprite)
+        addChild(sprite)
     }
 }
