@@ -24,6 +24,7 @@ class GameScene: SKScene {
         
         planets.append(Planet())
         planets.append(Planet())
+        planets.append(Planet())
         
         physicsWorld.contactDelegate = self
         
@@ -125,21 +126,17 @@ class GameScene: SKScene {
         
         p.positioner.addChild(p.playerAnchor)
         
-        // Player (posição relativa ao playerAnchor)
-        p.player = SKSpriteNode(color: .white, size: CGSize(width: 30, height: 40))
-        p.player.physicsBody?.friction = 0
-        p.player.physicsBody?.usesPreciseCollisionDetection = true
-        p.player.physicsBody = SKPhysicsBody(rectangleOf: p.player.size)
-        p.player.physicsBody?.affectedByGravity = false
-        
-        
-        p.player.physicsBody?.categoryBitMask = PhysicsCategory.player
+        p.player = Player()
+
         p.player.physicsBody?.contactTestBitMask = PhysicsCategory.stairs
-        p.player.physicsBody?.collisionBitMask = 0
-        
-        p.player.position = CGPoint(x: 0, y: 120)
         
         p.playerAnchor.addChild(p.player)
+        
+        p.ingredient = Ingredient(id: 1, nome: "Pó de fada", texture: SKTexture(imageNamed: "goldCoin1"))
+        
+        p.ingredient.node.position = CGPoint(x: 0, y: 120)
+        
+        p.playerAnchor.addChild(p.ingredient.node)
     }
     
     func changeDirection(planet: Planet) -> Void {

@@ -10,7 +10,8 @@ import SpriteKit
 import GameplayKit
 
 class Planet {
-    var player: SKSpriteNode!
+    var player: Player!
+    var ingredient: Ingredient!
     var world: SKShapeNode!
     var playerAnchor: SKSpriteNode!
     var rotationSpeed: CGFloat = 3
@@ -71,14 +72,6 @@ class Planet {
     }
     
     func jump() {
-        let jumpAction = SKAction.move(by: CGVector(dx: 0, dy: 20), duration: 0.1)
-        let returnAction = SKAction.move(by: CGVector(dx: 0, dy: -20), duration: 0.1)
-        jumpAction.timingMode = .easeOut
-        returnAction.timingMode = .easeIn
-        let wait = SKAction.wait(forDuration: 0.1)
-        let jumpSequence = SKAction.sequence([jumpAction, wait, returnAction])
-        
-        player.run(jumpSequence)
+        player?.performJump()
     }
-    
 }

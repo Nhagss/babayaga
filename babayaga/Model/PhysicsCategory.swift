@@ -10,4 +10,5 @@ import Foundation
 struct PhysicsCategory {
     static let player: UInt32 = 0x1 << 0
     static let stairs: UInt32 = 0x1 << 1
+    static let none: UInt32 = 0
 }
