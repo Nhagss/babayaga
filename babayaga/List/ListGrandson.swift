@@ -27,8 +27,16 @@ struct PilhaDeIngredientes {
             print("\(ingrediente.nome)")
         }
     }
+    
+    mutating func inverterPilha() {
+        pilha.reverse()
+    }
 
     var quantidade: Int {
         return pilha.count
     }
+    
+    func getIngredientes() -> [Ingredient] {
+            return pilha
+        }
 }
