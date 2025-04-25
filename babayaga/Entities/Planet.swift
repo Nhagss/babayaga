@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class Planet {
+    var id = UUID()
     var player: Player!
     var ingredient: Ingredient!
     var world: SKShapeNode!
