@@ -15,27 +15,26 @@ class GameScene: SKScene {
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
     var stairs: [SKShapeNode] = []
+    var planet: PlanetController?
+    private var planetControllers: [PlanetController] = []
+
     
     override func didMove(to view: SKView) {
         
         camera = cameraNode
         addChild(cameraNode)
         
-        gameWorld.position = CGPoint(x: frame.midX, y: frame.midY)
+        gameWorld.position = CGPoint(x: frame.minX, y: frame.minY)
         addChild(gameWorld)
         
-        let planet = PlanetController()
-        let planet2 = PlanetController()
-        let planet3 = PlanetController()
+        self.planet = PlanetController()
+        self.planet?.view.position = CGPoint(x: 0, y: 0)
+        gameWorld.addChild(self.planet!.view)
+        self.planet?.startRotation()
         
-        planet.view.position = CGPoint(x: 0, y: 10)
-        planet2.view.position = CGPoint(x: -100, y: -400)
-        planet3.view.position = CGPoint(x: -300, y: -600)
+        let model = IngredientModel(id: 1, name: "Pó de fada")
+        self.planet?.addIngredient(model: model, angleInDegrees: 233 )
         
-        gameWorld.addChild(planet.view)
-        gameWorld.addChild(planet2.view)
-        gameWorld.addChild(planet3.view)
-        planet.startRotation()
     }
     
     private func setupWorld() {
@@ -45,6 +44,8 @@ class GameScene: SKScene {
         gameWorld.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(gameWorld)
     }
+    
+    private func setupPlanets() {}
     
     //    override func didMove(to view: SKView) {
     //        camera = cameraNode
@@ -160,7 +161,7 @@ class GameScene: SKScene {
     //
     //        p.playerAnchor.addChild(p.player)
     //
-    //        p.ingredient = Ingredient(id: 1, nome: "Pó de fada", texture: SKTexture(imageNamed: "goldCoin1"))
+//            p.ingredient = Ingredient(id: 1, nome: "Pó de fada", texture: SKTexture(imageNamed: "goldCoin1"))
     //
     //        p.ingredient.node.position = CGPoint(x: 0, y: 120)
     //

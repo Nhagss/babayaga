@@ -36,4 +36,8 @@ class PlanetController {
         model.reverseDirection()
         startRotation()
     }
+    
+    func addIngredient(model: IngredientModel, angleInDegrees: CGFloat) {
+        view.addIngredient(model: model, angleInDegrees: angleInDegrees)
+    }
 }
