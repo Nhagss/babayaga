@@ -28,11 +28,13 @@ class GameViewController: UIViewController {
     }()
     
     @objc func changeDirection(_ sender: UIButton) {
-        scene.changeDirection(planet: scene.planets[scene.currentPlanetIndex])
+//        scene.changeDirection(planet: scene.planets[scene.currentPlanetIndex])
+        scene.planetControllers[scene.currentPlanetIndex].reverseRotation()
     }
     
     @objc func changePlanet(_ sender: UIButton) {
-        scene.jumpOrChangePlanet()
+        scene.planetControllers[scene.currentPlanetIndex].jump()
+        scene.changePlanet()
         changePlanetButton.setTitle("\(scene.currentPlanetIndex)", for: .normal)
     }
     
@@ -93,6 +95,6 @@ class GameViewController: UIViewController {
     }
 }
 
-#Preview {
-    GameViewController()
-}
+//#Preview {
+//    GameViewController()
+//}
