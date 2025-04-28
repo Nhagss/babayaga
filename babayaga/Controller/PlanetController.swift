@@ -8,10 +8,15 @@
 import Foundation
 
 class PlanetController {
-    let model: PlanetModel
+    let model: Planet
     let view: PlanetView
+        
+    var isContactingStair: Bool {
+        get { model.isContactingStair }
+        set { model.isContactingStair = newValue }
+    }
 
-    init(model: PlanetModel = PlanetModel(), view: PlanetView = PlanetView()) {
+    init(model: Planet = Planet(), view: PlanetView = PlanetView()) {
         self.model = model
         self.view = view
     }
@@ -37,7 +42,7 @@ class PlanetController {
         startRotation()
     }
     
-    func addIngredient(model: IngredientModel, angleInDegrees: CGFloat) {
-        view.addIngredient(model: model, angleInDegrees: angleInDegrees)
+    func addObstacle(angleInDegrees: CGFloat) {
+        view.addObstacle(angleInDegrees: angleInDegrees)
     }
 }

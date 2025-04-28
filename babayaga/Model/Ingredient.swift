@@ -8,7 +8,7 @@
 import Foundation
 import SpriteKit
 
-struct IngredientModel {
+struct Ingredient {
     let id: Int
     let name: String
 }

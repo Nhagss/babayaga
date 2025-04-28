@@ -7,7 +7,8 @@
 
 import Foundation
 
-class PlanetModel {
+class Planet {
+    
     var isContactingStair: Bool = false
     var rotationSpeed: CGFloat = 3
     var direction: CGFloat { rotationSpeed > 0 ? 1 : -1 }

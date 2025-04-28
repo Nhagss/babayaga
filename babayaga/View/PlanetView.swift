@@ -12,14 +12,17 @@ class PlanetView: SKNode {
     let positioner = SKSpriteNode()
     let world = SKShapeNode(circleOfRadius: 100)
     let playerAnchor = SKSpriteNode()
-    let ingredientAnchor = SKSpriteNode()
+    let orbitAnchor = SKSpriteNode()
     let playerNode = PlayerView()
     var ingredients: [IngredientView] = []
+    var obstacles: [ObstacleView] = []
     
+    var gravityField = SKFieldNode.radialGravityField()
+
     override init() {
         super.init()
         setupView()
-        rotateIngredientAnchor(angleInDegrees: 0)
+        rotateOrbitAnchor(angleInDegrees: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,16 +32,15 @@ class PlanetView: SKNode {
     private func setupView() {
         addChild(positioner)
         positioner.addChild(world)
-        positioner.addChild(playerAnchor)
-        positioner.addChild(ingredientAnchor)
+        positioner.addChild(orbitAnchor)
+        orbitAnchor.addChild(playerAnchor)
         playerAnchor.addChild(playerNode)
         
-        world.fillColor = .black
-        world.position = .zero
+        world.fillColor = .systemOrange
         positioner.position = .zero
                 
         playerAnchor.physicsBody = SKPhysicsBody(circleOfRadius: 100)
-        playerAnchor.physicsBody?.isDynamic = true
+        playerAnchor.physicsBody?.isDynamic = false
         playerAnchor.physicsBody?.friction = 0
         playerAnchor.physicsBody?.affectedByGravity = false
         playerAnchor.physicsBody?.allowsRotation = true
@@ -58,7 +60,23 @@ class PlanetView: SKNode {
         playerAnchor.removeAction(forKey: "rotation")
     }
     
-    func addIngredient(model: IngredientModel, angleInDegrees: CGFloat) {
+    func addObstacle(angleInDegrees: CGFloat) {
+        let obstacle = ObstacleView()
+        
+        let radius = world.frame.width / 2 + 20
+        let angleInRadians = angleInDegrees * .pi / 180
+        
+        let x = radius * cos(angleInRadians)
+        let y = radius * sin(angleInRadians)
+        
+        obstacle.position = CGPoint(x: x, y: y)
+        obstacle.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
+
+        orbitAnchor.addChild(obstacle)
+        obstacles.append(obstacle)
+    }
+    
+    func addIngredient(model: Ingredient, angleInDegrees: CGFloat) {
         let ingredient = IngredientView(model: model)
         
         let radius = world.frame.width / 2 + 20
@@ -68,15 +86,15 @@ class PlanetView: SKNode {
         let y = radius * sin(angleInRadians)
         
         ingredient.position = CGPoint(x: x, y: y)
-        ingredient.zRotation = angleInRadians - ingredientAnchor.zRotation - .pi / 2
+        ingredient.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
 
-        ingredientAnchor.addChild(ingredient)
+        orbitAnchor.addChild(ingredient)
         ingredients.append(ingredient)
     }
     
-    func rotateIngredientAnchor(angleInDegrees: CGFloat) {
+    func rotateOrbitAnchor(angleInDegrees: CGFloat) {
         let angleInRadians = angleInDegrees * .pi / 180
-        ingredientAnchor.zRotation = angleInRadians  // Rotaciona o anchor
+        orbitAnchor.zRotation = angleInRadians
     }
 }
 

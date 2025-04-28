@@ -10,207 +10,156 @@ import GameplayKit
 import SwiftUI
 
 class GameScene: SKScene {
-    var planets: [Planet] = []
+    
     var currentPlanetIndex = 0
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
-    var stairs: [SKShapeNode] = []
-    var planet: PlanetController?
-    private var planetControllers: [PlanetController] = []
-
+    var planetControllers: [PlanetController] = []
+    private var stairViews: [StairView] = []
     
     override func didMove(to view: SKView) {
         
+        setupCamera()
+        setupWorld()
+        setupPlanets()
+        setupStairs()
+        
+        physicsWorld.contactDelegate = self
+        
+        let ingredientModel = Ingredient(id: 1, name: "Pó de fada")
+        planetControllers[0].view.addIngredient(model: ingredientModel, angleInDegrees: 180)
+        
+        planetControllers[1].addObstacle(angleInDegrees: 200)
+        
+        /// Iniciar rotação do primeiro planeta
+        planetControllers[0].startRotation()
+    }
+    
+    private func setupCamera() {
         camera = cameraNode
         addChild(cameraNode)
-        
-        gameWorld.position = CGPoint(x: frame.minX, y: frame.minY)
-        addChild(gameWorld)
-        
-        self.planet = PlanetController()
-        self.planet?.view.position = CGPoint(x: 0, y: 0)
-        gameWorld.addChild(self.planet!.view)
-        self.planet?.startRotation()
-        
-        let model = IngredientModel(id: 1, name: "Pó de fada")
-        self.planet?.addIngredient(model: model, angleInDegrees: 233 )
-        
     }
     
     private func setupWorld() {
-        camera = cameraNode
-        addChild(cameraNode)
-        
-        gameWorld.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(gameWorld)
+        gameWorld.position = CGPoint(x: frame.minX, y: frame.minY)
     }
     
-    private func setupPlanets() {}
+    private func setupPlanets() {
+        let planet1 = PlanetController()
+        let planet2 = PlanetController()
+        let planet3 = PlanetController()
+        
+        planet1.view.position = CGPoint(x: 50, y: -150)
+        planet2.view.position = CGPoint(x: -150, y: 200)
+        planet3.view.position = CGPoint(x: 150, y: 400)
+
+        planetControllers = [planet1, planet2, planet3]
+
+        for controller in planetControllers {
+            gameWorld.addChild(controller.view)
+        }
+    }
     
-    //    override func didMove(to view: SKView) {
-    //        camera = cameraNode
-    //        addChild(cameraNode)
-    //        gameWorld.position = CGPoint(x: frame.midX, y: frame.midY)
-    //        addChild(gameWorld)
-    //
-    //        planets.append(Planet())
-    //        planets.append(Planet())
-    //        planets.append(Planet())
-    //
-    //        physicsWorld.contactDelegate = self
-    //
-    //        let spacing: CGFloat = 300
-    //        for i in 0..<planets.count {
-    //
-    //            makePlanet(p: planets[i], gameWorld: gameWorld)
-    //            let path = CGMutablePath()
-    //            let planetY = CGFloat(i) * spacing
-    //            planets[i].positioner.position = CGPoint(x: 0, y: planetY)
-    //            if i > 0 {
-    //
-    //                let from = planets[0].playerAnchor.convert(CGPoint.zero, to: gameWorld)
-    //                let to = planets[i].playerAnchor.convert(CGPoint.zero, to: gameWorld)
-    //
-    //                path.move(to: from)
-    //
-    //                path.addLine(to: to)
-    //
-    //                let line = SKShapeNode(path: path)
-    //                line.strokeColor = .gray
-    //                line.alpha = 0.7
-    //                line.lineWidth = 30
-    //                line.zPosition = -10
-    //
-    //                // Só visual, sem física agora
-    //                gameWorld.addChild(line)
-    //
-    //                // Guarda no array para checar no update
-    //                stairs.append(line)
-    //            }
-    //
-    //            planets[i].positioner.position = CGPoint(x: 0, y: CGFloat(i) * spacing)
-    //
-    //        }
-    //
-    //        cameraNode.position = CGPoint(x: planets[0].positioner.position.x + (scene?.bounds.width ?? 0)/2, y: planets[0].positioner.position.y + (scene?.bounds.height ?? 0)/2)
-    //
-    //        // Roda o mundo
-    //        let angleInDegrees: CGFloat = 0
-    //        let angleInRadians = angleInDegrees * .pi / 180
-    //        gameWorld.zRotation = angleInRadians
-    //
-    //
-    //    }
-    //
-    //    override func update(_ currentTime: TimeInterval) {
-    //        let player = planets[currentPlanetIndex].player
-    //
-    //        var isTouchingStair = false
-    //
-    //        for stair in stairs {
-    //            if player!.intersects(stair) {
-    //                isTouchingStair = true
-    //                break
-    //            }
-    //        }
-    //
-    //        if isTouchingStair && !planets[currentPlanetIndex].isContactingStair {
-    //            planets[currentPlanetIndex].isContactingStair = true
-    //            planets[currentPlanetIndex].slowDownRotation()
-    //        } else if !isTouchingStair && planets[currentPlanetIndex].isContactingStair {
-    //            planets[currentPlanetIndex].isContactingStair = false
-    //            planets[currentPlanetIndex].regularRotation()
-    //        }
-    //    }
-    //
-    //
-    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        guard let touch = touches.first else { return }
-    //        let location = touch.location(in: self)
-    //        let nodesAtPoint = nodes(at: location)
-    //
-    //        for _ in nodesAtPoint {
-    //        }
-    //    }
-    //
-    //    //Creates on the current parent
-    //    func makePlanet(p: Planet, isCurrent: Bool = false, gameWorld: SKNode) -> Void {
-    //        // Coloca o positioner no centro da cena
-    //        p.positioner = SKSpriteNode()
-    //        //        p.positioner.position = CGPoint(x: frame.midX, y: frame.midY)
-    //        gameWorld.addChild(p.positioner)
-    //
-    //        // Mundo (no centro do positioner)
-    //        p.world = SKShapeNode(circleOfRadius: 100)
-    //        p.world.position = .zero  // porque já tá no centro via positioner
-    //        p.world.fillColor = .black
-    //        p.positioner.addChild(p.world)
-    //
-    //        // Âncora (também no centro do positioner)
-    //        p.playerAnchor = SKSpriteNode()
-    //        p.playerAnchor.physicsBody = SKPhysicsBody(circleOfRadius: 100)
-    //        p.playerAnchor.physicsBody?.isDynamic = true
-    //        p.playerAnchor.physicsBody?.friction = 0
-    //        p.playerAnchor.physicsBody?.affectedByGravity = false
-    //        p.playerAnchor.physicsBody?.allowsRotation = true
-    //        p.playerAnchor.position = .zero
-    //
-    //        p.positioner.addChild(p.playerAnchor)
-    //
-    //        p.player = Player()
-    //
-    //        p.playerAnchor.addChild(p.player)
-    //
-//            p.ingredient = Ingredient(id: 1, nome: "Pó de fada", texture: SKTexture(imageNamed: "goldCoin1"))
-    //
-    //        p.ingredient.node.position = CGPoint(x: 0, y: 120)
-    //
-    //        p.playerAnchor.addChild(p.ingredient.node)
-    //    }
-    //
-    //    func changeDirection(planet: Planet) -> Void {
-    //        planet.changeDirection()
-    //    }
-    //
-    //    func jumpOrChangePlanet() {
-    //        if(planets[currentPlanetIndex].isContactingStair) {
-    //            planets[currentPlanetIndex].isContactingStair = false
-    //            // Hide current player
-    //            planets[currentPlanetIndex].pauseRotation()
-    //            //planets[currentPlanetIndex].player.isHidden = true
-    //            // Update index
-    //            currentPlanetIndex = (currentPlanetIndex + 1) % planets.count
-    //
-    //            // Show new one
-    //            planets[currentPlanetIndex].unPauseRotation()
-    //            //planets[currentPlanetIndex].player.isHidden = false
-    //
-    //            moveCameraToCurrentPlanet()
-    //        } else {
-    //            planets[currentPlanetIndex].jump()
-    //        }
-    //    }
-    //
-    //    func moveCameraToCurrentPlanet() {
-    //        let planet = planets[currentPlanetIndex]
-    //        let newPosition = CGPoint(
-    //            x: planet.positioner.position.x + (scene?.size.width ?? 0) / 2,
-    //            y: planet.positioner.position.y + (scene?.size.height ?? 0) / 2
-    //        )
-    //
-    //        let moveAction = SKAction.move(to: newPosition, duration: 0.5)
-    //        moveAction.timingMode = .easeOut
-    //        camera?.run(moveAction)
-    //    }
+    private func setupStairs() {
+        guard planetControllers.count >= 2 else { return }
+        
+        for i in 0..<(planetControllers.count - 1) {
+            let start = planetControllers[i].view.position
+            let end = planetControllers[i + 1].view.position
+            
+            let stair = StairView(from: start, to: end)
+            stairViews.append(stair)
+            gameWorld.addChild(stair)
+        }
+    }
     
+    func changePlanet() {
+        if(planetControllers[currentPlanetIndex].isContactingStair) {
+            planetControllers[currentPlanetIndex].isContactingStair = false
+            
+            /// Pause a rotação do planeta atual
+            planetControllers[currentPlanetIndex].stopRotation()
+            
+            /// Oculta o player
+            planetControllers[currentPlanetIndex].view.playerNode.isHidden = true
+            
+            /// Atualiza o index do array de planetas
+            currentPlanetIndex = (currentPlanetIndex + 1) % planetControllers.count
+            
+            /// Retorna a animação, agora sendo de outro planeta
+            planetControllers[currentPlanetIndex].startRotation()
+            
+            /// Mostra o player do atual planeta
+            planetControllers[currentPlanetIndex].view.playerNode.isHidden = false
+        }
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+//        let player = planetControllers[currentPlanetIndex].view.playerNode
+        
+//        var isTouchingStair = false
+//        
+//        for stair in stairViews {
+//            if player.intersects(stair) {
+//                isTouchingStair = true
+//                break
+//            }
+//        }
+//        
+//        if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
+//            planetControllers[currentPlanetIndex].isContactingStair = true
+//
+//        } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
+//            planetControllers[currentPlanetIndex].isContactingStair = false
+//        }
+        
+        /// Move a câmera suavemente para o planeta atual
+        let targetPosition = CGPoint(
+            x: planetControllers[currentPlanetIndex].view.position.x,
+            y: planetControllers[currentPlanetIndex].view.position.y
+        )
+        
+        /// Quanto mais perto de 1.0, mais rápido a câmera segue
+        let lerpFactor: CGFloat = 0.1
+        
+        let newPosition = CGPoint(
+            x: cameraNode.position.x + (targetPosition.x - cameraNode.position.x) * lerpFactor,
+            y: cameraNode.position.y + (targetPosition.y - cameraNode.position.y) * lerpFactor
+        )
+        
+        cameraNode.position = newPosition
+    }
 }
 
-//extension GameScene: SKPhysicsContactDelegate {
-//    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
-//        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
-//        return set == Set([a, b])
-//    }
-//}
+extension GameScene: SKPhysicsContactDelegate {
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
+            print("Player colidiu com obstáculo!")
+            planetControllers[currentPlanetIndex].reverseRotation()
+        }
+        
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+            print("Player tocou na escada!")
+            planetControllers[currentPlanetIndex].isContactingStair = true
+            planetControllers[currentPlanetIndex].slowDownRotation()
+        }
+    }
+    
+    func didEnd(_ contact: SKPhysicsContact) {
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+            print("Player saiu da escada!")
+            planetControllers[currentPlanetIndex].isContactingStair = false
+            planetControllers[currentPlanetIndex].startRotation()
+        }
+    }
+    
+    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+        return set == Set([a, b])
+    }
+}
 
 #Preview {
     GameViewController()

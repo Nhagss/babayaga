@@ -10,7 +10,7 @@ import SpriteKit
 
 class PlayerView: SKSpriteNode {
     init() {
-        let size = CGSize(width: 30, height: 40)
+        let size = CGSize(width: 40, height: 40)
         super.init(texture: nil, color: .white, size: size)
         setupPhysics()
     }
@@ -21,12 +21,15 @@ class PlayerView: SKSpriteNode {
 
     private func setupPhysics() {
         physicsBody = SKPhysicsBody(rectangleOf: size)
-        physicsBody?.affectedByGravity = false
+        
         physicsBody?.friction = 0
+        physicsBody?.isDynamic = false
+        physicsBody?.affectedByGravity = false
         physicsBody?.usesPreciseCollisionDetection = true
+        
         physicsBody?.categoryBitMask = PhysicsCategory.player
-        physicsBody?.contactTestBitMask = PhysicsCategory.stairs
-        physicsBody?.collisionBitMask = 0
+        physicsBody?.collisionBitMask = PhysicsCategory.none
+        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.stair
     }
 
     func jump() {
