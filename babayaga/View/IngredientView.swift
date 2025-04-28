@@ -18,7 +18,8 @@ class IngredientView: SKSpriteNode {
     private func setupPhysics() {
         physicsBody = SKPhysicsBody(circleOfRadius: size.height)
         
-        physicsBody?.isDynamic = false
+        physicsBody?.isDynamic = true
+        physicsBody?.affectedByGravity = false
         physicsBody?.categoryBitMask = PhysicsCategory.ingredient
         physicsBody?.contactTestBitMask = PhysicsCategory.player
         physicsBody?.collisionBitMask = PhysicsCategory.none

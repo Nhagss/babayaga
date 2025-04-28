@@ -35,9 +35,10 @@ class GameScene: SKScene {
         for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
             let ingrediente = Ingredient(id: id, name: name)
             planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+            planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
         }
 
-        //planetControllers[0].addObstacle(angleInDegrees: 90)
         planetControllers[2].addObstacle(angleInDegrees: 90)
 
         /// Iniciar rotação do primeiro planeta
@@ -143,23 +144,23 @@ class GameScene: SKScene {
     private func handleIngredientContact(_ contact: SKPhysicsContact) {
         let bodies = [contact.bodyA, contact.bodyB]
         
-        // Procura quem é o ingrediente na colisão
+        /// Procura quem é o ingrediente na colisão
         if let ingredienteNode = bodies.first(where: { $0.categoryBitMask == PhysicsCategory.ingredient })?.node {
             
-            // Aqui vamos procurar em qual planeta o ingrediente está
+            /// Aqui vamos procurar em qual planeta o ingrediente está
             let planet = planetControllers[currentPlanetIndex]
             
-            if let ingredient = planet.view.ingredients.first(where: { $0.node == ingredienteNode }) {
+            if let ingredient = planet.view.ingredients.first(where: { $0.view == ingredienteNode }) {
                 processCollectedIngredient(ingredient, on: planet)
             }
         }
     }
     
-    private func processCollectedIngredient(_ ingredient: Ingredient, on planet: PlanetController) {
-        guard ingredient.node.parent != nil else { return }
+    private func processCollectedIngredient(_ ingredient: IngredientController, on planet: PlanetController) {
+        guard ingredient.view.parent != nil else { return }
         
         // Remove o ingrediente da cena
-        ingredient.node.removeFromParent()
+        ingredient.view.removeFromParent()
         
         // Remove da lista de ingredientes ativos no planeta
         if let index = planet.view.ingredients.firstIndex(where: { $0 === ingredient }) {
@@ -167,7 +168,7 @@ class GameScene: SKScene {
         }
         
         // Aqui você pode guardar o ingrediente coletado num inventário futuro
-        print("Ingrediente coletado: \(ingredient.name)")
+        print("Ingrediente coletado: \(ingredient.model.name)")
     }
 }
 
@@ -180,31 +181,15 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
-            
+            handleIngredientContact(contact)
         }
         
-        
-//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-//            print("Player tocou na escada!")
-//            planetControllers[currentPlanetIndex].isContactingStair = true
-//            planetControllers[currentPlanetIndex].slowDownRotation()
-//        }
-    }
-    
-//    func didEnd(_ contact: SKPhysicsContact) {
-//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-//            print("Player saiu da escada!")
-//            planetControllers[currentPlanetIndex].isContactingStair = false
-//            planetControllers[currentPlanetIndex].startRotation()
-//        }
-//    }
-    
-    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
-        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
-        return set == Set([a, b])
+        func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+            let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+            return set == Set([a, b])
+        }
     }
 }
-
-#Preview {
-    GameViewController()
-}
+    #Preview {
+        GameViewController()
+    }

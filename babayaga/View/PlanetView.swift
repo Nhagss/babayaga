@@ -14,7 +14,7 @@ class PlanetView: SKNode {
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
     let playerNode = PlayerView()
-    var ingredients: [IngredientView] = []
+    var ingredients: [IngredientController] = []
     var obstacles: [ObstacleView] = []
     
     var gravityField = SKFieldNode.radialGravityField()
@@ -78,7 +78,8 @@ class PlanetView: SKNode {
     }
     
     func addIngredient(model: Ingredient, angleInDegrees: CGFloat) {
-        let ingredient = IngredientView(model: model)
+        let ingredientController = IngredientController(model: model)
+        let ingredientView = ingredientController.view
         
         let radius = world.frame.width / 2 + 20
         let angleInRadians = angleInDegrees * .pi / 180
@@ -86,11 +87,11 @@ class PlanetView: SKNode {
         let x = radius * cos(angleInRadians)
         let y = radius * sin(angleInRadians)
         
-        ingredient.position = CGPoint(x: x, y: y)
-        ingredient.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
+        ingredientView.position = CGPoint(x: x, y: y)
+        ingredientView.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
 
-        orbitAnchor.addChild(ingredient)
-        ingredients.append(ingredient)
+        orbitAnchor.addChild(ingredientView)
+        ingredients.append(ingredientController)
     }
     
     func rotateOrbitAnchor(angleInDegrees: CGFloat) {
