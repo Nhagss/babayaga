@@ -28,7 +28,7 @@ class StairView: SKShapeNode {
         self.zPosition = -10
 
         /// Configura o physicsBody
-        setupPhysicsBody(length: length)
+        //setupPhysicsBody(length: length)
         
         self.position = CGPoint(x: (startPoint.x + endPoint.x)/2, y: (startPoint.y + endPoint.y)/2)
         self.zRotation = angle

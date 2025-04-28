@@ -47,6 +47,7 @@ class PlanetView: SKNode {
         
         playerNode.position = CGPoint(x: 0, y: 120)
         
+        
     }
     
     func rotate(speed: CGFloat) {

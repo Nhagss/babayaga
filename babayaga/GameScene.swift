@@ -26,11 +26,13 @@ class GameScene: SKScene {
         
         physicsWorld.contactDelegate = self
         
-        let ingredientModel = Ingredient(id: 1, name: "Pó de fada")
-        planetControllers[0].view.addIngredient(model: ingredientModel, angleInDegrees: 180)
+        let poDeFada = Ingredient(id: 1, name: "Pó de fada")
+        planetControllers[0].view.addIngredient(model: poDeFada, angleInDegrees: 0)
         
-        planetControllers[1].addObstacle(angleInDegrees: 200)
-        
+
+        planetControllers[0].addObstacle(angleInDegrees: 90)
+        planetControllers[2].addObstacle(angleInDegrees: 90)
+
         /// Iniciar rotação do primeiro planeta
         planetControllers[0].startRotation()
     }
@@ -96,23 +98,23 @@ class GameScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-//        let player = planetControllers[currentPlanetIndex].view.playerNode
+        let player = planetControllers[currentPlanetIndex].view.playerNode
         
-//        var isTouchingStair = false
-//        
-//        for stair in stairViews {
-//            if player.intersects(stair) {
-//                isTouchingStair = true
-//                break
-//            }
-//        }
-//        
-//        if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
-//            planetControllers[currentPlanetIndex].isContactingStair = true
-//
-//        } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
-//            planetControllers[currentPlanetIndex].isContactingStair = false
-//        }
+        var isTouchingStair = false
+        
+        for stair in stairViews {
+            if player.intersects(stair) {
+                isTouchingStair = true
+                break
+            }
+        }
+        
+        if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
+            planetControllers[currentPlanetIndex].isContactingStair = true
+
+        } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
+            planetControllers[currentPlanetIndex].isContactingStair = false
+        }
         
         /// Move a câmera suavemente para o planeta atual
         let targetPosition = CGPoint(
@@ -140,20 +142,20 @@ extension GameScene: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
-        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-            print("Player tocou na escada!")
-            planetControllers[currentPlanetIndex].isContactingStair = true
-            planetControllers[currentPlanetIndex].slowDownRotation()
-        }
+//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+//            print("Player tocou na escada!")
+//            planetControllers[currentPlanetIndex].isContactingStair = true
+//            planetControllers[currentPlanetIndex].slowDownRotation()
+//        }
     }
     
-    func didEnd(_ contact: SKPhysicsContact) {
-        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-            print("Player saiu da escada!")
-            planetControllers[currentPlanetIndex].isContactingStair = false
-            planetControllers[currentPlanetIndex].startRotation()
-        }
-    }
+//    func didEnd(_ contact: SKPhysicsContact) {
+//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+//            print("Player saiu da escada!")
+//            planetControllers[currentPlanetIndex].isContactingStair = false
+//            planetControllers[currentPlanetIndex].startRotation()
+//        }
+//    }
     
     func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
         let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
