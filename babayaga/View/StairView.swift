@@ -8,8 +8,11 @@
 import SpriteKit
 
 class StairView: SKShapeNode {    
-    init(from startPoint: CGPoint, to endPoint: CGPoint) {
+    init(from startPlanet: PlanetController, to endPlanet: PlanetController) {
         super.init()
+
+        let startPoint = startPlanet.view.position
+        let endPoint = endPlanet.view.position
 
         let dx = endPoint.x - startPoint.x
         let dy = endPoint.y - startPoint.y

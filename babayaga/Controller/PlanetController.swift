@@ -8,6 +8,7 @@
 import Foundation
 
 class PlanetController {
+    let id: UUID = UUID()
     let parent: PlanetController?
     let model: Planet
     let view: PlanetView

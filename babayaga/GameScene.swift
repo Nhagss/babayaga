@@ -8,7 +8,8 @@ class GameScene: SKScene {
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
     var planetControllers: [PlanetController] = []
-    private var stairViews: [StairView] = []
+    var nextPlanetID: UUID = UUID()
+    private var stairControllers: [StairController] = []
     
     override func didMove(to view: SKView) {
         
@@ -63,9 +64,10 @@ class GameScene: SKScene {
             let start = planetControllers[i].view.position
             let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
-            let stair = StairView(from: start, to: end)
-            stairViews.append(stair)
-            gameWorld.addChild(stair)
+            let stair = StairController(from: planetControllers[i], to: planetControllers[i].parent ?? planetControllers[i])
+            
+            stairControllers.append(stair)
+            gameWorld.addChild(stair.view)
         }
     }
     
@@ -80,7 +82,13 @@ class GameScene: SKScene {
             planetControllers[currentPlanetIndex].view.playerNode.isHidden = true
             
             /// Atualiza o index do array de planetas
-            currentPlanetIndex = (currentPlanetIndex + 1) % planetControllers.count
+            for i in 0..<planetControllers.count {
+                if(planetControllers[i].id == nextPlanetID) {
+                    currentPlanetIndex = i
+                    print(i)
+                    print(nextPlanetID)
+                }
+            }
             
             /// Retorna a animação, agora sendo de outro planeta
             planetControllers[currentPlanetIndex].startRotation()
@@ -100,9 +108,15 @@ class GameScene: SKScene {
         
         var isTouchingStair = false
         
-        for stair in stairViews {
-            if player.intersects(stair) {
+        for stair in stairControllers {
+            if player.intersects(stair.view) {
                 isTouchingStair = true
+                
+                // Só atualiza o próximo planeta se ainda não estava na escada
+                if !planetControllers[currentPlanetIndex].isContactingStair {
+                    nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
+                    print("Novo nextPlanetID definido:", nextPlanetID)
+                }
                 break
             }
         }
