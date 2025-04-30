@@ -42,8 +42,8 @@ class GameScene: SKScene {
     
     private func setupPlanets() {
         let planet1 = PlanetController()
-        let planet2 = PlanetController()
-        let planet3 = PlanetController()
+        let planet2 = PlanetController(parent: planet1)
+        let planet3 = PlanetController(parent: planet2)
         
         planet1.view.position = CGPoint(x: 50, y: -150)
         planet2.view.position = CGPoint(x: -150, y: 200)
@@ -59,9 +59,9 @@ class GameScene: SKScene {
     private func setupStairs() {
         guard planetControllers.count >= 2 else { return }
         
-        for i in 0..<(planetControllers.count - 1) {
+        for i in 1..<(planetControllers.count) {
             let start = planetControllers[i].view.position
-            let end = planetControllers[i + 1].view.position
+            let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
             let stair = StairView(from: start, to: end)
             stairViews.append(stair)
@@ -109,9 +109,11 @@ class GameScene: SKScene {
         
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
+            planetControllers[currentPlanetIndex].slowDownRotation()
 
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = false
+            planetControllers[currentPlanetIndex].startRotation()
         }
         
         /// Move a câmera suavemente para o planeta atual
@@ -140,6 +142,7 @@ extension GameScene: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
+        
 //        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
 //            print("Player tocou na escada!")
 //            planetControllers[currentPlanetIndex].isContactingStair = true
@@ -155,10 +158,6 @@ extension GameScene: SKPhysicsContactDelegate {
 //        }
 //    }
     
-    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
-        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
-        return set == Set([a, b])
-    }
 }
 
 #Preview {

@@ -8,6 +8,7 @@
 import Foundation
 
 class PlanetController {
+    let parent: PlanetController?
     let model: Planet
     let view: PlanetView
         
@@ -16,7 +17,9 @@ class PlanetController {
         set { model.isContactingStair = newValue }
     }
 
-    init(model: Planet = Planet(), view: PlanetView = PlanetView()) {
+    init(parent: PlanetController? = nil, model: Planet = Planet(), view: PlanetView = PlanetView()) {
+        
+        self.parent = parent
         self.model = model
         self.view = view
     }
