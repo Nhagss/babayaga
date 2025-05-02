@@ -20,11 +20,19 @@ class GameScene: SKScene {
         
         physicsWorld.contactDelegate = self
         
-        let poDeFada = Ingredient(id: 1, name: "Pó de fada")
-        planetControllers[0].view.addIngredient(model: poDeFada, angleInDegrees: 0)
+        let ingredientesDisponiveis = [
+            (1, "Pó de fada"), (2, "Suor de goblin"), (3, "Pena de corvo"),
+            (4, "Água da lua cheia")
+        ]
         
+        // Exemplo: adicionar 2 ingredientes no planeta 0
+        for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
+            let ingrediente = Ingredient(id: id, name: name)
+            planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+            planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+        }
 
-        planetControllers[0].addObstacle(angleInDegrees: 90)
         planetControllers[2].addObstacle(angleInDegrees: 90)
 
         /// Iniciar rotação do primeiro planeta
@@ -146,6 +154,36 @@ class GameScene: SKScene {
         
         cameraNode.position = newPosition
     }
+    
+    private func handleIngredientContact(_ contact: SKPhysicsContact) {
+        let bodies = [contact.bodyA, contact.bodyB]
+        
+        /// Procura quem é o ingrediente na colisão
+        if let ingredienteNode = bodies.first(where: { $0.categoryBitMask == PhysicsCategory.ingredient })?.node {
+            
+            /// Aqui vamos procurar em qual planeta o ingrediente está
+            let planet = planetControllers[currentPlanetIndex]
+            
+            if let ingredient = planet.view.ingredients.first(where: { $0.view == ingredienteNode }) {
+                processCollectedIngredient(ingredient, on: planet)
+            }
+        }
+    }
+    
+    private func processCollectedIngredient(_ ingredient: IngredientController, on planet: PlanetController) {
+        guard ingredient.view.parent != nil else { return }
+        
+        // Remove o ingrediente da cena
+        ingredient.view.removeFromParent()
+        
+        // Remove da lista de ingredientes ativos no planeta
+        if let index = planet.view.ingredients.firstIndex(where: { $0 === ingredient }) {
+            planet.view.ingredients.remove(at: index)
+        }
+        
+        // Aqui você pode guardar o ingrediente coletado num inventário futuro
+        print("Ingrediente coletado: \(ingredient.model.name)")
+    }
 }
 
 extension GameScene: SKPhysicsContactDelegate {
@@ -156,6 +194,9 @@ extension GameScene: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
+            handleIngredientContact(contact)
+        }
         
 //        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
 //            print("Player tocou na escada!")
