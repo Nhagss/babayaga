@@ -1,10 +1,3 @@
-//
-//  GameScene.swift
-//  babayaga
-//
-//  Created by Yago Souza Ramos on 4/22/25.
-//
-
 import SpriteKit
 import GameplayKit
 import SwiftUI
@@ -15,7 +8,8 @@ class GameScene: SKScene {
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
     var planetControllers: [PlanetController] = []
-    private var stairViews: [StairView] = []
+    var nextPlanetID: UUID = UUID()
+    private var stairControllers: [StairController] = []
     
     override func didMove(to view: SKView) {
         
@@ -57,8 +51,8 @@ class GameScene: SKScene {
     
     private func setupPlanets() {
         let planet1 = PlanetController()
-        let planet2 = PlanetController()
-        let planet3 = PlanetController()
+        let planet2 = PlanetController(parent: planet1)
+        let planet3 = PlanetController(parent: planet2)
         
         planet1.view.position = CGPoint(x: 50, y: -150)
         planet2.view.position = CGPoint(x: -150, y: 200)
@@ -74,13 +68,14 @@ class GameScene: SKScene {
     private func setupStairs() {
         guard planetControllers.count >= 2 else { return }
         
-        for i in 0..<(planetControllers.count - 1) {
+        for i in 1..<(planetControllers.count) {
             let start = planetControllers[i].view.position
-            let end = planetControllers[i + 1].view.position
+            let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
-            let stair = StairView(from: start, to: end)
-            stairViews.append(stair)
-            gameWorld.addChild(stair)
+            let stair = StairController(from: planetControllers[i], to: planetControllers[i].parent ?? planetControllers[i])
+            
+            stairControllers.append(stair)
+            gameWorld.addChild(stair.view)
         }
     }
     
@@ -95,7 +90,13 @@ class GameScene: SKScene {
             planetControllers[currentPlanetIndex].view.playerNode.isHidden = true
             
             /// Atualiza o index do array de planetas
-            currentPlanetIndex = (currentPlanetIndex + 1) % planetControllers.count
+            for i in 0..<planetControllers.count {
+                if(planetControllers[i].id == nextPlanetID) {
+                    currentPlanetIndex = i
+                    print(i)
+                    print(nextPlanetID)
+                }
+            }
             
             /// Retorna a animação, agora sendo de outro planeta
             planetControllers[currentPlanetIndex].startRotation()
@@ -105,23 +106,36 @@ class GameScene: SKScene {
         }
     }
     
+    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+        return set == Set([a, b])
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         let player = planetControllers[currentPlanetIndex].view.playerNode
         
         var isTouchingStair = false
         
-        for stair in stairViews {
-            if player.intersects(stair) {
+        for stair in stairControllers {
+            if player.intersects(stair.view) {
                 isTouchingStair = true
+                
+                // Só atualiza o próximo planeta se ainda não estava na escada
+                if !planetControllers[currentPlanetIndex].isContactingStair {
+                    nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
+                    print("Novo nextPlanetID definido:", nextPlanetID)
+                }
                 break
             }
         }
         
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
+            planetControllers[currentPlanetIndex].slowDownRotation()
 
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = false
+            planetControllers[currentPlanetIndex].startRotation()
         }
         
         /// Move a câmera suavemente para o planeta atual
@@ -184,12 +198,23 @@ extension GameScene: SKPhysicsContactDelegate {
             handleIngredientContact(contact)
         }
         
-        func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
-            let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
-            return set == Set([a, b])
-        }
+//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+//            print("Player tocou na escada!")
+//            planetControllers[currentPlanetIndex].isContactingStair = true
+//            planetControllers[currentPlanetIndex].slowDownRotation()
+//        }
     }
+    
+//    func didEnd(_ contact: SKPhysicsContact) {
+//        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
+//            print("Player saiu da escada!")
+//            planetControllers[currentPlanetIndex].isContactingStair = false
+//            planetControllers[currentPlanetIndex].startRotation()
+//        }
+//    }
+    
 }
-    #Preview {
-        GameViewController()
-    }
+
+#Preview {
+    GameViewController()
+}

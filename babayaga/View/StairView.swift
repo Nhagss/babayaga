@@ -7,23 +7,42 @@
 
 import SpriteKit
 
-class StairView: SKShapeNode {
-    
-    init(from startPoint: CGPoint, to endPoint: CGPoint) {
+class StairView: SKShapeNode {    
+    init(from startPlanet: PlanetController, to endPlanet: PlanetController) {
         super.init()
+
+        let startPoint = startPlanet.view.position
+        let endPoint = endPlanet.view.position
 
         let dx = endPoint.x - startPoint.x
         let dy = endPoint.y - startPoint.y
         let length = hypot(dx, dy)
         let angle = atan2(dy, dx)
         
+        let portal1 = SKShapeNode(circleOfRadius: 10)
+        portal1.zPosition = 10
+        portal1.glowWidth = 30
+        
+        let portal2 = SKShapeNode(circleOfRadius: 10)
+        portal2.zPosition = 10
+        portal2.glowWidth = 30
+
+        
         let path = CGMutablePath()
         path.move(to: CGPoint(x: -length/2, y: 0))
+        
+        portal1.position = CGPoint(x: path.currentPoint.x + 100, y: path.currentPoint.y)
+        
         path.addLine(to: CGPoint(x: length/2, y: 0))
         
+        portal2.position = CGPoint(x: path.currentPoint.x - 100, y: path.currentPoint.y)
+
+        addChild(portal1)
+        addChild(portal2)
+                
         self.path = path
-        self.strokeColor = .systemPurple
-        self.alpha = 0.7
+        self.strokeColor = .white.withAlphaComponent(0.000000001)
+        self.alpha = 1
         self.lineWidth = 30
         self.zPosition = -10
 
