@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "eye1_fundo_babayaga.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
