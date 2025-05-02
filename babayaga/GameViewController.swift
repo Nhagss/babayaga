@@ -1,8 +1,8 @@
 //
 //  GameViewController.swift
-//  babayaga
+//  RoundMovementPOC
 //
-//  Created by Yago Souza Ramos on 4/22/25.
+//  Created by Yago Souza Ramos on 4/13/25.
 //
 
 import UIKit
@@ -79,12 +79,20 @@ class GameViewController: UIViewController {
             changePlanetButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
             changePlanetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
         ])
+        
+        //        if let view = self.view as? SKView {
+        //            let scene = GameScene(size: view.bounds.size)
+        //            scene.scaleMode = .aspectFill
+        //            view.presentScene(scene)
+        //        }
+        
+        
     }
     
     // Funções de orientação e status bar (mantidas como antes)
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
+            return [.portrait]
         } else {
             return .all
         }
