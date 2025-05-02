@@ -11,6 +11,10 @@ struct PlayButton: View {
     var body: some View {
         ZStack{
             
+            Image("play")
+            
+            Image("eye.play")
+                .padding(.leading, -10)
         }
     }
 }

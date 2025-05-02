@@ -18,6 +18,10 @@ struct GameViewControllerWrapper: UIViewControllerRepresentable {
     }
 }
 
+enum Views: Hashable {
+    case GameScene
+}
+
 struct GameSceneView: View {
     var scene: SKScene {
         let scene = GameScene()

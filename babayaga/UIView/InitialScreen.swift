@@ -8,60 +8,38 @@
 import SwiftUI
 import SpriteKit
 
-struct GameSceneView: View {
-    var scene: SKScene {
-        let scene = GameScene()
-        scene.scaleMode = .resizeFill
-        return scene
-    }
-    
-    var body: some View {
-        SpriteView(scene: scene)
-            .ignoresSafeArea()
-    }
-}
+import SwiftUI
 
 struct InitialScreen: View {
     var body: some View {
-        NavigationStack {
-            HStack {
-                NavigationLink(destination: GameSceneView()) {
-                        ZStack {
-                            Circle()
-                                .frame(width: 80)
-                            Image(systemName: "window.ceiling.closed")
-                                .foregroundStyle(.white)
-                        }
-                            
-                    }
-                NavigationLink(destination: GameSceneView()) {
-                    ZStack {
-                        Circle()
-                            .frame(width: 100)
-                        Image(systemName: "play.fill")
-                            .foregroundStyle(.white)
-                    }
-                    
-                }
-                NavigationLink(destination: GameSceneView()) {
-                    ZStack {
-                        Circle()
-                            .frame(width: 80)
-                        Image(systemName: "gear")
-                            .foregroundStyle(.white)
-                    }
-                    
-                }
-                .navigationTitle("Main Menu")
-            }
+        ZStack{
+            
+            Background()
+            
+            Image("moon")
+                .padding(.bottom, 600)
+                .padding(.leading, 250)
+                
+            Text("Baba")
+                .font(.custom("GermaniaOne-Regular", size: 106))
+                .padding(.bottom, 400)
+                .padding(.trailing, 70)
+                .foregroundStyle(.white)
+            
+            Text("Yaga")
+                .font(.custom("GermaniaOne-Regular", size: 106))
+                .padding(.bottom, 220)
+                .padding(.leading, 30)
+                .foregroundStyle(.white)
+            
+            PlayButton()
+                .padding(.top, 150)
+    
         }
-    }
+        .ignoresSafeArea()
+            
+        }
 }
-
-#Preview {
-    InitialScreen()
-}
-
 
 #Preview {
     InitialScreen()
