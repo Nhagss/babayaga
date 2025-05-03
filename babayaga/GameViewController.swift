@@ -7,11 +7,13 @@
 
 import UIKit
 import SpriteKit
-
+import SwiftUI
 class GameViewController: UIViewController {
     
     var spriteKitView = SKView()
     let scene = GameScene()
+    let backGround = Background()
+    
     
     var changeDirectionBTN: UIButton! = {
         let btn = UIButton()
@@ -40,9 +42,12 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let backgroundView = UIHostingController(rootView: backGround)
         
         view.backgroundColor = .black
         
+        backgroundView.view.layer.zPosition = -1
+        view.addSubview(backgroundView.view)
         scene.size = view.bounds.size
         scene.scaleMode = .aspectFill
         spriteKitView.presentScene(scene)
@@ -103,6 +108,6 @@ class GameViewController: UIViewController {
     }
 }
 
-//#Preview {
-//    GameViewController()
-//}
+#Preview {
+    GameViewController()
+}
