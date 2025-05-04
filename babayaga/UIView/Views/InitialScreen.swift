@@ -35,32 +35,25 @@ struct InitialScreen: View {
                     .padding(.leading, 30)
                     .foregroundStyle(.white)
                 
-                Button(action: {
-                    router.goToGameScene()
-                }) {
-                    VStack {
-                        ZStack {
-                            
-                            Image("play")
-                            
-                            Image("eye.play")
-                                .padding(.trailing, 10)
-                            
-                        }
-                        Text("Jogar")
-                            .font(.custom("Quicksand-Regular", size: 27))
-                            .foregroundStyle(.white)
+                VStack(spacing: 80) {
+                    Button(action: {
+                        router.goToGameScene()
+                    }) {
+                        PlayButton()
+                            .padding(.top, 300)
                         
-                    }
-                    .padding(.top, 150)
-                    
-                    .navigationDestination(for: Views.self) { view in
-                        switch view {
-                        case .GameViewController:
-                            GameViewControllerWrapper()
-                        }
+                            .navigationDestination(for: Views.self) { view in
+                                switch view {
+                                case .GameViewController:
+                                    GameViewControllerWrapper()
+                                }
+                            }
                     }
                     
+                    HStack(spacing: 150){
+                        ButtonComponent()
+                        ButtonComponent()
+                    }
                 }
             }
             .ignoresSafeArea()

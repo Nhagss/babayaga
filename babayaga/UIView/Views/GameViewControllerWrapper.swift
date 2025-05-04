@@ -8,6 +8,7 @@
 import SwiftUI
 import SpriteKit
 
+// MARK: Usada para integrar um UIViewController do UIKit dentro de uma interface SwiftUI.
 struct GameViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> GameViewController {
         GameViewController()
@@ -18,7 +19,7 @@ struct GameViewControllerWrapper: UIViewControllerRepresentable {
     }
 }
 
-
+// MARK: define uma view SwiftUI que exibe uma cena SpriteKit
 struct GameSceneView: View {
     var scene: SKScene {
         let scene = GameScene()
