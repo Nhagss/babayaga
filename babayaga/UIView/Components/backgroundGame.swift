@@ -10,7 +10,6 @@ import SwiftUI
 struct BackgroundGame: View {
     var body: some View {
         ZStack {
-            
             Image("background")
                 .resizable()
                 .brightness(-0.1)
@@ -56,7 +55,6 @@ struct BackgroundGame: View {
             Image("textura")
                 .resizable()
         }
-        
     }
 }
 
