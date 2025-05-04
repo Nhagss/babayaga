@@ -38,29 +38,35 @@ struct InitialScreen: View {
                 Button(action: {
                     router.goToGameScene()
                 }) {
-                    ZStack {
+                    VStack {
+                        ZStack {
+                            
+                            Image("play")
+                            
+                            Image("eye.play")
+                                .padding(.trailing, 10)
+                            
+                        }
+                        Text("Jogar")
+                            .font(.custom("Quicksand-Regular", size: 27))
+                            .foregroundStyle(.white)
                         
-                        Image("play")
-                        
-                        Image("eye.play")
-                            .padding(.trailing, 10)
+                    }
+                    .padding(.top, 150)
+                    
+                    .navigationDestination(for: Views.self) { view in
+                        switch view {
+                        case .GameViewController:
+                            GameViewControllerWrapper()
+                        }
                     }
                     
                 }
-                .padding(.top, 150)
-                
-                .navigationDestination(for: Views.self) { view in
-                    switch view {
-                    case .GameViewController:
-                        GameViewControllerWrapper()
-                    }
-                }
-                
             }
+            .ignoresSafeArea()
+            .environmentObject(router)
+            
         }
-        .ignoresSafeArea()
-        .environmentObject(router)
-        
     }
 }
 
