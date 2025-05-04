@@ -10,17 +10,14 @@ import SpriteKit
 
 struct GameViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> GameViewController {
-        return GameViewController()
+        GameViewController()
     }
 
     func updateUIViewController(_ uiViewController: GameViewController, context: Context) {
-        // Você pode atualizar o controller aqui se precisar
+        // Atualizações do controller, se necessário
     }
 }
 
-enum Views: Hashable {
-    case GameScene
-}
 
 struct GameSceneView: View {
     var scene: SKScene {
@@ -35,4 +32,5 @@ struct GameSceneView: View {
             .navigationBarHidden(true)
     }
 }
+
 
