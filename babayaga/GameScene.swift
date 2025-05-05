@@ -121,7 +121,7 @@ class GameScene: SKScene {
         var isTouchingStair = false
         
         for stair in stairControllers {
-            if player.intersects(stair.view) {
+            if player.getChacterHitBox.intersects(stair.view) {
                 isTouchingStair = true
                 
                 // Só atualiza o próximo planeta se ainda não estava na escada
@@ -199,6 +199,7 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
+            print("contato ingrediente")
             handleIngredientContact(contact)
         }
         

@@ -47,6 +47,7 @@ class PlanetController {
     }
     
     func reverseRotation() {
+        view.playerNode.xScale *= -1
         model.reverseDirection()
         startRotation()
     }
