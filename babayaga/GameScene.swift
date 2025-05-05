@@ -33,10 +33,14 @@ class GameScene: SKScene {
             planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
         }
 
-        planetControllers[2].addObstacle(angleInDegrees: 90)
+        planetControllers[2].addObject(angleInDegrees: 90)
 
         /// Iniciar rotação do primeiro planeta
         planetControllers[0].startRotation()
+        planetControllers[0].makePlanetType(type: .complete)
+        planetControllers[1].makePlanetType(type: .twoGrass)
+        planetControllers[2].makePlanetType(type: .threeGrass)
+
     }
     
     private func setupCamera() {

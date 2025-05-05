@@ -7,11 +7,12 @@
 
 import UIKit
 import SpriteKit
-
+import SwiftUI
 class GameViewController: UIViewController {
     
     var spriteKitView = SKView()
     let scene = GameScene()
+    let backgroundView = UIHostingController(rootView: BackgroundGame())
     
     var changeDirectionBTN: UIButton! = {
         let btn = UIButton()
@@ -41,26 +42,35 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
+        addChild(backgroundView)
+        view.addSubview(backgroundView.view)
+        backgroundView.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundView.view.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            backgroundView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        backgroundView.didMove(toParent: self)
         
+        // SpriteKit
         scene.size = view.bounds.size
         scene.scaleMode = .aspectFill
+        scene.backgroundColor = .clear
         spriteKitView.presentScene(scene)
+        spriteKitView.backgroundColor = .clear
+        spriteKitView.allowsTransparency = true
         spriteKitView.frame = view.bounds
-        
-        //spriteKitView.scene?.backgroundColor = .black
-        //        spriteKitView.layer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY - 100)
-        
         view.addSubview(spriteKitView)
+        
         view.addSubview(changeDirectionBTN)
         view.addSubview(changePlanetButton)
         
-        #if DEBUG
+#if DEBUG
         spriteKitView.ignoresSiblingOrder = true
         spriteKitView.showsFPS = true
         spriteKitView.showsNodeCount = true
-        #endif
-        
+#endif
         
         changeDirectionBTN.addTarget(self, action: #selector(changeDirection), for: .touchUpInside)
         changeDirectionBTN.layer.zPosition = 10
@@ -72,22 +82,15 @@ class GameViewController: UIViewController {
         ])
         
         changePlanetButton.addTarget(self, action: #selector(changePlanet), for: .touchUpInside)
-        //        changePlanetButton.layer.zPosition = 10
+        changePlanetButton.layer.zPosition = 10
         NSLayoutConstraint.activate([
             changePlanetButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2),
             changePlanetButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
             changePlanetButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
             changePlanetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
         ])
-        
-        //        if let view = self.view as? SKView {
-        //            let scene = GameScene(size: view.bounds.size)
-        //            scene.scaleMode = .aspectFill
-        //            view.presentScene(scene)
-        //        }
-        
-        
     }
+
     
     // Funções de orientação e status bar (mantidas como antes)
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -103,6 +106,6 @@ class GameViewController: UIViewController {
     }
 }
 
-//#Preview {
-//    GameViewController()
-//}
+#Preview {
+    GameViewController()
+}

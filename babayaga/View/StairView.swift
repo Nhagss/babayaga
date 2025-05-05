@@ -19,21 +19,29 @@ class StairView: SKShapeNode {
         let length = hypot(dx, dy)
         let angle = atan2(dy, dx)
         
-        let portal1 = SKShapeNode(circleOfRadius: 10)
+        let portal1 = SKSpriteNode()
+        portal1.size = CGSize(width: 40, height: 50)
+        portal1.physicsBody = SKPhysicsBody(rectangleOf: portal1.size)
+        portal1.physicsBody?.isDynamic = false
+        portal1.texture = SKTexture(imageNamed: "portal")
         portal1.zPosition = 10
-        portal1.glowWidth = 30
+        portal1.zRotation = -1.5
         
-        let portal2 = SKShapeNode(circleOfRadius: 10)
+        let portal2 = SKSpriteNode()
+        portal2.size = CGSize(width: 40, height: 50)
+        portal2.physicsBody = SKPhysicsBody(rectangleOf: portal2.size)
+        portal2.physicsBody?.isDynamic = false
+        portal2.texture = SKTexture(imageNamed: "portal")
         portal2.zPosition = 10
-        portal2.glowWidth = 30
+        portal2.zRotation = 1.5
 
         
         let path = CGMutablePath()
-        path.move(to: CGPoint(x: -length/2, y: 0))
+        path.move(to: CGPoint(x: -length/2.1, y: 0))
         
         portal1.position = CGPoint(x: path.currentPoint.x + 100, y: path.currentPoint.y)
         
-        path.addLine(to: CGPoint(x: length/2, y: 0))
+        path.addLine(to: CGPoint(x: length/2.1, y: 0))
         
         portal2.position = CGPoint(x: path.currentPoint.x - 100, y: path.currentPoint.y)
 
@@ -41,9 +49,10 @@ class StairView: SKShapeNode {
         addChild(portal2)
                 
         self.path = path
-        self.strokeColor = .white.withAlphaComponent(0.000000001)
+        self.strokeColor = .white
+        self.strokeTexture = SKTexture(imageNamed: "portal")
         self.alpha = 1
-        self.lineWidth = 30
+        self.lineWidth = 4
         self.zPosition = -10
 
         /// Configura o physicsBody
@@ -75,4 +84,8 @@ class StairView: SKShapeNode {
         addChild(debugShape)
         #endif
     }
+}
+
+#Preview {
+    GameViewController()
 }
