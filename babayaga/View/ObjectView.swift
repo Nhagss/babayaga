@@ -8,12 +8,14 @@
 import Foundation
 import SpriteKit
 
-class ObstacleView: SKSpriteNode {
+class ObjectView: SKSpriteNode {
     
-    init() {
-        let size = CGSize(width: 50, height: 50)
-        super.init(texture: nil, color: .systemYellow, size: size)
-        setupPhysics()
+    init(withCollision: Bool, texture: SKTexture?, size: CGSize) {
+        let size = size
+        super.init(texture: texture, color: .systemYellow, size: size)
+        if (withCollision) {
+            setupPhysics()
+        }
     }
     
     private func setupPhysics() {
