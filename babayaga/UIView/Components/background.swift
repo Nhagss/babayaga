@@ -38,6 +38,7 @@ struct Background: View {
             Image("textura")
                 .resizable()
         }
+            .ignoresSafeArea()
         
     }
 }

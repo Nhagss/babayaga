@@ -35,23 +35,53 @@ struct InitialScreen: View {
                     .padding(.leading, 30)
                     .foregroundStyle(.white)
                 
-                VStack(spacing: 80) {
+                VStack(spacing: 60) {
                     Button(action: {
                         router.goToGameScene()
                     }) {
-                        PlayButton()
-                            .padding(.top, 300)
-                        
+                        VStack {
+                            PlayButton()
+                                .padding(.top, 300)
+                            
+                            Text("Jogar")
+                                .font(.custom("Quicksand-Regular", size: 27))
+                                .foregroundStyle(.white)
+                        }
                             .navigationDestination(for: Views.self) { view in
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                    
+                                case .SettingsView:
+                                    SettingsView()
                                 }
                             }
                     }
                     
                     HStack(spacing: 150){
-                        ButtonComponent()
+                        Button(action: {
+                            router.goToSettingsView()
+                        }) {
+                            VStack {
+                                ZStack {
+                                    ButtonComponent()
+                                    Image("settingsIcon")
+                                }
+                                
+                                Text("Ajustes")
+                                    .font(.custom("Quicksand-Regular", size: 27))
+                                    .foregroundStyle(.white)
+                            }
+                                .navigationDestination(for: Views.self) { view in
+                                    switch view {
+                                    case .GameViewController:
+                                        GameViewControllerWrapper()
+                                        
+                                    case .SettingsView:
+                                        SettingsView()
+                                    }
+                                }
+                        }
                         ButtonComponent()
                     }
                 }

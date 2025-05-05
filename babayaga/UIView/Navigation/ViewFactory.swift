@@ -14,6 +14,9 @@ enum ViewFactory {
         switch destinations {
         case .GameViewController:
             GameViewControllerWrapper()
+            
+        case .SettingsView:
+            SettingsView()
            
         }
     }

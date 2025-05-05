@@ -18,10 +18,6 @@ struct PlayButton: View {
                     .padding(.trailing, 10)
                 
             }
-            Text("Jogar")
-                .font(.custom("Quicksand-Regular", size: 27))
-                .foregroundStyle(.white)
-            
         }
     }
 }

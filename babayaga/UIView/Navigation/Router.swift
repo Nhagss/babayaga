@@ -14,4 +14,8 @@ class Router: ObservableObject {
     func goToGameScene() {
         path.append(Views.GameViewController.self)
     }
+    
+    func goToSettingsView() {
+        path.append(Views.SettingsView.self)
+    }
 }

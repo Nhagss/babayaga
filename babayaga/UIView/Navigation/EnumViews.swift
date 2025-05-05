@@ -9,5 +9,6 @@ import Foundation
 
 enum Views: Hashable {
     case GameViewController
+    case SettingsView
     
 }
