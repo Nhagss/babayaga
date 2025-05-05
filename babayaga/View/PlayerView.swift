@@ -8,11 +8,24 @@
 import Foundation
 import SpriteKit
 
-class PlayerView: SKSpriteNode {
-    init() {
-        let size = CGSize(width: 40, height: 40)
-        super.init(texture: nil, color: .white, size: size)
+class PlayerView: SKNode {
+    private let hitboxNode = SKShapeNode(rectOf: CGSize(width: 40, height: 40))
+    
+    override init() {
+        super.init()
+        
+        hitboxNode.fillColor = .clear
+        hitboxNode.strokeColor = .red
+        addChild(hitboxNode)
+        
+        let character = createCharacter()
+        addChild(character)
+        
         setupPhysics()
+    }
+    
+    var hitboxFrameInScene: SKShapeNode {
+        return hitboxNode
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -20,7 +33,7 @@ class PlayerView: SKSpriteNode {
     }
 
     private func setupPhysics() {
-        physicsBody = SKPhysicsBody(rectangleOf: size)
+        physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 100))
         
         physicsBody?.friction = 0
         physicsBody?.isDynamic = false
@@ -37,6 +50,97 @@ class PlayerView: SKSpriteNode {
         let jumpDown = SKAction.moveBy(x: 0, y: -20, duration: 0.1)
         let sequence = SKAction.sequence([jumpUp, .wait(forDuration: 0.1), jumpDown])
         run(sequence)
+    }
+    
+    func createCharacter() -> SKNode {
+        let center = SKNode()
+        
+        // Torso
+        let torso = SKSpriteNode(texture: SKTexture(imageNamed: "torso"))
+        torso.run(bobbing())
+        torso.run(rotation(byangle: 0.05))
+        torso.position.y = 0
+        center.addChild(torso)
+        
+        // Cabeça
+        let head = SKSpriteNode(texture: SKTexture(imageNamed: "head"))
+        head.setScale(1 / 1.6)
+        head.run(bobbing())
+        head.run(rotation(byangle: 0.02))
+        head.position = CGPoint(x: -15, y: 130)
+        center.addChild(head)
+        
+        // Braços
+        let frontArm = createAnimatedAnchor(image: "frontArm", angle1: 0.8, angle2: -0.8)
+        let backArm = createAnimatedAnchor(image: "backArm", angle1: -0.8, angle2: 0.8)
+        frontArm.position.y = 20
+        backArm.position.y = 20
+        center.addChild(frontArm)
+        center.addChild(backArm)
+        
+        // Pernas
+        let frontFoot = createAnimatedAnchor(image: "foot", angle1: -0.3, angle2: 0.3)
+        let backFoot = createAnimatedAnchor(image: "backFoot", angle1: 0.3, angle2: -0.3)
+        frontFoot.position.y = 40
+        backFoot.position.y = 40
+        center.addChild(frontFoot)
+        center.addChild(backFoot)
+        
+        // Posicionamento dos membros
+        frontArm.children.first?.position = CGPoint(x: 10, y: -30)
+        backArm.children.first?.position = CGPoint(x: -10, y: -30)
+        frontFoot.children.first?.position = CGPoint(x: 0, y: -80)
+        backFoot.children.first?.position = CGPoint(x: 0, y: -80)
+        
+        // Escalas
+        [frontFoot, backFoot].forEach {
+            $0.children.first?.xScale = 1
+            $0.children.first?.yScale = 1
+        }
+        
+        [frontArm, backArm].forEach {
+            $0.children.first?.xScale = 0.8
+            $0.children.first?.yScale = 0.8
+        }
+        
+        // Z Positions
+        backArm.children.first?.zPosition = 0
+        backFoot.children.first?.zPosition = 1
+        frontFoot.children.first?.zPosition = 2
+        torso.zPosition = 3
+        frontArm.children.first?.zPosition = 4
+        head.zPosition = 5
+        
+        // Escala total
+        center.setScale(0.4)
+        
+        return center
+    }
+    
+    
+    func createAnimatedAnchor(image: String, angle1: CGFloat, angle2: CGFloat) -> SKNode {
+        let anchor = SKNode()
+        let sprite = SKSpriteNode(texture: SKTexture(imageNamed: image))
+        anchor.addChild(sprite)
+        
+        let rotate1 = SKAction.rotate(toAngle: angle1, duration: 1, shortestUnitArc: true)
+        let rotate2 = SKAction.rotate(toAngle: angle2, duration: 1, shortestUnitArc: true)
+        let sequence = SKAction.sequence([rotate1, rotate2])
+        anchor.run(SKAction.repeatForever(sequence))
+        
+        return anchor
+    }
+    
+    func bobbing() -> SKAction {
+        let up = SKAction.moveBy(x: 0, y: 5, duration: 0.5)
+        let down = SKAction.moveBy(x: 0, y: -5, duration: 0.5)
+        return SKAction.repeatForever(SKAction.sequence([up, down]))
+    }
+    
+    func rotation(byangle: CGFloat) -> SKAction {
+        let right = SKAction.rotate(byAngle: byangle, duration: 0.5)
+        let left = SKAction.rotate(byAngle: -byangle, duration: 0.5)
+        return SKAction.repeatForever(SKAction.sequence([right, left]))
     }
 }
 
