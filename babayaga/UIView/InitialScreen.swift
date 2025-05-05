@@ -8,60 +8,67 @@
 import SwiftUI
 import SpriteKit
 
-struct GameSceneView: View {
-    var scene: SKScene {
-        let scene = GameScene()
-        scene.scaleMode = .resizeFill
-        return scene
-    }
+struct InitialScreen: View {
+    
+    @StateObject private var router = Router()
     
     var body: some View {
-        SpriteView(scene: scene)
-            .ignoresSafeArea()
-    }
-}
-
-struct InitialScreen: View {
-    var body: some View {
-        NavigationStack {
-            HStack {
-                NavigationLink(destination: GameSceneView()) {
+        NavigationStack (path: $router.path) {
+            
+            ZStack {
+                
+                Background()
+                
+                Image("moon")
+                    .padding(.bottom, 600)
+                    .padding(.leading, 250)
+                
+                Text("Baba")
+                    .font(.custom("GermaniaOne-Regular", size: 106))
+                    .padding(.bottom, 400)
+                    .padding(.trailing, 70)
+                    .foregroundStyle(.white)
+                
+                Text("Yaga")
+                    .font(.custom("GermaniaOne-Regular", size: 106))
+                    .padding(.bottom, 220)
+                    .padding(.leading, 30)
+                    .foregroundStyle(.white)
+                
+                Button(action: {
+                    router.goToGameScene()
+                }) {
+                    VStack {
                         ZStack {
-                            Circle()
-                                .frame(width: 80)
-                            Image(systemName: "window.ceiling.closed")
-                                .foregroundStyle(.white)
-                        }
                             
-                    }
-                NavigationLink(destination: GameSceneView()) {
-                    ZStack {
-                        Circle()
-                            .frame(width: 100)
-                        Image(systemName: "play.fill")
+                            Image("play")
+                            
+                            Image("eye.play")
+                                .padding(.trailing, 10)
+                            
+                        }
+                        Text("Jogar")
+                            .font(.custom("Quicksand-Regular", size: 27))
                             .foregroundStyle(.white)
+                        
+                    }
+                    .padding(.top, 150)
+                    
+                    .navigationDestination(for: Views.self) { view in
+                        switch view {
+                        case .GameViewController:
+                            GameViewControllerWrapper()
+                        }
                     }
                     
                 }
-                NavigationLink(destination: GameSceneView()) {
-                    ZStack {
-                        Circle()
-                            .frame(width: 80)
-                        Image(systemName: "gear")
-                            .foregroundStyle(.white)
-                    }
-                    
-                }
-                .navigationTitle("Main Menu")
             }
+            .ignoresSafeArea()
+            .environmentObject(router)
+            
         }
     }
 }
-
-#Preview {
-    InitialScreen()
-}
-
 
 #Preview {
     InitialScreen()
