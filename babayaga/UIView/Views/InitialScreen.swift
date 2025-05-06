@@ -88,7 +88,6 @@ struct InitialScreen: View {
             }
             .ignoresSafeArea()
             .environmentObject(router)
-            
         }
     }
 }
