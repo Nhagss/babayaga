@@ -56,6 +56,12 @@ class PlanetController {
         view.addObject(angleInDegrees: angleInDegrees)
     }
     
+    func addHouse(angleInDegrees: CGFloat) -> Void {
+        let scale = 1.3
+        let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false, texture: SKTexture(imageNamed: "house"), size: treeSize)
+    }
+    
     func addTree(angleInDegrees: CGFloat) {
         let scale = 1.3
         let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
@@ -77,11 +83,7 @@ class PlanetController {
     
     func makePlanetType(type: PlanetType) {
         
-        let scale = 1.3
-        let grassSize: CGSize = CGSize(width: 131/scale, height: 76/scale)
-        let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
-        let crossSize: CGSize = CGSize(width: 50/scale, height: 50/scale)
-        
+        let scale = 1.3        
         switch type {
         case .complete:
             addGrass(angleInDegrees: 90)
