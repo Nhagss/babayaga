@@ -63,6 +63,7 @@ class GameViewController: UIViewController {
             }
         ))
 
+        
         // Adicionando a view do UIHostingController à hierarquia
         if let controlsView = controlsView?.view {
             view.addSubview(controlsView)

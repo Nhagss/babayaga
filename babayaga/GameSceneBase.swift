@@ -165,6 +165,84 @@ class GameSceneBase: SKScene {
         /// Aqui você pode guardar o ingrediente coletado num inventário futuro
         print("Ingrediente coletado: \(ingredient.model.name)")
     }
+    
+    func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
+        let words = text.split(separator: " ")
+        var lines: [String] = []
+        var currentLine = ""
+        
+        let tempLabel = SKLabelNode(fontNamed: fontName)
+        tempLabel.fontSize = fontSize
+        
+        for word in words {
+            let testLine = currentLine.isEmpty ? String(word) : "\(currentLine) \(word)"
+            tempLabel.text = testLine
+            if tempLabel.frame.width > maxWidth {
+                lines.append(currentLine)
+                currentLine = String(word)
+            } else {
+                currentLine = testLine
+            }
+        }
+        lines.append(currentLine)
+        
+        let parentNode = SKNode()
+        for (i, line) in lines.enumerated() {
+            let label = SKLabelNode(text: line)
+            label.fontName = fontName
+            label.fontSize = fontSize
+            label.fontName = "HelveticaNeue-Bold"
+            label.fontColor = fontColor
+            label.horizontalAlignmentMode = .center
+            label.verticalAlignmentMode = .center
+            label.position = CGPoint(x: 0, y: CGFloat(-i) * (fontSize + 4))
+            parentNode.addChild(label)
+        }
+        
+        return parentNode
+    }
+    
+    private func showHouseMessage(at position: CGPoint, text: String) {
+        let multilineLabel = createMultilineLabel(text: text, maxWidth: 200, fontSize: 16, fontName: "AvenirNext-Bold", fontColor: .white)
+        
+        let labelSize = multilineLabel.calculateAccumulatedFrame().size
+        let padding: CGFloat = 10
+        let bubbleSize = CGSize(width: labelSize.width + padding * 2, height: labelSize.height + padding * 2)
+        let bubbleRect = CGRect(origin: CGPoint(x: -bubbleSize.width / 2, y: -bubbleSize.height / 2), size: bubbleSize)
+        
+        let radius: CGFloat = 20
+        let minX = bubbleRect.minX
+        let minY = bubbleRect.minY
+        let maxX = bubbleRect.maxX
+        let maxY = bubbleRect.maxY
+        
+        let path = CGMutablePath()
+        path.move(to: CGPoint(x: minX, y: minY-10))
+        path.addLine(to: CGPoint(x: minX + 10, y: minY))
+        path.addLine(to: CGPoint(x: maxX - radius, y: minY))
+        path.addQuadCurve(to: CGPoint(x: maxX, y: minY + radius), control: CGPoint(x: maxX, y: minY))
+        path.addLine(to: CGPoint(x: maxX, y: maxY - radius))
+        path.addQuadCurve(to: CGPoint(x: maxX - radius, y: maxY), control: CGPoint(x: maxX, y: maxY))
+        path.addLine(to: CGPoint(x: minX + radius, y: maxY))
+        path.addQuadCurve(to: CGPoint(x: minX, y: maxY - radius), control: CGPoint(x: minX, y: maxY))
+        path.addLine(to: CGPoint(x: minX, y: minY))
+        path.closeSubpath()
+        
+        let bubbleNode = SKShapeNode(path: path)
+        bubbleNode.fillColor = .black
+        bubbleNode.lineWidth = 2
+        
+        bubbleNode.addChild(multilineLabel)
+        let labelFrame = multilineLabel.calculateAccumulatedFrame()
+        multilineLabel.position = CGPoint(x: 0, y: labelFrame.height / 2 - 10)
+        
+        bubbleNode.position = position
+        self.addChild(bubbleNode)
+        
+        let wait = SKAction.wait(forDuration: 2.0)
+        let remove = SKAction.removeFromParent()
+        bubbleNode.run(SKAction.sequence([wait, remove]))
+    }
 }
 
 extension GameSceneBase: SKPhysicsContactDelegate {
@@ -178,6 +256,14 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             print("Player colidiu com obstáculo!")
             planetControllers[currentPlanetIndex].reverseRotation()
+        }
+        
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.house) {
+            let xPos = contact.bodyB.node!.position.x + 100
+            let yPos = contact.bodyB.node!.position.y - 30
+            let position = CGPoint(x: xPos, y: yPos)
+            
+            showHouseMessage(at: position, text: "You still dont have all the ingredients!")
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {

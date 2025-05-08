@@ -46,6 +46,7 @@ struct InitialScreen: View {
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                        .ignoresSafeArea()
                                         .navigationBarBackButtonHidden()
                                 }
                             }

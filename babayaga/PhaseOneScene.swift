@@ -44,7 +44,7 @@ class PhaseOneScene: GameSceneBase {
 
         /// Iniciar rotação do primeiro planeta
         planetControllers[0].startRotation()
-        
+        planetControllers[0].addHouse(angleInDegrees: 90)
         /// Adiciona Ornamentos
         planetControllers[0].makePlanetType(type: .threeGrass)
         planetControllers[1].makePlanetType(type: .twoGrass)
