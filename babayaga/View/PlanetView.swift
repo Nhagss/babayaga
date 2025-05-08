@@ -15,7 +15,7 @@ class PlanetView: SKNode {
     let orbitAnchor = SKSpriteNode()
     let playerNode = PlayerView()
     var ingredients: [IngredientController] = []
-    var obstacles: [ObjectView] = []
+    var objects: [ObjectView] = []
     
     var gravityField = SKFieldNode.radialGravityField()
 
@@ -62,8 +62,8 @@ class PlanetView: SKNode {
         playerAnchor.removeAction(forKey: "rotation")
     }
     
-    func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
-        let obstacle = ObjectView(withCollision: withCollision, texture: texture, size: size)
+    func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, isHouse: Bool = false, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
+        let object = ObjectView(withCollision: withCollision, isHouse: isHouse, texture: texture, size: size)
         
         let radius = world.frame.width / 2 + size.height / 2.5 + distanceToPlanet
         let angleInRadians = angleInDegrees * .pi / 180
@@ -71,11 +71,11 @@ class PlanetView: SKNode {
         let x = radius * cos(angleInRadians)
         let y = radius * sin(angleInRadians)
         
-        obstacle.position = CGPoint(x: x, y: y)
-        obstacle.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
-        obstacle.zPosition = -1
-        orbitAnchor.addChild(obstacle)
-        obstacles.append(obstacle)
+        object.position = CGPoint(x: x, y: y)
+        object.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
+        object.zPosition = -1
+        orbitAnchor.addChild(object)
+        objects.append(object)
     }
     
     func addIngredient(model: Ingredient, angleInDegrees: CGFloat) {
