@@ -24,3 +24,7 @@ struct GameControlsView: View {
         .frame(maxWidth: .infinity)
     }
 }
+
+#Preview {
+    GameControlsView(onChangeDirection: {}, onChangePlanet: {})
+}

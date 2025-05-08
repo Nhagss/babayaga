@@ -30,7 +30,7 @@ class GameSceneBase: SKScene {
         setupStairs()
         
         physicsWorld.contactDelegate = self
-
+        
     }
     
     private func setupCamera() {
@@ -107,7 +107,7 @@ class GameSceneBase: SKScene {
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
             planetControllers[currentPlanetIndex].slowDownRotation()
-
+            
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = false
             planetControllers[currentPlanetIndex].startRotation()
@@ -129,6 +129,36 @@ class GameSceneBase: SKScene {
         
         cameraNode.position = newPosition
     }
+    
+    
+    
+    func distributeIngredients(_ ingredients: [(Int, String)], toPlanets planetCount: Int, difficulty: Double = 0.5) {
+        guard planetCount > 0 && planetControllers.count >= planetCount else {
+            print("Erro: Número de planetas solicitado maior do que planetas disponíveis")
+            return
+        }
+        
+        // Limita os ingredientes para que não ultrapassem o número de planetas
+        var availableIngredients = ingredients.shuffled().prefix(min(ingredients.count, planetCount))
+        
+        // Cria um array com os índices dos planetas disponíveis para receber ingredientes
+        var availablePlanets = Array(0..<planetCount).shuffled()
+        
+        // Ajusta a quantidade de ingredientes com base na dificuldade
+        let maxIngredients = Int(Double(planetCount) * difficulty)
+        availableIngredients = availableIngredients.prefix(maxIngredients)
+        
+        // Distribui os ingredientes
+        for ingredient in availableIngredients {
+            // Decide se o planeta vai receber o ingrediente com base na dificuldade
+            if let planetIndex = availablePlanets.popLast(), Bool.random() || difficulty >= 0.75 {
+                let angle = CGFloat.random(in: 0...360)
+                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1), angleInDegrees: angle)
+            }
+        }
+    }
+
+    
     
     private func handleIngredientContact(_ contact: SKPhysicsContact) {
         let bodies = [contact.bodyA, contact.bodyB]

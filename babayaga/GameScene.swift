@@ -72,8 +72,8 @@ class GameScene: SKScene {
         guard planetControllers.count >= 2 else { return }
         
         for i in 1..<(planetControllers.count) {
-            let start = planetControllers[i].view.position
-            let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
+            _ = planetControllers[i].view.position
+            _ = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
             let stair = StairController(from: planetControllers[i], to: planetControllers[i].parent ?? planetControllers[i])
             
