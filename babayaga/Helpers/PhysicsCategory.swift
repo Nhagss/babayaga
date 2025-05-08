@@ -13,5 +13,6 @@ struct PhysicsCategory {
     static let planet: UInt32 = 0x1 << 2
     static let stair: UInt32 = 0x1 << 3
     static let ingredient: UInt32 = 0x1 << 4
+    static let house: UInt32 = 0x1 << 5
     static let none: UInt32 = 0
 }

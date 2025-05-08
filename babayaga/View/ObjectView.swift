@@ -10,15 +10,15 @@ import SpriteKit
 
 class ObjectView: SKSpriteNode {
     
-    init(withCollision: Bool, texture: SKTexture?, size: CGSize) {
+    init(withCollision: Bool, isHouse: Bool = false, texture: SKTexture?, size: CGSize) {
         let size = size
         super.init(texture: texture, color: .systemYellow, size: size)
         if (withCollision) {
-            setupPhysics()
+            setupPhysics(isHouse: isHouse)
         }
     }
     
-    private func setupPhysics() {
+    private func setupPhysics(isHouse: Bool) {
         physicsBody = SKPhysicsBody(rectangleOf: size)
         
         physicsBody?.friction = 0
@@ -27,7 +27,7 @@ class ObjectView: SKSpriteNode {
         physicsBody?.affectedByGravity = false
         physicsBody?.usesPreciseCollisionDetection = true
         
-        physicsBody?.categoryBitMask = PhysicsCategory.obstacle
+        physicsBody?.categoryBitMask = isHouse ? PhysicsCategory.obstacle : PhysicsCategory.house
         physicsBody?.collisionBitMask = PhysicsCategory.none
         physicsBody?.contactTestBitMask = PhysicsCategory.player
     }
