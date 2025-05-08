@@ -1,15 +1,26 @@
+//
+//  GameSceneBase.swift
+//  babayaga
+//
+//  Created by honorio on 08/05/25.
+//
+
 import SpriteKit
 import GameplayKit
 import SwiftUI
 
-class GameScene: SKScene {
+class GameSceneBase: SKScene {
     
     var currentPlanetIndex = 0
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
-    var planetControllers: [PlanetController] = []
     var nextPlanetID: UUID = UUID()
-    private var stairControllers: [StairController] = []
+    var planetControllers: [PlanetController] = []
+    var stairControllers: [StairController] = []
+    var collectedIngredients: [IngredientController] = []
+    
+    /// Closure para notificar a coleta de ingredientes
+    var onIngredientCollected: (([Ingredient]) -> Void)?
     
     override func didMove(to view: SKView) {
         
@@ -19,23 +30,7 @@ class GameScene: SKScene {
         setupStairs()
         
         physicsWorld.contactDelegate = self
-        
-        let ingredientesDisponiveis = [
-            (1, "Pó de fada"), (2, "Suor de goblin"), (3, "Pena de corvo"),
-            (4, "Água da lua cheia")
-        ]
-        
-        // Exemplo: adicionar 2 ingredientes no planeta 0
-        for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
-            let ingrediente = Ingredient(id: id, name: name)
-            planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-            planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-        }
-        
-        /// Iniciar rotação do primeiro planeta
-        planetControllers[0].startRotation()
-        
+
     }
     
     private func setupCamera() {
@@ -48,32 +43,14 @@ class GameScene: SKScene {
         gameWorld.position = CGPoint(x: frame.minX, y: frame.minY)
     }
     
-    private func setupPlanets() {
-        let planet1 = PlanetController()
-        let planet2 = PlanetController(parent: planet1)
-        let planet3 = PlanetController(parent: planet2)
-        
-        planet1.view.position = CGPoint(x: 50, y: -150)
-        planet2.view.position = CGPoint(x: -250, y: 150)
-        planet3.view.position = CGPoint(x: 150, y: 400)
-        
-        planetControllers = [planet1, planet2, planet3]
-        
-        for controller in planetControllers {
-            gameWorld.addChild(controller.view)
-        }
-        planetControllers[0].addHouse(angleInDegrees: 90)
-        planetControllers[1].makePlanetType(type: .complete)
-        planetControllers[2].makePlanetType(type: .twoGrass)
-        planetControllers[0].makePlanetType(type: .threeGrass)
-    }
+    func setupPlanets() {}
     
     private func setupStairs() {
         guard planetControllers.count >= 2 else { return }
         
         for i in 1..<(planetControllers.count) {
-            let start = planetControllers[i].view.position
-            let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
+            _ = planetControllers[i].view.position
+            _ = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
             let stair = StairController(from: planetControllers[i], to: planetControllers[i].parent ?? planetControllers[i])
             
@@ -109,11 +86,6 @@ class GameScene: SKScene {
         }
     }
     
-    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
-        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
-        return set == Set([a, b])
-    }
-    
     override func update(_ currentTime: TimeInterval) {
         let player = planetControllers[currentPlanetIndex].view.playerNode
         
@@ -123,7 +95,7 @@ class GameScene: SKScene {
             if player.getChacterHitBox.intersects(stair.view) {
                 isTouchingStair = true
                 
-                // Só atualiza o próximo planeta se ainda não estava na escada
+                /// Só atualiza o próximo planeta se ainda não estava na escada
                 if !planetControllers[currentPlanetIndex].isContactingStair {
                     nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
                     print("Novo nextPlanetID definido:", nextPlanetID)
@@ -135,7 +107,7 @@ class GameScene: SKScene {
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
             planetControllers[currentPlanetIndex].slowDownRotation()
-            
+
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = false
             planetControllers[currentPlanetIndex].startRotation()
@@ -176,16 +148,58 @@ class GameScene: SKScene {
     private func processCollectedIngredient(_ ingredient: IngredientController, on planet: PlanetController) {
         guard ingredient.view.parent != nil else { return }
         
-        // Remove o ingrediente da cena
-        ingredient.view.removeFromParent()
+        /// Remove o ingrediente da cena
+        ingredient.collect()
         
-        // Remove da lista de ingredientes ativos no planeta
+        /// Adiciona a Fila
+        ingredient.push(ingredient.model)
+        
+        /// Chama o closure para atualizar a UI na GameViewController
+        onIngredientCollected?(ingredient.stack)  // Passa a pilha atualizada
+        
+        /// Remove da lista de ingredientes ativos no planeta
         if let index = planet.view.ingredients.firstIndex(where: { $0 === ingredient }) {
             planet.view.ingredients.remove(at: index)
         }
         
-        // Aqui você pode guardar o ingrediente coletado num inventário futuro
+        /// Aqui você pode guardar o ingrediente coletado num inventário futuro
         print("Ingrediente coletado: \(ingredient.model.name)")
+    }
+    
+    func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
+        let words = text.split(separator: " ")
+        var lines: [String] = []
+        var currentLine = ""
+        
+        let tempLabel = SKLabelNode(fontNamed: fontName)
+        tempLabel.fontSize = fontSize
+        
+        for word in words {
+            let testLine = currentLine.isEmpty ? String(word) : "\(currentLine) \(word)"
+            tempLabel.text = testLine
+            if tempLabel.frame.width > maxWidth {
+                lines.append(currentLine)
+                currentLine = String(word)
+            } else {
+                currentLine = testLine
+            }
+        }
+        lines.append(currentLine)
+        
+        let parentNode = SKNode()
+        for (i, line) in lines.enumerated() {
+            let label = SKLabelNode(text: line)
+            label.fontName = fontName
+            label.fontSize = fontSize
+            label.fontName = "HelveticaNeue-Bold"
+            label.fontColor = fontColor
+            label.horizontalAlignmentMode = .center
+            label.verticalAlignmentMode = .center
+            label.position = CGPoint(x: 0, y: CGFloat(-i) * (fontSize + 4))
+            parentNode.addChild(label)
+        }
+        
+        return parentNode
     }
     
     private func showHouseMessage(at position: CGPoint, text: String) {
@@ -231,11 +245,14 @@ class GameScene: SKScene {
     }
 }
 
-extension GameScene: SKPhysicsContactDelegate {
+extension GameSceneBase: SKPhysicsContactDelegate {
+    
+    func contactBetween(_ contact: SKPhysicsContact, _ a: UInt32, _ b: UInt32) -> Bool {
+        let set = Set([contact.bodyA.categoryBitMask, contact.bodyB.categoryBitMask])
+        return set == Set([a, b])
+    }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        
-        
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             print("Player colidiu com obstáculo!")
             planetControllers[currentPlanetIndex].reverseRotation()
@@ -253,60 +270,9 @@ extension GameScene: SKPhysicsContactDelegate {
             print("contato ingrediente")
             handleIngredientContact(contact)
         }
-        
-        //        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-        //            print("Player tocou na escada!")
-        //            planetControllers[currentPlanetIndex].isContactingStair = true
-        //            planetControllers[currentPlanetIndex].slowDownRotation()
-        //        }
     }
-    
-    //    func didEnd(_ contact: SKPhysicsContact) {
-    //        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.stair) {
-    //            print("Player saiu da escada!")
-    //            planetControllers[currentPlanetIndex].isContactingStair = false
-    //            planetControllers[currentPlanetIndex].startRotation()
-    //        }
-    //    }
-    
 }
 
 #Preview {
     GameViewController()
-}
-
-func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
-    let words = text.split(separator: " ")
-    var lines: [String] = []
-    var currentLine = ""
-    
-    let tempLabel = SKLabelNode(fontNamed: fontName)
-    tempLabel.fontSize = fontSize
-    
-    for word in words {
-        let testLine = currentLine.isEmpty ? String(word) : "\(currentLine) \(word)"
-        tempLabel.text = testLine
-        if tempLabel.frame.width > maxWidth {
-            lines.append(currentLine)
-            currentLine = String(word)
-        } else {
-            currentLine = testLine
-        }
-    }
-    lines.append(currentLine)
-    
-    let parentNode = SKNode()
-    for (i, line) in lines.enumerated() {
-        let label = SKLabelNode(text: line)
-        label.fontName = fontName
-        label.fontSize = fontSize
-        label.fontName = "HelveticaNeue-Bold"
-        label.fontColor = fontColor
-        label.horizontalAlignmentMode = .center
-        label.verticalAlignmentMode = .center
-        label.position = CGPoint(x: 0, y: CGFloat(-i) * (fontSize + 4))
-        parentNode.addChild(label)
-    }
-    
-    return parentNode
 }

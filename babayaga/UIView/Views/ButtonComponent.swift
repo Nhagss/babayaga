@@ -8,19 +8,23 @@
 import SwiftUI
 
 struct ButtonComponent: View {
+    
+    var image: ImageResource
+    var action: () -> Void
+    
     var body: some View {
-        ZStack {
+        Button(action: action) {
             Circle()
-                .fill(Color.black) 
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 2)
-                )
+                .fill(Color.black)
+                .strokeBorder(.white, lineWidth: 2)
                 .frame(width: 80, height: 80) // Tamanho do botão
+                .overlay {
+                    Image(image)
+                }
         }
     }
 }
 
 #Preview {
-    ButtonComponent()
+    ButtonComponent(image: .reverseButton, action: {})
 }

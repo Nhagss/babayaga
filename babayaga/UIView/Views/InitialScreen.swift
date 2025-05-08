@@ -46,13 +46,15 @@ struct InitialScreen: View {
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                        .ignoresSafeArea()
+                                        .navigationBarBackButtonHidden()
                                 }
                             }
                     }
                     
                     HStack(spacing: 150){
-                        ButtonComponent()
-                        ButtonComponent()
+                        ButtonComponent(image: .shinyEye, action: {})
+                        ButtonComponent(image: .shinyEye, action: {})
                     }
                 }
             }

@@ -11,33 +11,22 @@ import SwiftUI
 class GameViewController: UIViewController {
     
     var spriteKitView = SKView()
-    let scene = GameScene()
+    let scene = PhaseOneScene()
     let backgroundView = UIHostingController(rootView: BackgroundGame())
     
-    var changeDirectionBTN: UIButton! = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.backgroundColor = .gray
-        return btn
+    var inventoryStackView: UIStackView!
+    
+    var controlsView: UIHostingController<GameControlsView>?
+    
+    var capsuleView: UIView! = {
+        let capsule = UIView()
+        capsule.backgroundColor = .systemGray
+        capsule.layer.cornerRadius = 10
+        capsule.layer.masksToBounds = true
+        capsule.translatesAutoresizingMaskIntoConstraints = false
+        capsule.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        return capsule;
     }()
-    
-    var changePlanetButton: UIButton! = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.backgroundColor = .gray
-        return btn
-    }()
-    
-    @objc func changeDirection(_ sender: UIButton) {
-//        scene.changeDirection(planet: scene.planets[scene.currentPlanetIndex])
-        scene.planetControllers[scene.currentPlanetIndex].reverseRotation()
-    }
-    
-    @objc func changePlanet(_ sender: UIButton) {
-        scene.planetControllers[scene.currentPlanetIndex].jump()
-        scene.changePlanet()
-        changePlanetButton.setTitle("\(scene.currentPlanetIndex)", for: .normal)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,32 +52,84 @@ class GameViewController: UIViewController {
         spriteKitView.frame = view.bounds
         view.addSubview(spriteKitView)
         
-        view.addSubview(changeDirectionBTN)
-        view.addSubview(changePlanetButton)
+        // Criando o UIHostingController para os controles
+        controlsView = UIHostingController(rootView: GameControlsView(
+            onChangeDirection: { [weak self] in
+                self?.scene.planetControllers[self?.scene.currentPlanetIndex ?? 0].reverseRotation()
+            },
+            onChangePlanet: { [weak self] in
+                self?.scene.planetControllers[self?.scene.currentPlanetIndex ?? 0].jump()
+                self?.scene.changePlanet()
+            }
+        ))
+
         
-#if DEBUG
+        // Adicionando a view do UIHostingController à hierarquia
+        if let controlsView = controlsView?.view {
+            view.addSubview(controlsView)
+            controlsView.backgroundColor = .clear
+            controlsView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                controlsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                controlsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                controlsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                controlsView.heightAnchor.constraint(equalToConstant: 150) // Ajuste conforme necessário
+            ])
+        }
+
+        view.addSubview(capsuleView)
+        
+        #if DEBUG
         spriteKitView.ignoresSiblingOrder = true
         spriteKitView.showsFPS = true
         spriteKitView.showsNodeCount = true
-#endif
+        #endif
         
-        changeDirectionBTN.addTarget(self, action: #selector(changeDirection), for: .touchUpInside)
-        changeDirectionBTN.layer.zPosition = 10
+        // Configuração do Inventário (UIStackView)
+        inventoryStackView = UIStackView()
+        inventoryStackView.axis = .horizontal // Agora os ingredientes vão se alinhar horizontalmente
+        inventoryStackView.spacing = 10
+        inventoryStackView.translatesAutoresizingMaskIntoConstraints = true
+        view.addSubview(inventoryStackView)
+        
         NSLayoutConstraint.activate([
-            changeDirectionBTN.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2),
-            changeDirectionBTN.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
-            changeDirectionBTN.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
-            changeDirectionBTN.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+            inventoryStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 25),
+            inventoryStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            inventoryStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
-        changePlanetButton.addTarget(self, action: #selector(changePlanet), for: .touchUpInside)
-        changePlanetButton.layer.zPosition = 10
         NSLayoutConstraint.activate([
-            changePlanetButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2),
-            changePlanetButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
-            changePlanetButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
-            changePlanetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            capsuleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            capsuleView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            capsuleView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
+        
+        // Configuração do closure para notificar a GameViewController
+        scene.onIngredientCollected = { [weak self] collectedIngredients in
+            // Aqui, vamos garantir que estamos passando um array de IngredientController
+            let ingredientControllers = collectedIngredients.map { IngredientController(model: $0) }
+            self?.updateInventory(with: ingredientControllers)
+        }
+    }
+    
+    // Atualiza a UI com as views dos ingredientes coletados
+    func updateInventory(with stack: [IngredientController]) {
+        // Limpa o inventário atual
+        inventoryStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Adiciona as views dos ingredientes no StackView
+        for ingredientController in stack {
+            // Cria a imagem usando o nome do arquivo do ingrediente
+            let imageName = "goldCoin\(ingredientController.model.id)"
+            if let image = UIImage(named: imageName) {
+                let imageView = UIImageView(image: image)
+                imageView.contentMode = .scaleAspectFit
+                imageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                imageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+                inventoryStackView.addArrangedSubview(imageView)
+            }
+        }
     }
 
     

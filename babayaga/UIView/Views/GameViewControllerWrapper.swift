@@ -24,6 +24,7 @@ struct GameSceneView: View {
     var scene: SKScene {
         let scene = GameScene()
         scene.scaleMode = .resizeFill
+        
         return scene
     }
     

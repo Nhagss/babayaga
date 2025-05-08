@@ -79,7 +79,7 @@ class PlayerView: SKNode {
         
         // Pernas
         let frontFoot = createAnimatedAnchor(image: "foot", angle1: -0.3, angle2: 0.3)
-        let backFoot = createAnimatedAnchor(image: "backFoot", angle1: 0.3, angle2: -0.3)
+        let backFoot = createAnimatedAnchor(image: "foot", angle1: 0.3, angle2: -0.3)
         frontFoot.position.y = 40
         backFoot.position.y = 40
         center.addChild(frontFoot)
