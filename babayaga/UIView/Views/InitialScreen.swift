@@ -38,6 +38,8 @@ struct InitialScreen: View {
                 VStack(spacing: 80) {
                     Button(action: {
                         router.goToGameScene()
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
                     }) {
                         PlayButton()
                             .padding(.top, 300)
