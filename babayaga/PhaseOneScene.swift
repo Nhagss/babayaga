@@ -14,7 +14,10 @@ class PhaseOneScene: GameSceneBase {
         (1, "Pó de fada"),
         (2, "Suor de goblin"),
         (2, "Suor de goblin"),
-        (2, "Suor de goblin")
+        (2, "Cabelo de glblin"),
+        (3, "Cabelo de glblin"),
+        (3, "Cabelo de glblin"),
+        (3, "Cabelo de glblin")
     ]
     
     override func setupPlanets() {
@@ -34,13 +37,15 @@ class PhaseOneScene: GameSceneBase {
         
         // MARK: Outros ajustes específicos para Fase
         /// Exemplo: adicionar 2 ingredientes no planeta 0
-        for (id, name) in ingredientesDisponiveis.shuffled().prefix(2) {
+        for (id, name) in ingredientesDisponiveis.shuffled() {
             let ingrediente = Ingredient(id: id, name: name)
             planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+
         }
         
         /// Adiciona Obstáculos
-        planetControllers[1].addObject(angleInDegrees: 90)
+        planetControllers[1].addObstacle(angleInDegrees: 90)
 
         /// Iniciar rotação do primeiro planeta
         planetControllers[0].startRotation()
