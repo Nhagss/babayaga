@@ -27,7 +27,7 @@ class ObjectView: SKSpriteNode {
         physicsBody?.affectedByGravity = false
         physicsBody?.usesPreciseCollisionDetection = true
         
-        physicsBody?.categoryBitMask = isHouse ? PhysicsCategory.obstacle : PhysicsCategory.house
+        physicsBody?.categoryBitMask = isHouse ? PhysicsCategory.house : PhysicsCategory.obstacle
         physicsBody?.collisionBitMask = PhysicsCategory.none
         physicsBody?.contactTestBitMask = PhysicsCategory.player
     }
