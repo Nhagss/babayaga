@@ -30,7 +30,7 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         addChild(backgroundView)
         view.addSubview(backgroundView.view)
         backgroundView.view.translatesAutoresizingMaskIntoConstraints = false
@@ -105,6 +105,21 @@ class GameViewController: UIViewController {
             capsuleView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
+        let button = UIButton(type: .system)
+                button.setTitle("Clique aqui", for: .normal)
+                button.backgroundColor = .systemBlue
+                button.setTitleColor(.white, for: .normal)
+                button.layer.cornerRadius = 8
+                button.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 25)
+                ])
+        
+        button.addTarget(self, action: #selector(openMenuView), for: .touchUpInside)
+        
         // Configuração do closure para notificar a GameViewController
         scene.onIngredientCollected = { [weak self] collectedIngredients in
             // Aqui, vamos garantir que estamos passando um array de IngredientController
@@ -131,6 +146,12 @@ class GameViewController: UIViewController {
             }
         }
     }
+    
+    @objc func openMenuView() {
+            let swiftUIView = MenuView()
+            let hostingController = UIHostingController(rootView: swiftUIView)
+            self.present(hostingController, animated: true, completion: nil)
+        }
 
     
     // Funções de orientação e status bar (mantidas como antes)

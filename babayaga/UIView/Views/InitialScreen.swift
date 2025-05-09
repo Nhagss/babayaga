@@ -50,6 +50,8 @@ struct InitialScreen: View {
                                     GameViewControllerWrapper()
                                         .ignoresSafeArea()
                                         .navigationBarBackButtonHidden()
+                                case .InitialScreen:
+                                    InitialScreen()
                                 }
                             }
                     }

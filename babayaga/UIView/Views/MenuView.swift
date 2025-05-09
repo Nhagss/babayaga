@@ -8,35 +8,31 @@
 import SwiftUI
 
 struct MenuView: View {
+    let labels = ["Reiniciar fase", "Voltar ao Menu", "Retornar ao jogo"]
+    let icons = ["revolving", "home", ""]
+    let View : [AnyView] = []
+
     var body: some View {
         ZStack {
             Image("menu_background")
-            
+
             VStack(spacing: 40) {
-                HStack {
-                    Image("revolving")
-                    Text("Reiniciar fase")
-                        .font(.custom("Quicksand-Medium", size: 27))
-                        .foregroundStyle(.white)
-                    
+                ForEach(0..<labels.count, id: \.self) { index in
+                    HStack{
+                        if !icons[index].isEmpty {
+                            Image(icons[index])
+                        }
+                        Text(labels[index])
+                            .font(.custom("Quicksand-Medium", size: 24))
+                            .foregroundColor(.white)
+                    }
                 }
-                HStack {
-                    Image("home")
-                    Text("Voltar ao Menu")
-                        .font(.custom("Quicksand-Medium", size: 27))
-                        .foregroundStyle(.white)
-                    
-                }
-                
-                Text("Retornar ao jogo")
-                    .font(.custom("Quicksand-Medium", size: 27))
-                    .foregroundStyle(.white)
-                
             }
-            .padding(.top)
+            .padding()
         }
     }
 }
+
 
 #Preview {
     MenuView()
