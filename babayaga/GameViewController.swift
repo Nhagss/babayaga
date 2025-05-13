@@ -9,7 +9,7 @@ import UIKit
 import SpriteKit
 import SwiftUI
 class GameViewController: UIViewController {
-    @EnvironmentObject var router: Router
+    var router: Router = Router.shared
     
     var spriteKitView = SKView()
     let scene = PhaseOneScene()
@@ -168,12 +168,20 @@ class GameViewController: UIViewController {
         scene.isPaused = true
 
         // Cria o menu SwiftUI
-        let swiftUIView = MenuView(onClose: { [weak self] in
+        let menuView = MenuView { [weak self] menuButton in
+            switch menuButton.destination {
+            case .GameViewController:
+                self?.scene.isPaused = false
+                // TODO: Reiniciar jogo!
+                return
+            case .InitialScreen:
+                self?.router.backToMenu()
+            }
+        } onClose: { [weak self] in
             self?.scene.isPaused = false
             self?.dismiss(animated: true, completion: nil)
-        })
-
-        let hostingController = UIHostingController(rootView: swiftUIView)
+        }
+        let hostingController = UIHostingController(rootView: menuView)
         hostingController.modalPresentationStyle = .fullScreen // Apresenta como tela cheia
         present(hostingController, animated: true, completion: nil)
     }

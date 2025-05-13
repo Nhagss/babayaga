@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 class Router: ObservableObject {
+    static var shared: Router = Router()
+    
     @Published var path = NavigationPath()
 
     func goToGameScene() {
@@ -17,5 +19,9 @@ class Router: ObservableObject {
     
     func goToInitialScreen(){
         path.append(Views.InitialScreen.self)
+    }
+    
+    func backToMenu() {
+        path = .init()
     }
 }

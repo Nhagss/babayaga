@@ -9,7 +9,10 @@ import SwiftUI
 import Foundation
 
 struct MenuView: View {
-    @EnvironmentObject var router: Router
+    @ObservedObject var router: Router = Router.shared
+    @Environment(\.dismiss) var dismiss
+    
+    var onTap: ((MenuButton) -> Void)?
     var onClose: (() -> Void)? = nil
     
     let menubuttons: [MenuButton] = [
@@ -19,33 +22,32 @@ struct MenuView: View {
     ]
         
     var body: some View {
-            ZStack {
-                BackgroundGame()
-                    .blur(radius: 5)
-                Image("menu_background")
-                    .padding(.bottom, 20)
-                
-                VStack(spacing: 35) {
-                    ForEach(menubuttons) { button in
-                        Button(action: {
-                            router.path.append(button.destination)
-                            
-                        }) {
-                            HStack {
-                                if let icon = button.icon, !icon.isEmpty {
-                                    Image(icon)
-                                }
-                                Text(button.label)
-                                    .font(.custom("Quicksand-Medium", size: 24))
-                                    .foregroundColor(.white)
+        ZStack {
+            BackgroundGame()
+                .blur(radius: 5)
+            Image("menu_background")
+                .padding(.bottom, 20)
+            
+            VStack(spacing: 35) {
+                ForEach(menubuttons) { button in
+                    Button(action: {
+                        dismiss()
+                        self.onTap?(button)
+                    }) {
+                        HStack {
+                            if let icon = button.icon, !icon.isEmpty {
+                                Image(icon)
                             }
+                            Text(button.label)
+                                .font(.custom("Quicksand-Medium", size: 24))
+                                .foregroundColor(.white)
                         }
                     }
                 }
-            }/*.environmentObject(router)*/
-            
             }
+        }
     }
+}
 
 #Preview {
     MenuView()

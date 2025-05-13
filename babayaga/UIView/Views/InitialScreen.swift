@@ -9,9 +9,7 @@ import SwiftUI
 import SpriteKit
 import Foundation
 struct InitialScreen: View {
-    
-    @ObservedObject private var router = Router()
-    
+    @ObservedObject private var router = Router.shared
     var body: some View {
         NavigationStack (path: $router.path) {
             
@@ -43,18 +41,6 @@ struct InitialScreen: View {
                     }) {
                         PlayButton()
                             .padding(.top, 300)
-                        
-                            .navigationDestination(for: Views.self) { view in
-                                switch view {
-                                case .GameViewController:
-                                    GameViewControllerWrapper()
-                                        .ignoresSafeArea()
-                                        .navigationBarBackButtonHidden()
-                                        
-                                case .InitialScreen:
-                                    InitialScreen()
-                                }
-                            }
                     }
                     
                     HStack(spacing: 150){
@@ -64,7 +50,16 @@ struct InitialScreen: View {
                 }
             }
             .ignoresSafeArea()
-            
+            .navigationDestination(for: Views.self) { view in
+                switch view {
+                case .GameViewController:
+                    GameViewControllerWrapper()
+                        .ignoresSafeArea()
+                        .navigationBarBackButtonHidden()
+                case .InitialScreen:
+                    InitialScreen()
+                }
+            }
         }
         .environmentObject(router)
         
