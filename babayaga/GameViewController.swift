@@ -9,6 +9,7 @@ import UIKit
 import SpriteKit
 import SwiftUI
 class GameViewController: UIViewController {
+    @EnvironmentObject var router: Router
     
     var spriteKitView = SKView()
     let scene = PhaseOneScene()
@@ -105,19 +106,35 @@ class GameViewController: UIViewController {
             capsuleView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
+        // Cria a imagem de fundo do botão de pause
+        let backgroundPauseImageView = UIImageView(image: UIImage(named: "backgroundpause"))
+        backgroundPauseImageView.contentMode = .scaleAspectFit
+        backgroundPauseImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backgroundPauseImageView)
+
+        // Constraints para posicionar atrás do botão
+        NSLayoutConstraint.activate([
+            backgroundPauseImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            backgroundPauseImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            backgroundPauseImageView.widthAnchor.constraint(equalToConstant: 70),
+            backgroundPauseImageView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
         let button = UIButton(type: .system)
-                button.setTitle("Clique aqui", for: .normal)
-                button.backgroundColor = .systemBlue
-                button.setTitleColor(.white, for: .normal)
-                button.layer.cornerRadius = 8
-                button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        button.tintColor = .white
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(button)
         
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 25)
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            button.widthAnchor.constraint(equalToConstant: 70),
+            button.heightAnchor.constraint(equalToConstant: 50)
                 ])
-        
+       
         button.addTarget(self, action: #selector(openMenuView), for: .touchUpInside)
         
         // Configuração do closure para notificar a GameViewController
@@ -148,10 +165,18 @@ class GameViewController: UIViewController {
     }
     
     @objc func openMenuView() {
-            let swiftUIView = MenuView()
-            let hostingController = UIHostingController(rootView: swiftUIView)
-            self.present(hostingController, animated: true, completion: nil)
-        }
+        scene.isPaused = true
+
+        // Cria o menu SwiftUI
+        let swiftUIView = MenuView(onClose: { [weak self] in
+            self?.scene.isPaused = false
+            self?.dismiss(animated: true, completion: nil)
+        })
+
+        let hostingController = UIHostingController(rootView: swiftUIView)
+        hostingController.modalPresentationStyle = .fullScreen // Apresenta como tela cheia
+        present(hostingController, animated: true, completion: nil)
+    }
 
     
     // Funções de orientação e status bar (mantidas como antes)

@@ -7,10 +7,10 @@
 
 import SwiftUI
 import SpriteKit
-
+import Foundation
 struct InitialScreen: View {
     
-    @StateObject private var router = Router()
+    @ObservedObject private var router = Router()
     
     var body: some View {
         NavigationStack (path: $router.path) {
@@ -50,6 +50,7 @@ struct InitialScreen: View {
                                     GameViewControllerWrapper()
                                         .ignoresSafeArea()
                                         .navigationBarBackButtonHidden()
+                                        
                                 case .InitialScreen:
                                     InitialScreen()
                                 }
@@ -63,9 +64,11 @@ struct InitialScreen: View {
                 }
             }
             .ignoresSafeArea()
-            .environmentObject(router)
             
         }
+        .environmentObject(router)
+        
+        
     }
 }
 

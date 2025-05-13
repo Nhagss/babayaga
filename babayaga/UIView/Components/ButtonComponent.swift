@@ -17,7 +17,7 @@ struct ButtonComponent: View {
             Circle()
                 .fill(Color.black)
                 .strokeBorder(.white, lineWidth: 2)
-                .frame(width: 80, height: 80) // Tamanho do botão
+                .frame(width: 80, height: 80) 
                 .overlay {
                     Image(image)
                 }
