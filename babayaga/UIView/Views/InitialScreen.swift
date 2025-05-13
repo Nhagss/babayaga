@@ -46,8 +46,14 @@ struct InitialScreen: View {
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                        .onAppear {
+                                            AudioManager.shared.playSound(named: "fasesIniciais")
+                                        }
                                         .ignoresSafeArea()
                                 }
+                            }
+                            .onAppear {
+                                AudioManager.shared.playSound(named: "temaPrincipal")
                             }
                     }
                     
