@@ -17,7 +17,7 @@ struct IngredientPanelView: View {
             ForEach(gameSceneManager.ingredients, id: \.id) { ingredient in
                 HStack(spacing: 2) {
                     // Substitua por seu asset .goldCoin1 ou use SF Symbols para teste
-                    Image("goldCoin\(ingredient.id)")
+                    Image("ingredient\(ingredient.id)")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 20, height: 20)

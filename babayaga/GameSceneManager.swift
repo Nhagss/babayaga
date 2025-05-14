@@ -15,9 +15,9 @@ class GameSceneManager: ObservableObject {
     @Published var isShowingLevelSelection = false
     @Published var ingredients = [Ingredient]()
     
-    weak var viewController: GameViewControllerBase?
+    weak var viewController: GameViewController?
     
-    init(viewController: GameViewControllerBase? = nil) {
+    init(viewController: GameViewController? = nil) {
         self.viewController = viewController
     }
     

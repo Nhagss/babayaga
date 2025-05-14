@@ -145,5 +145,5 @@ class PlayerView: SKNode {
 }
 
 #Preview {
-    GameViewControllerBase()
+    GameViewController()
 }

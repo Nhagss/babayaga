@@ -272,7 +272,7 @@ extension GameScene: SKPhysicsContactDelegate {
 }
 
 #Preview {
-    GameViewControllerBase()
+    GameViewController()
 }
 
 func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {

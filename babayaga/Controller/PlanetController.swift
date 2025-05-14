@@ -107,9 +107,9 @@ class PlanetController {
             addGrass(angleInDegrees: 340)
             addGrass(angleInDegrees: 100)
             break
-        default:
-            print("not a planet type")
-            break
+//        default:
+//            print("not a planet type")
+//            break
         }
         
     }

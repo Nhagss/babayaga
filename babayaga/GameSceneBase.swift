@@ -308,5 +308,5 @@ extension GameSceneBase: SKPhysicsContactDelegate {
 }
 
 #Preview {
-    GameViewControllerBase()
+    GameViewController()
 }
