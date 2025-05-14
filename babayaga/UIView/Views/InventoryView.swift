@@ -25,9 +25,9 @@ struct InventoryView: View {
 
 #Preview {
     InventoryView(ingredients: [
-        Ingredient(id: 1, name: "Pó de fada"),
-        Ingredient(id: 2, name: "Suor de goblin"),
-        Ingredient(id: 3, name: "Pena de corvo"),
-        Ingredient(id: 4, name: "Água da lua cheia")
+        Ingredient(id: 1, name: "Pó de fada", total: 3),
+        Ingredient(id: 2, name: "Suor de goblin", total: 2),
+        Ingredient(id: 3, name: "Pena de corvo", total: 1),
+        Ingredient(id: 4, name: "Água da lua cheia", total: 4)
     ])
 }

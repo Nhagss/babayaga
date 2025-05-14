@@ -7,11 +7,12 @@
 
 import SwiftUI
 import SpriteKit
-
+import CoreHaptics
+import Foundation
 struct InitialScreen: View {
-    
-    @StateObject private var router = Router()
-    
+    @ObservedObject private var router = Router.shared
+  @State private var engine: CHHapticEngine?
+
     var body: some View {
         NavigationStack (path: $router.path) {
             
@@ -36,9 +37,10 @@ struct InitialScreen: View {
                     .foregroundStyle(.white)
                 
                 VStack(spacing: 80) {
-                    Button(action: {
+                    Button(action:  {
                         router.goToGameScene()
-                    }) {
+                        complexSuccess()
+                    }){
                         PlayButton()
                             .padding(.top, 300)
                         
@@ -46,20 +48,73 @@ struct InitialScreen: View {
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                        .onAppear {
+                                            AudioManager.shared.playSound(named: "fasesIniciais")
+                                        }
+                                        .ignoresSafeArea()
+                                case .InitialScreen:
+                                    GameViewControllerWrapper()
+                                        .onAppear {
+                                            AudioManager.shared.playSound(named: "fasesIniciais")
+                                        }
                                         .ignoresSafeArea()
                                 }
                             }
+                            .onAppear {
+                                AudioManager.shared.playSound(named: "temaPrincipal")
+                            }
                     }
+                    .onAppear(perform: prepareHaptics)
                     
                     HStack(spacing: 150){
-                        ButtonComponent(image: .shinyEye, action: {})
-                        ButtonComponent(image: .shinyEye, action: {})
+                        ButtonComponent(image: .shinyEye, action: {complexSuccess()})
+                            .onAppear(perform: prepareHaptics)
+                        ButtonComponent(image: .shinyEye, action: {complexSuccess()})
+                            .onAppear(perform: prepareHaptics)
                     }
                 }
             }
             .ignoresSafeArea()
-            .environmentObject(router)
-            
+            .navigationDestination(for: Views.self) { view in
+                switch view {
+                case .GameViewController:
+                    GameViewControllerWrapper()
+                        .ignoresSafeArea()
+                        .navigationBarBackButtonHidden()
+                case .InitialScreen:
+                    InitialScreen()
+                }
+            }
+        }
+        .environmentObject(router)
+        
+        
+    }
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("Failed to create engine: \(error.localizedDescription)")
+        }
+    }
+    func complexSuccess() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity , value: 3)
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
+        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+        let events = [event]
+        
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription)")
         }
     }
 }

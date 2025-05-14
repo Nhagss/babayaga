@@ -39,9 +39,21 @@ class IngredientController {
         return stack
     }
     
+//    func collect() {
+//        view.removeFromParent()
+//        print("Ingrediente coletado: \(model.name)")
+//    }
+    
     func collect() {
-        view.removeFromParent()
-        print("Ingrediente coletado: \(model.name)")
+        if model.remaining > 0 {
+            model.remaining -= 1
+            view.removeFromParent()
+            print("Ingrediente coletado: \(model.name) - Restantes: \(model.remaining)")
+        }
+    }
+    
+    func isCollected() -> Bool {
+        return model.remaining <= 0
     }
     
 }
