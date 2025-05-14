@@ -53,13 +53,13 @@ class PhaseTwoScene: GameSceneBase {
         /// Distribui os ingredientes com dificuldade ajustada
         planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300)
         planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 225)
-        planetControllers[2].view.addIngredient(model: ingredientesDisponiveis[2], angleInDegrees: 150)
+        planetControllers[2].view.addIngredient(model: ingredientesDisponiveis[2], angleInDegrees: 200)
         
         
         //Adiciona o inimigo porco espinho
         planetControllers[0].addEnemySpike(angleInDegrees: -180)
         planetControllers[1].addEnemySpike(angleInDegrees: 180)
-        planetControllers[2].addEnemySpike(angleInDegrees: 0)
+        planetControllers[2].addEnemySpike(angleInDegrees: 150)
 
         
         
