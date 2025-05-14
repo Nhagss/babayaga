@@ -34,6 +34,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"UIView/Fonts/GermaniaOne-Regular.ttf",
+				"UIView/Fonts/Quicksand-Medium.ttf",
 				"UIView/Fonts/Quicksand-Regular.ttf",
 			);
 			target = F7EB7AC42DB7BED100DEA835 /* babayagaTests */;
@@ -42,6 +43,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"UIView/Fonts/GermaniaOne-Regular.ttf",
+				"UIView/Fonts/Quicksand-Medium.ttf",
 				"UIView/Fonts/Quicksand-Regular.ttf",
 			);
 			target = F7EB7ACE2DB7BED100DEA835 /* babayagaUITests */;

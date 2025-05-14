@@ -8,12 +8,11 @@
 import SwiftUI
 import SpriteKit
 import CoreHaptics
-
+import Foundation
 struct InitialScreen: View {
-    
-    @StateObject private var router = Router()
-    @State private var engine: CHHapticEngine?
-    
+    @ObservedObject private var router = Router.shared
+  @State private var engine: CHHapticEngine?
+
     var body: some View {
         NavigationStack (path: $router.path) {
             
@@ -70,9 +69,20 @@ struct InitialScreen: View {
                 }
             }
             .ignoresSafeArea()
-            .environmentObject(router)
-            
+            .navigationDestination(for: Views.self) { view in
+                switch view {
+                case .GameViewController:
+                    GameViewControllerWrapper()
+                        .ignoresSafeArea()
+                        .navigationBarBackButtonHidden()
+                case .InitialScreen:
+                    InitialScreen()
+                }
+            }
         }
+        .environmentObject(router)
+        
+        
     }
     
     func prepareHaptics() {

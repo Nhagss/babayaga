@@ -10,6 +10,7 @@ import SpriteKit
 import SwiftUI
 import CoreHaptics
 class GameViewController: UIViewController {
+    var router: Router = Router.shared
     
     var engine: CHHapticEngine?
     var spriteKitView = SKView()
@@ -109,6 +110,37 @@ class GameViewController: UIViewController {
             capsuleView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
+        // Cria a imagem de fundo do botão de pause
+        let backgroundPauseImageView = UIImageView(image: UIImage(named: "backgroundpause"))
+        backgroundPauseImageView.contentMode = .scaleAspectFit
+        backgroundPauseImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backgroundPauseImageView)
+
+        // Constraints para posicionar atrás do botão
+        NSLayoutConstraint.activate([
+            backgroundPauseImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            backgroundPauseImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            backgroundPauseImageView.widthAnchor.constraint(equalToConstant: 70),
+            backgroundPauseImageView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        button.tintColor = .white
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            button.widthAnchor.constraint(equalToConstant: 70),
+            button.heightAnchor.constraint(equalToConstant: 50)
+                ])
+       
+        button.addTarget(self, action: #selector(openMenuView), for: .touchUpInside)
+        
         // Configuração do closure para notificar a GameViewController
         scene.onIngredientCollected = { [weak self] collectedIngredients in
             // Aqui, vamos garantir que estamos passando um array de IngredientController
@@ -135,6 +167,29 @@ class GameViewController: UIViewController {
             }
         }
     }
+    
+    @objc func openMenuView() {
+        scene.isPaused = true
+
+        // Cria o menu SwiftUI
+        let menuView = MenuView { [weak self] menuButton in
+            switch menuButton.destination {
+            case .GameViewController:
+                self?.scene.isPaused = false
+                // TODO: Reiniciar jogo!
+                return
+            case .InitialScreen:
+                self?.router.backToMenu()
+            }
+        } onClose: { [weak self] in
+            self?.scene.isPaused = false
+            self?.dismiss(animated: true, completion: nil)
+        }
+        let hostingController = UIHostingController(rootView: menuView)
+        hostingController.modalPresentationStyle = .fullScreen // Apresenta como tela cheia
+        present(hostingController, animated: true, completion: nil)
+    }
+  
     //MARK: Funções de Haptics custom
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
@@ -146,6 +201,7 @@ class GameViewController: UIViewController {
             print("Failed to create engine: \(error.localizedDescription)")
         }
     }
+  
     func complexSuccess() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
 
