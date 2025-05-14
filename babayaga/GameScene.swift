@@ -27,7 +27,7 @@ class GameScene: SKScene {
         
         // Exemplo: adicionar 2 ingredientes no planeta 0
         for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
-            let ingrediente = Ingredient(id: id, name: name)
+            let ingrediente = Ingredient(id: id, name: name, total: 2)
             planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
             planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
             planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
@@ -272,7 +272,7 @@ extension GameScene: SKPhysicsContactDelegate {
 }
 
 #Preview {
-    GameViewController()
+    GameViewControllerBase()
 }
 
 func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {

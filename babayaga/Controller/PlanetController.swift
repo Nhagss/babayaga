@@ -84,7 +84,7 @@ class PlanetController {
     
     func makePlanetType(type: PlanetType) {
         
-        let scale = 1.3
+        _ = 1.3
         switch type {
         case .complete:
             addGrass(angleInDegrees: 90)

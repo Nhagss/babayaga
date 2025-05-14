@@ -87,5 +87,5 @@ class StairView: SKShapeNode {
 }
 
 #Preview {
-    GameViewController()
+    GameViewControllerBase()
 }

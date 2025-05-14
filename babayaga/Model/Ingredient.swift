@@ -8,7 +8,17 @@
 import Foundation
 import SpriteKit
 
-struct Ingredient {
+@Observable
+class Ingredient {
     let id: Int
     let name: String
+    var total: Int
+    var remaining: Int
+    
+    init(id: Int, name: String, total: Int) {
+        self.id = id
+        self.name = name
+        self.total = total
+        self.remaining = total
+    }
 }

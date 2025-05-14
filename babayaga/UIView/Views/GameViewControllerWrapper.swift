@@ -10,11 +10,11 @@ import SpriteKit
 
 // MARK: Usada para integrar um UIViewController do UIKit dentro de uma interface SwiftUI.
 struct GameViewControllerWrapper: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> GameViewController {
-        GameViewController()
+    func makeUIViewController(context: Context) -> GameViewControllerBase {
+        GameViewControllerBase()
     }
 
-    func updateUIViewController(_ uiViewController: GameViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: GameViewControllerBase, context: Context) {
         // Atualizações do controller, se necessário
     }
 }

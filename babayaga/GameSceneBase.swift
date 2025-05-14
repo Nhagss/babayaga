@@ -22,6 +22,10 @@ class GameSceneBase: SKScene {
     /// Closure para notificar a coleta de ingredientes
     var onIngredientCollected: (([Ingredient]) -> Void)?
     
+    /// Closure para notificar quando todos os ingredientes foram coletados
+    var onAllIngredientsCollected: (() -> Void)?
+    
+    
     override func didMove(to view: SKView) {
         
         setupCamera()
@@ -153,7 +157,7 @@ class GameSceneBase: SKScene {
             // Decide se o planeta vai receber o ingrediente com base na dificuldade
             if let planetIndex = availablePlanets.popLast(), Bool.random() || difficulty >= 0.75 {
                 let angle = CGFloat.random(in: 0...360)
-                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1), angleInDegrees: angle)
+                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1, total: 2), angleInDegrees: angle)
             }
         }
     }
@@ -304,5 +308,5 @@ extension GameSceneBase: SKPhysicsContactDelegate {
 }
 
 #Preview {
-    GameViewController()
+    GameViewControllerBase()
 }

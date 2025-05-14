@@ -4,8 +4,6 @@
 //
 //  Created by honorio on 08/05/25.
 //
-
-import SpriteKit
 // GameSceneManager.swift
 
 import SpriteKit
@@ -15,10 +13,11 @@ class GameSceneManager: ObservableObject {
     @Published var currentScene: GameSceneBase?
     @Published var currentLevel: Int = 1
     @Published var isShowingLevelSelection = false
+    @Published var ingredients = [Ingredient]()
     
-    weak var viewController: GameViewController?
+    weak var viewController: GameViewControllerBase?
     
-    init(viewController: GameViewController? = nil) {
+    init(viewController: GameViewControllerBase? = nil) {
         self.viewController = viewController
     }
     
@@ -27,18 +26,15 @@ class GameSceneManager: ObservableObject {
         
         switch level {
         case 1:
-            newScene = PhaseOneScene(size: viewController!.view.bounds.size)
+            newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         default:
-            newScene = PhaseOneScene(size: viewController!.view.bounds.size)
+            newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         }
         
-//        newScene?.onIngredientCollected = { [weak self] ingredients in
-//            self?.viewController?.updateIngredientUI(with: ingredients)
-//        }
-        
-//        newScene?.onLevelCompleted = { [weak self] in
-//            self?.nextLevel()
-//        }
+        // Configura o callback para quando todos os ingredientes forem coletados
+        newScene?.onAllIngredientsCollected = { [weak self] in
+            self?.nextLevel()
+        }
         
         currentScene = newScene
         viewController?.spriteKitView.presentScene(newScene)

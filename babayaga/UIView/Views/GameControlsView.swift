@@ -19,7 +19,8 @@ struct GameControlsView: View {
                 ButtonComponent(image: .reverseButton, action: onChangeDirection)
             }
             .padding(.horizontal, 40) // Afastando das bordas
-            .padding(.bottom, 50) // Ajustando a altura
+            .padding(.bottom, 50)
+            // Ajustando a altura
         }
         .frame(maxWidth: .infinity)
     }

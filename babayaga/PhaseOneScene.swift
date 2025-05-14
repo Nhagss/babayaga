@@ -11,14 +11,25 @@ import SwiftUI
 
 class PhaseOneScene: GameSceneBase {
     
-    private let ingredientesDisponiveis = [
-        (1, "Pó de fada"),
-        (2, "Suor de goblin"),
-        (3, "Escamas de dragão"),
-        (4, "Dente de troll"),
-        (5, "Chifre de unicórnio"),
-        (6, "Lágrima de fênix")
+    let ingredientesDisponiveis = [
+        Ingredient(id: 1, name: "Pó de fada", total: 3),
+        Ingredient(id: 2, name: "Suor de goblin", total: 1),
     ]
+    
+    var totalDeIngredientes: Int
+    
+    var gameSceneManager: GameSceneManager?
+
+    init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
+        self.gameSceneManager = gameSceneManager
+        gameSceneManager?.ingredients = ingredientesDisponiveis
+        self.totalDeIngredientes = ingredientesDisponiveis.map { $0.total }.reduce(0, +)
+        super.init(size: size)
+    }
+    
+    @MainActor required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setupPlanets() {
         super.setupPlanets()
@@ -46,7 +57,11 @@ class PhaseOneScene: GameSceneBase {
         }
         
         /// Distribui os ingredientes com dificuldade ajustada
-        distributeIngredients(ingredientesDisponiveis, toPlanets: planetControllers.count, difficulty: 0.8)
+        planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 90)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 180)
+
+        
         
         /// Adiciona obstáculos e ornamentos
         planetControllers[0].addHouse(angleInDegrees: 270)
