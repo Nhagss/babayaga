@@ -60,6 +60,12 @@ class PlanetController {
     func addObstacle(angleInDegrees: CGFloat) {
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false)
     }
+    
+    func addEnemySpike(angleInDegrees: CGFloat) {
+        let scale = 1.3
+        let enemySize: CGSize = CGSize(width: 80/scale, height: 80/scale)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
+    }
 
     func addHouse(angleInDegrees: CGFloat) -> Void {
         let scale = 1.3

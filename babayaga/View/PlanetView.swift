@@ -62,6 +62,8 @@ class PlanetView: SKNode {
         playerAnchor.removeAction(forKey: "rotation")
     }
     
+    
+    
     func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, isHouse: Bool = false, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
         let object = ObjectView(withCollision: withCollision, isHouse: isHouse, texture: texture, size: size)
         

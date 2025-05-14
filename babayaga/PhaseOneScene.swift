@@ -12,8 +12,8 @@ import SwiftUI
 class PhaseOneScene: GameSceneBase {
     
     let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Pó de fada", total: 3),
-        Ingredient(id: 2, name: "Suor de goblin", total: 1),
+        Ingredient(id: 2, name: "Pó de fada", total: 1),
+        Ingredient(id: 3, name: "Asa de morcego", total: 1),
     ]
     
     var totalDeIngredientes: Int
@@ -37,19 +37,13 @@ class PhaseOneScene: GameSceneBase {
         // MARK: Criação dos Planetas
         let planet1 = PlanetController()
         let planet2 = PlanetController(parent: planet1)
-        let planet3 = PlanetController(parent: planet2)
-        let planet4 = PlanetController(parent: planet3)
-        let planet5 = PlanetController(parent: planet4)
         
         /// Configuração das posições dos planetas (mais variada)
         planet1.view.position = CGPoint(x: 50, y: -150)
         planet2.view.position = CGPoint(x: -150, y: 300)
-        planet3.view.position = CGPoint(x: 50, y: 600)
-        planet4.view.position = CGPoint(x: -100, y: 800)
-        planet5.view.position = CGPoint(x: 150, y: 1200)
         
         /// Adiciona planetas à lista
-        planetControllers = [planet1, planet2, planet3, planet4, planet5]
+        planetControllers = [planet1, planet2]
         
         /// Adiciona os planetas à cena
         for controller in planetControllers {
@@ -58,8 +52,11 @@ class PhaseOneScene: GameSceneBase {
         
         /// Distribui os ingredientes com dificuldade ajustada
         planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300)
-        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 90)
-        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 180)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 90)
+        
+        //Adiciona o inimigo porco espinho
+        planetControllers[0].addEnemySpike(angleInDegrees: 90)
+        planetControllers[1].addEnemySpike(angleInDegrees: 270)
 
         
         
@@ -69,9 +66,6 @@ class PhaseOneScene: GameSceneBase {
         /// Personaliza a aparência dos planetas
         planetControllers[0].makePlanetType(type: .threeGrass)
         planetControllers[1].makePlanetType(type: .twoGrass)
-        planetControllers[2].makePlanetType(type: .complete)
-        planetControllers[3].makePlanetType(type: .twoGrass)
-        planetControllers[4].makePlanetType(type: .complete)
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
