@@ -27,7 +27,7 @@ class GameScene: SKScene {
         
         // Exemplo: adicionar 2 ingredientes no planeta 0
         for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
-            let ingrediente = Ingredient(id: id, name: name)
+            let ingrediente = Ingredient(id: id, name: name, total: 2)
             planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
             planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
             planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
@@ -72,8 +72,8 @@ class GameScene: SKScene {
         guard planetControllers.count >= 2 else { return }
         
         for i in 1..<(planetControllers.count) {
-            let start = planetControllers[i].view.position
-            let end = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
+            _ = planetControllers[i].view.position
+            _ = planetControllers[i].parent?.view.position ?? planetControllers[i].view.position
             
             let stair = StairController(from: planetControllers[i], to: planetControllers[i].parent ?? planetControllers[i])
             
