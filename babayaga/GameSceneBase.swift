@@ -297,7 +297,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            showHouseMessage(at: position, text: "You still dont have all the ingredients!")
+            showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!")
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
