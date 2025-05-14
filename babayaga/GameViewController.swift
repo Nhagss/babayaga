@@ -23,11 +23,11 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareHaptics()
+        setupBackground()
         
         /// Conecta o GameSceneManager com o ViewController
         gameSceneManager.viewController = self
         
-        setupBackground()
         setupSpriteKitView()
         setupScene()
         setupIngredientPanelView()
@@ -50,8 +50,6 @@ class GameViewController: UIViewController {
             backgroundView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        
-        backgroundView.didMove(toParent: self)
     }
     
     private func setupSpriteKitView() {

@@ -78,8 +78,8 @@ class PlanetView: SKNode {
         objects.append(object)
     }
     
-    func addIngredient(model: Ingredient, angleInDegrees: CGFloat) {
-        let ingredientController = IngredientController(model: model)
+    func addIngredient(model: Ingredient, angleInDegrees: CGFloat, onCollect: @escaping () -> Void) {
+        let ingredientController = IngredientController(model: model, onCollect: onCollect)
         let ingredientView = ingredientController.view
         
         let radius = world.frame.width / 2 + 20

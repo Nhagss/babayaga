@@ -8,6 +8,7 @@
 
 import SpriteKit
 import SwiftUI
+import Combine
 
 class GameSceneManager: ObservableObject {
     @Published var currentScene: GameSceneBase?
@@ -17,8 +18,20 @@ class GameSceneManager: ObservableObject {
     
     weak var viewController: GameViewController?
     
+    var cancellables = Set<AnyCancellable>()
+    
     init(viewController: GameViewController? = nil) {
         self.viewController = viewController
+    }
+    
+    func checkIngredients() {
+        print(#function)
+        let remaining = ingredients.map(\.remaining).reduce(0, +)
+        print("remaining: \(remaining)")
+        if remaining == 0 {
+            nextLevel()
+        }
+
     }
     
     func loadScene(forLevel level: Int) {
@@ -27,6 +40,8 @@ class GameSceneManager: ObservableObject {
         switch level {
         case 1:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
+        case 2:
+            newScene = PhaseThreeScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         default:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         }
@@ -44,6 +59,7 @@ class GameSceneManager: ObservableObject {
     }
     
     func nextLevel() {
+        print(#function)
         currentLevel += 1
         loadScene(forLevel: currentLevel)
     }

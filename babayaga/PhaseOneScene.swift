@@ -12,18 +12,15 @@ import SwiftUI
 class PhaseOneScene: GameSceneBase {
     
     let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Pó de fada", total: 3),
+        Ingredient(id: 1, name: "Pó de fada", total: 2),
         Ingredient(id: 2, name: "Suor de goblin", total: 1),
     ]
-    
-    var totalDeIngredientes: Int
-    
+        
     var gameSceneManager: GameSceneManager?
 
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
         self.gameSceneManager = gameSceneManager
         gameSceneManager?.ingredients = ingredientesDisponiveis
-        self.totalDeIngredientes = ingredientesDisponiveis.map { $0.total }.reduce(0, +)
         super.init(size: size)
     }
     
@@ -56,10 +53,15 @@ class PhaseOneScene: GameSceneBase {
             gameWorld.addChild(controller.view)
         }
         
+        let onCollect = { [weak self] in
+            guard let self else { return }
+            gameSceneManager?.checkIngredients()
+        }
+        
         /// Distribui os ingredientes com dificuldade ajustada
-        planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300)
-        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 90)
-        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 180)
+        planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300, onCollect: onCollect)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 90, onCollect: onCollect)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 180, onCollect: onCollect)
 
         
         

@@ -17,7 +17,6 @@ class GameSceneBase: SKScene {
     var nextPlanetID: UUID = UUID()
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
-    var collectedIngredients: [IngredientController] = []
     
     /// Closure para notificar a coleta de ingredientes
     var onIngredientCollected: (([Ingredient]) -> Void)?
@@ -31,6 +30,7 @@ class GameSceneBase: SKScene {
         setupCamera()
         setupWorld()
         setupPlanets()
+        setupPlanetPlayers()
         setupStairs()
         
         physicsWorld.contactDelegate = self
@@ -48,6 +48,14 @@ class GameSceneBase: SKScene {
     }
     
     func setupPlanets() {}
+    
+    private func setupPlanetPlayers() {
+        for (index, controller) in planetControllers.enumerated() {
+            
+            /// Oculta todos os players, exceto o do primeiro planeta
+            controller.view.playerNode.isHidden = (index != 0)
+        }
+    }
     
     private func setupStairs() {
         guard planetControllers.count >= 2 else { return }
@@ -102,7 +110,7 @@ class GameSceneBase: SKScene {
                 /// Só atualiza o próximo planeta se ainda não estava na escada
                 if !planetControllers[currentPlanetIndex].isContactingStair {
                     nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
-                    print("Novo nextPlanetID definido:", nextPlanetID)
+//                    print("Novo nextPlanetID definido:", nextPlanetID)
                 }
                 break
             }
@@ -153,13 +161,13 @@ class GameSceneBase: SKScene {
         availableIngredients = availableIngredients.prefix(maxIngredients)
         
         // Distribui os ingredientes
-        for ingredient in availableIngredients {
-            // Decide se o planeta vai receber o ingrediente com base na dificuldade
-            if let planetIndex = availablePlanets.popLast(), Bool.random() || difficulty >= 0.75 {
-                let angle = CGFloat.random(in: 0...360)
-                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1, total: 2), angleInDegrees: angle)
-            }
-        }
+//        for ingredient in availableIngredients {
+//            // Decide se o planeta vai receber o ingrediente com base na dificuldade
+//            if let planetIndex = availablePlanets.popLast(), Bool.random() || difficulty >= 0.75 {
+//                let angle = CGFloat.random(in: 0...360)
+//                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1, total: 2), angleInDegrees: angle)
+//            }
+//        }
     }
 
     
@@ -197,7 +205,7 @@ class GameSceneBase: SKScene {
         }
         
         /// Aqui você pode guardar o ingrediente coletado num inventário futuro
-        print("Ingrediente coletado: \(ingredient.model.name)")
+//        print("Ingrediente coletado: \(ingredient.model.name)")
     }
     
     func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
@@ -301,7 +309,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
-            print("contato ingrediente")
+//            print("contato ingrediente")
             handleIngredientContact(contact)
         }
     }

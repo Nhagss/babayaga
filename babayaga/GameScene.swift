@@ -26,12 +26,12 @@ class GameScene: SKScene {
         ]
         
         // Exemplo: adicionar 2 ingredientes no planeta 0
-        for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
-            let ingrediente = Ingredient(id: id, name: name, total: 2)
-            planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-            planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
-        }
+//        for (id, name) in ingredientesDisponiveis.shuffled().prefix(4) {
+//            let ingrediente = Ingredient(id: id, name: name, total: 2)
+//            planetControllers[0].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+//            planetControllers[1].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+//            planetControllers[2].view.addIngredient(model: ingrediente, angleInDegrees: CGFloat.random(in: 0...360))
+//        }
         
         /// Iniciar rotação do primeiro planeta
         planetControllers[0].startRotation()
@@ -126,7 +126,7 @@ class GameScene: SKScene {
                 // Só atualiza o próximo planeta se ainda não estava na escada
                 if !planetControllers[currentPlanetIndex].isContactingStair {
                     nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
-                    print("Novo nextPlanetID definido:", nextPlanetID)
+//                    print("Novo nextPlanetID definido:", nextPlanetID)
                 }
                 break
             }
@@ -185,7 +185,7 @@ class GameScene: SKScene {
         }
         
         // Aqui você pode guardar o ingrediente coletado num inventário futuro
-        print("Ingrediente coletado: \(ingredient.model.name)")
+//        print("Ingrediente coletado: \(ingredient.model.name)")
     }
     
     private func showHouseMessage(at position: CGPoint, text: String) {
@@ -250,7 +250,7 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
-            print("contato ingrediente")
+//            print("contato ingrediente")
             handleIngredientContact(contact)
         }
         
