@@ -8,9 +8,11 @@
 import UIKit
 import SpriteKit
 import SwiftUI
+import CoreHaptics
 class GameViewController: UIViewController {
     var router: Router = Router.shared
     
+    var engine: CHHapticEngine?
     var spriteKitView = SKView()
     let scene = PhaseOneScene()
     let backgroundView = UIHostingController(rootView: BackgroundGame())
@@ -31,7 +33,7 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        prepareHaptics()
         addChild(backgroundView)
         view.addSubview(backgroundView.view)
         backgroundView.view.translatesAutoresizingMaskIntoConstraints = false
@@ -57,10 +59,12 @@ class GameViewController: UIViewController {
         controlsView = UIHostingController(rootView: GameControlsView(
             onChangeDirection: { [weak self] in
                 self?.scene.planetControllers[self?.scene.currentPlanetIndex ?? 0].reverseRotation()
+                self?.complexSuccess()
             },
             onChangePlanet: { [weak self] in
                 self?.scene.planetControllers[self?.scene.currentPlanetIndex ?? 0].jump()
                 self?.scene.changePlanet()
+                self?.complexSuccess()
             }
         ))
 
@@ -185,7 +189,34 @@ class GameViewController: UIViewController {
         hostingController.modalPresentationStyle = .fullScreen // Apresenta como tela cheia
         present(hostingController, animated: true, completion: nil)
     }
+  
+    //MARK: Funções de Haptics custom
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("Failed to create engine: \(error.localizedDescription)")
+        }
+    }
+  
+    func complexSuccess() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
 
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity , value: 1.0)
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1.0)
+        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+
+        do {
+            let pattern = try CHHapticPattern(events: [event], parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription)")
+        }
+    }
     
     // Funções de orientação e status bar (mantidas como antes)
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
