@@ -27,6 +27,8 @@ class GameSceneManager: ObservableObject {
         switch level {
         case 1:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
+        case 2:
+            newScene = PhaseTwoScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         default:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController!.view.bounds.size)
         }

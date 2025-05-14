@@ -63,7 +63,7 @@ class GameViewController: UIViewController {
     
     private func setupScene() {
         /// Carrega a primeira fase
-        gameSceneManager.loadScene(forLevel: 1)
+        gameSceneManager.loadScene(forLevel: 2)
         
         // SpriteKit
         if let scene = gameSceneManager.currentScene {
@@ -142,7 +142,7 @@ class GameViewController: UIViewController {
         // Constraints para posicionar atrás do botão
         NSLayoutConstraint.activate([
             backgroundPauseImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            backgroundPauseImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 95),
+            backgroundPauseImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 55),
             backgroundPauseImageView.widthAnchor.constraint(equalToConstant: 70),
             backgroundPauseImageView.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -158,7 +158,7 @@ class GameViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 95),
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 55),
             button.widthAnchor.constraint(equalToConstant: 70),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])

@@ -48,18 +48,21 @@ struct InitialScreen: View {
                                 switch view {
                                 case .GameViewController:
                                     GameViewControllerWrapper()
+                                        .navigationBarBackButtonHidden(true)
                                         .onAppear {
                                             AudioManager.shared.playSound(named: "fasesIniciais")
                                         }
                                         .ignoresSafeArea()
                                 case .InitialScreen:
                                     GameViewControllerWrapper()
+                                        .navigationBarBackButtonHidden(true)
                                         .onAppear {
                                             AudioManager.shared.playSound(named: "fasesIniciais")
                                         }
                                         .ignoresSafeArea()
                                 }
                             }
+                            .navigationBarBackButtonHidden(true)
                             .onAppear {
                                 AudioManager.shared.playSound(named: "temaPrincipal")
                             }
@@ -83,6 +86,7 @@ struct InitialScreen: View {
                         .navigationBarBackButtonHidden()
                 case .InitialScreen:
                     InitialScreen()
+                        .navigationBarBackButtonHidden(true)
                 }
             }
         }
