@@ -18,9 +18,6 @@ class GameSceneBase: SKScene {
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
     
-    /// Closure para notificar a coleta de ingredientes
-    var onIngredientCollected: (([Ingredient]) -> Void)?
-    
     /// Closure para notificar quando todos os ingredientes foram coletados
     var onAllIngredientsCollected: (() -> Void)?
     
@@ -85,8 +82,6 @@ class GameSceneBase: SKScene {
             for i in 0..<planetControllers.count {
                 if(planetControllers[i].id == nextPlanetID) {
                     currentPlanetIndex = i
-                    print(i)
-                    print(nextPlanetID)
                 }
             }
             
@@ -110,7 +105,6 @@ class GameSceneBase: SKScene {
                 /// Só atualiza o próximo planeta se ainda não estava na escada
                 if !planetControllers[currentPlanetIndex].isContactingStair {
                     nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
-//                    print("Novo nextPlanetID definido:", nextPlanetID)
                 }
                 break
             }
@@ -143,35 +137,6 @@ class GameSceneBase: SKScene {
     }
     
     
-    
-    func distributeIngredients(_ ingredients: [(Int, String)], toPlanets planetCount: Int, difficulty: Double = 0.5) {
-        guard planetCount > 0 && planetControllers.count >= planetCount else {
-            print("Erro: Número de planetas solicitado maior do que planetas disponíveis")
-            return
-        }
-        
-        // Limita os ingredientes para que não ultrapassem o número de planetas
-        var availableIngredients = ingredients.shuffled().prefix(min(ingredients.count, planetCount))
-        
-        // Cria um array com os índices dos planetas disponíveis para receber ingredientes
-        var availablePlanets = Array(0..<planetCount).shuffled()
-        
-        // Ajusta a quantidade de ingredientes com base na dificuldade
-        let maxIngredients = Int(Double(planetCount) * difficulty)
-        availableIngredients = availableIngredients.prefix(maxIngredients)
-        
-        // Distribui os ingredientes
-//        for ingredient in availableIngredients {
-//            // Decide se o planeta vai receber o ingrediente com base na dificuldade
-//            if let planetIndex = availablePlanets.popLast(), Bool.random() || difficulty >= 0.75 {
-//                let angle = CGFloat.random(in: 0...360)
-//                planetControllers[planetIndex].view.addIngredient(model: Ingredient(id: ingredient.0, name: ingredient.1, total: 2), angleInDegrees: angle)
-//            }
-//        }
-    }
-
-    
-    
     private func handleIngredientContact(_ contact: SKPhysicsContact) {
         let bodies = [contact.bodyA, contact.bodyB]
         
@@ -193,19 +158,10 @@ class GameSceneBase: SKScene {
         /// Remove o ingrediente da cena
         ingredient.collect()
         
-        /// Adiciona a Fila
-        ingredient.push(ingredient.model)
-        
-        /// Chama o closure para atualizar a UI na GameViewController
-        onIngredientCollected?(ingredient.stack)  // Passa a pilha atualizada
-        
         /// Remove da lista de ingredientes ativos no planeta
         if let index = planet.view.ingredients.firstIndex(where: { $0 === ingredient }) {
             planet.view.ingredients.remove(at: index)
         }
-        
-        /// Aqui você pode guardar o ingrediente coletado num inventário futuro
-//        print("Ingrediente coletado: \(ingredient.model.name)")
     }
     
     func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
@@ -296,7 +252,6 @@ extension GameSceneBase: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
-            print("Player colidiu com obstáculo!")
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
@@ -309,7 +264,6 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
-//            print("contato ingrediente")
             handleIngredientContact(contact)
         }
     }
