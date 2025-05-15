@@ -10,7 +10,7 @@ import SpriteKit
 class IngredientView: SKSpriteNode {
     
     init(model: Ingredient) {
-        super.init(texture: SKTexture(imageNamed: "ingredient\(model.id)"), color: .clear, size: CGSize(width: 30, height: 30))
+        super.init(texture: SKTexture(imageNamed: "ingredient\(model.id)"), color: .clear, size: CGSize(width: 50, height: 50))
         
         self.name = model.name
         setupPhysics()
