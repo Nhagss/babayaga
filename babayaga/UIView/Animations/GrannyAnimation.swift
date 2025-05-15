@@ -8,21 +8,46 @@
 import SwiftUI
 import RiveRuntime
 struct GrannyAnimation: View {
+    var phaseNumber: Int = 2
+    @State var animateUp: Bool = true
+    @State var animateSize: Bool = true
+
     var body: some View {
-        VStack {
-            GeometryReader { geo in
+        GeometryReader { geo in
+            ZStack {
                 VStack(spacing: 0) {
                     Text("Fase")
-                        .font(.custom("Quicksand-Regular", size: 38))
-                    Text("1")
-                        .font(.custom("GermaniaOne-Regular", size: 110))
+                        .font(.custom("Quicksand-Regular", size: geo.size.width * (animateSize ? 0.15 : 0.15 * 1.6)))
+                    Text("\(phaseNumber)")
+                        .font(.custom("GermaniaOne-Regular", size: geo.size.width * (animateSize ? 0.25 : 0.25 * 1.6)))
                 }
-                .position(x: geo.size.width/2, y: geo.size.height*0.15)
+                .position(x: geo.size.width/2)
+                .offset(y: geo.size.height * (animateUp ? 1.3 : 0.2))
                 .foregroundStyle(.white)
                 RiveViewModel(fileName: "GrannyPullsUpCrop").view().frame(minWidth: geo.size.width*2)
-                    .position(x:geo.size.width/2, y: geo.size.height*0.7)
+                    .position(x: geo.size.width/2)
+                    .offset(y:geo.size.height * 0.7)
+            }
+            .onAppear() {
+                withAnimation(.bouncy(duration: 1)) {
+                    animateUp = false
+                    
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                    withAnimation(.easeInOut(duration: 0.32)) {
+                        animateSize = false
+                    }
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        animateSize = true
+                    }
+                }
             }
         }
+        
         .background(Background())
     }
 }
