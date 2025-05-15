@@ -162,6 +162,8 @@ class GameViewController: UIViewController {
                     return
                 case .InitialScreen:
                     self?.router.backToMenu()
+                case .SettingsView:
+                    self?.router.goToSettingsView()
                 }
             } onClose: { [weak self] in
                 scene.isPaused = false

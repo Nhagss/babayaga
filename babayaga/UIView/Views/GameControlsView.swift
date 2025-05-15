@@ -15,8 +15,8 @@ struct GameControlsView: View {
         ZStack {
             Color.clear // Para garantir transparência
             HStack(spacing: 40) { // Aumentando o espaçamento
-                ButtonComponent(image: .portalButton, action: onChangePlanet)
-                ButtonComponent(image: .reverseButton, action: onChangeDirection)
+                ButtonComponent(imageName: "portalButton", action: onChangePlanet)
+                ButtonComponent(imageName: "reverseButton", action: onChangeDirection)
             }
             .padding(.horizontal, 40) // Afastando das bordas
             .padding(.bottom, 50)

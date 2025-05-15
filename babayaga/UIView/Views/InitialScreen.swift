@@ -9,15 +9,14 @@ import SwiftUI
 import SpriteKit
 import CoreHaptics
 import Foundation
-struct InitialScreen: View {
-    @ObservedObject private var router = Router.shared
-  @State private var engine: CHHapticEngine?
 
+struct InitialScreen: View {
+    @ObservedObject var router = Router.shared
+    @State private var engine: CHHapticEngine?
+    
     var body: some View {
-        NavigationStack (path: $router.path) {
-            
+        NavigationStack(path: $router.path) {
             ZStack {
-                
                 Background()
                 
                 Image("moon")
@@ -37,67 +36,56 @@ struct InitialScreen: View {
                     .foregroundStyle(.white)
                 
                 VStack(spacing: 80) {
-                    Button(action:  {
+                    Button(action: {
                         router.goToGameScene()
                         complexSuccess()
-                    }){
+                    }) {
                         PlayButton()
                             .padding(.top, 300)
-                        
-                            .navigationDestination(for: Views.self) { view in
-                                switch view {
-                                case .GameViewController:
-                                    GameViewControllerWrapper()
-                                        .navigationBarBackButtonHidden(true)
-                                        .onAppear {
-                                            AudioManager.shared.playSound(named: "fasesIniciais")
-                                        }
-                                        .ignoresSafeArea()
-                                case .InitialScreen:
-                                    GameViewControllerWrapper()
-                                        .navigationBarBackButtonHidden(true)
-                                        .onAppear {
-                                            AudioManager.shared.playSound(named: "fasesIniciais")
-                                        }
-                                        .ignoresSafeArea()
-                                }
-                            }
-                            .navigationBarBackButtonHidden(true)
-                            .onAppear {
-                                AudioManager.shared.playSound(named: "temaPrincipal")
-                            }
                     }
                     .onAppear(perform: prepareHaptics)
                     
-                    HStack(spacing: 150){
-                        ButtonComponent(image: .shinyEye, action: {complexSuccess()})
+                    HStack(spacing: 150) {
+                        ButtonComponent(imageName: "shinyEye", action: { complexSuccess() })
                             .onAppear(perform: prepareHaptics)
-                        ButtonComponent(image: .shinyEye, action: {complexSuccess()})
-                            .onAppear(perform: prepareHaptics)
+                        
+                        // Botão da SettingsView
+                        Button(action: {
+                            router.goToSettingsView()
+                        }) {
+                            VStack {
+                                    ButtonComponent(imageName: "settingsIcon", action: router.goToSettingsView)
+                                Text("Ajustes")
+                                    .font(.custom("Quicksand-Regular", size: 27))
+                                    .foregroundStyle(.white)
+                            }
+                        }
                     }
                 }
             }
-            .ignoresSafeArea()
             .navigationDestination(for: Views.self) { view in
                 switch view {
                 case .GameViewController:
                     GameViewControllerWrapper()
                         .ignoresSafeArea()
-                        .navigationBarBackButtonHidden()
+                        .navigationBarBackButtonHidden(true)
                 case .InitialScreen:
                     InitialScreen()
                         .navigationBarBackButtonHidden(true)
+                case .SettingsView:
+                    SettingsView()
                 }
             }
+            .onAppear {
+                AudioManager.shared.playSound(named: "temaPrincipal")
+            }
+            .ignoresSafeArea()
         }
         .environmentObject(router)
-        
-        
     }
     
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
-        
         do {
             engine = try CHHapticEngine()
             try engine?.start()
@@ -105,10 +93,11 @@ struct InitialScreen: View {
             print("Failed to create engine: \(error.localizedDescription)")
         }
     }
+    
     func complexSuccess() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         
-        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity , value: 3)
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
         let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
         let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
         let events = [event]
@@ -126,3 +115,4 @@ struct InitialScreen: View {
 #Preview {
     InitialScreen()
 }
+
