@@ -31,9 +31,7 @@ class GameViewController: UIViewController {
         setupSpriteKitView()
         setupScene()
         setupUi()
-        setupControls()
-        setupTransitionOverlay()
-        
+        setupControls()        
 #if DEBUG
         configureDebugOptions()
 #endif
@@ -173,8 +171,9 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setupTransitionOverlay() {
-        let overlayView = UIHostingController(rootView: TransitionOverlayView(level: gameSceneManager.currentLevel))
+    func setupTransitionOverlay() {
+        let grannyAnimation = GrannyAnimation(phaseNumber: gameSceneManager.currentLevel + 1)
+        let overlayView = UIHostingController(rootView: grannyAnimation)
         addChild(overlayView)
         view.addSubview(overlayView.view)
         
@@ -186,7 +185,7 @@ class GameViewController: UIViewController {
             overlayView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        // Esconde inicialmente
+         //Esconde inicialmente
         overlayView.view.isHidden = true
         
         // Vincula a visibilidade ao estado do gameSceneManager
@@ -200,12 +199,14 @@ class GameViewController: UIViewController {
                     animations: {
                         overlayView.view.isHidden = !isShowing
                     },
-                    completion: nil
+                    completion: { _ in
+                        grannyAnimation.play()
+                    }
                 )
             }
             .store(in: &gameSceneManager.cancellables)
     }
-    
+//
     //MARK: Funções de Haptics custom
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }

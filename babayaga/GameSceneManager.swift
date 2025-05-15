@@ -34,8 +34,6 @@ class GameSceneManager: ObservableObject {
     
     private func showTransition() {
         isShowingTransition = true
-        
-        // Esconde o overlay depois de 2 segundos e carrega a nova fase
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.isShowingTransition = false
             self?.nextLevel()
@@ -51,9 +49,9 @@ class GameSceneManager: ObservableObject {
         case 1:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 2:
-            newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
-        case 3:
             newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 3:
+            newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
             newScene = nil
         }
@@ -64,9 +62,10 @@ class GameSceneManager: ObservableObject {
             self?.showTransition()
         }
         
-        let transition = SKTransition.crossFade(withDuration: 1.0)
+        let transition = SKTransition.fade(withDuration: 0)
         currentScene = scene
         viewController.spriteKitView.presentScene(scene, transition: transition)
+        viewController.setupTransitionOverlay()
         isShowingLevelSelection = false
     }
     
