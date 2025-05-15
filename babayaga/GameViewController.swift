@@ -23,16 +23,16 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareHaptics()
+        setupBackground()
         
         /// Conecta o GameSceneManager com o ViewController
         gameSceneManager.viewController = self
         
-        setupBackground()
         setupSpriteKitView()
         setupScene()
-        setupIngredientPanelView()
+        setupUi()
         setupControls()
-        setupMenu()
+        setupTransitionOverlay()
         
 #if DEBUG
         configureDebugOptions()
@@ -50,8 +50,6 @@ class GameViewController: UIViewController {
             backgroundView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        
-        backgroundView.didMove(toParent: self)
     }
     
     private func setupSpriteKitView() {
@@ -70,22 +68,6 @@ class GameViewController: UIViewController {
             scene.size = view.bounds.size
             scene.scaleMode = .aspectFill
             scene.backgroundColor = .clear
-        }
-    }
-    
-    private func setupIngredientPanelView() {
-        ingredientPanelView = UIHostingController(
-            rootView: IngredientPanelView(gameSceneManager: gameSceneManager)
-        )
-        
-        if let ingredientPanelView = ingredientPanelView?.view {
-            view.addSubview(ingredientPanelView)
-            ingredientPanelView.backgroundColor = .clear
-            ingredientPanelView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                ingredientPanelView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0),
-            ])
         }
     }
     
@@ -132,35 +114,37 @@ class GameViewController: UIViewController {
         spriteKitView.showsNodeCount = true
     }
     
-    private func setupMenu() {
-        // Cria a imagem de fundo do botão de pause
-        let backgroundPauseImageView = UIImageView(image: UIImage(named: "backgroundpause"))
-        backgroundPauseImageView.contentMode = .scaleAspectFit
-        backgroundPauseImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(backgroundPauseImageView)
+    private func setupUi() {
+        
+        /// Cria o painel de ingredientes
+        ingredientPanelView = UIHostingController(
+            rootView: IngredientPanelView(gameSceneManager: gameSceneManager)
+        )
+        guard let ingredientPanelView = ingredientPanelView?.view else { return }
+        view.addSubview(ingredientPanelView)
+        ingredientPanelView.backgroundColor = .clear
+        ingredientPanelView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Constraints para posicionar atrás do botão
+        
+        /// Cria o botão de pause
+        let pauseButton = UIButton(type: .system)
+        pauseButton.setBackgroundImage(UIImage(named: "backgroundpause"), for: .normal)
+        pauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        pauseButton.tintColor = .white
+        pauseButton.contentMode = .scaleAspectFit
+        pauseButton.translatesAutoresizingMaskIntoConstraints = false
+        pauseButton.addTarget(self, action: #selector(openMenuView), for: .touchUpInside)
+        view.addSubview(pauseButton)
+        
+        /// Constraints do painel
         NSLayoutConstraint.activate([
-            backgroundPauseImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            backgroundPauseImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 95),
-            backgroundPauseImageView.widthAnchor.constraint(equalToConstant: 70),
-            backgroundPauseImageView.heightAnchor.constraint(equalToConstant: 50)
+            ingredientPanelView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0),
         ])
-        
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-        button.tintColor = .white
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(openMenuView), for: .touchUpInside)
-        
-        view.addSubview(button)
-        
+
+        /// Alinhamento horizontal do botão com o painel de ingredientes
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 95),
-            button.widthAnchor.constraint(equalToConstant: 70),
-            button.heightAnchor.constraint(equalToConstant: 50)
+            pauseButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16.0),
+            pauseButton.topAnchor.constraint(equalTo: ingredientPanelView.centerYAnchor, constant: 15.0)
         ])
     }
     
@@ -187,6 +171,39 @@ class GameViewController: UIViewController {
             hostingController.modalPresentationStyle = .fullScreen // Apresenta como tela cheia
             present(hostingController, animated: true, completion: nil)
         }
+    }
+    
+    private func setupTransitionOverlay() {
+        let overlayView = UIHostingController(rootView: TransitionOverlayView(level: gameSceneManager.currentLevel))
+        addChild(overlayView)
+        view.addSubview(overlayView.view)
+        
+        overlayView.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.view.topAnchor.constraint(equalTo: view.topAnchor),
+            overlayView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            overlayView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            overlayView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        // Esconde inicialmente
+        overlayView.view.isHidden = true
+        
+        // Vincula a visibilidade ao estado do gameSceneManager
+        gameSceneManager.$isShowingTransition
+            .receive(on: RunLoop.main)
+            .sink { isShowing in
+                UIView.transition(
+                    with: overlayView.view,
+                    duration: 0.5,
+                    options: .transitionCrossDissolve,
+                    animations: {
+                        overlayView.view.isHidden = !isShowing
+                    },
+                    completion: nil
+                )
+            }
+            .store(in: &gameSceneManager.cancellables)
     }
     
     //MARK: Funções de Haptics custom

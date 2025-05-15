@@ -11,49 +11,19 @@ import UIKit
 class IngredientController {
     let model: Ingredient
     let view: IngredientView
-    var stack: [Ingredient] = []
-    
-    var count: Int {
-        return stack.count
-    }
+    var onCollect: () -> Void
 
-    init(model: Ingredient) {
+    init(model: Ingredient, onCollect: @escaping () -> Void) {
         self.model = model
         self.view = IngredientView(model: model)
+        self.onCollect = onCollect
     }
-    
-    func push(_ ingredient: Ingredient) {
-        stack.append(ingredient)
-        print("Empilhou: \(ingredient.name)")
-    }
-    
-    func pop() -> Ingredient? {
-        return stack.popLast()
-    }
-    
-    func clear() {
-        stack.removeAll()
-    }
-    
-    func currentStack() -> [Ingredient] {
-        return stack
-    }
-    
-//    func collect() {
-//        view.removeFromParent()
-//        print("Ingrediente coletado: \(model.name)")
-//    }
     
     func collect() {
         if model.remaining > 0 {
             model.remaining -= 1
             view.removeFromParent()
-            print("Ingrediente coletado: \(model.name) - Restantes: \(model.remaining)")
+            self.onCollect()
         }
     }
-    
-    func isCollected() -> Bool {
-        return model.remaining <= 0
-    }
-    
 }

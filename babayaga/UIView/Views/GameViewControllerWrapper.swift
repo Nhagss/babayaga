@@ -19,20 +19,4 @@ struct GameViewControllerWrapper: UIViewControllerRepresentable {
     }
 }
 
-// MARK: define uma view SwiftUI que exibe uma cena SpriteKit
-struct GameSceneView: View {
-    var scene: SKScene {
-        let scene = GameScene()
-        scene.scaleMode = .resizeFill
-        
-        return scene
-    }
-    
-    var body: some View {
-        SpriteView(scene: scene)
-            .ignoresSafeArea()
-            .navigationBarHidden(true)
-    }
-}
-
 
