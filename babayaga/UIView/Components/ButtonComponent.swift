@@ -16,7 +16,7 @@ struct ButtonComponent: View {
                     Circle()
                         .stroke(Color.white, lineWidth: 2)
                 )
-                .frame(width: 80, height: 80) // Tamanho do botão
+                .frame(width: 80, height: 80) 
         }
     }
 }
