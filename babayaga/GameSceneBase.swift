@@ -17,20 +17,21 @@ class GameSceneBase: SKScene {
     var nextPlanetID: UUID = UUID()
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
-    var collectedIngredients: [IngredientController] = []
     
-    /// Closure para notificar a coleta de ingredientes
-    var onIngredientCollected: (([Ingredient]) -> Void)?
+    /// Closure para notificar quando todos os ingredientes foram coletados
+    var onAllIngredientsCollected: (() -> Void)?
+    
     
     override func didMove(to view: SKView) {
         
         setupCamera()
         setupWorld()
         setupPlanets()
+        setupPlanetPlayers()
         setupStairs()
         
         physicsWorld.contactDelegate = self
-
+        
     }
     
     private func setupCamera() {
@@ -44,6 +45,14 @@ class GameSceneBase: SKScene {
     }
     
     func setupPlanets() {}
+    
+    private func setupPlanetPlayers() {
+        for (index, controller) in planetControllers.enumerated() {
+            
+            /// Oculta todos os players, exceto o do primeiro planeta
+            controller.view.playerNode.isHidden = (index != 0)
+        }
+    }
     
     private func setupStairs() {
         guard planetControllers.count >= 2 else { return }
@@ -73,8 +82,6 @@ class GameSceneBase: SKScene {
             for i in 0..<planetControllers.count {
                 if(planetControllers[i].id == nextPlanetID) {
                     currentPlanetIndex = i
-                    print(i)
-                    print(nextPlanetID)
                 }
             }
             
@@ -98,7 +105,6 @@ class GameSceneBase: SKScene {
                 /// Só atualiza o próximo planeta se ainda não estava na escada
                 if !planetControllers[currentPlanetIndex].isContactingStair {
                     nextPlanetID = stair.getJumpDestination(currentPlanet: planetControllers[currentPlanetIndex].id)
-                    print("Novo nextPlanetID definido:", nextPlanetID)
                 }
                 break
             }
@@ -107,7 +113,7 @@ class GameSceneBase: SKScene {
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
             planetControllers[currentPlanetIndex].slowDownRotation()
-
+            
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = false
             planetControllers[currentPlanetIndex].startRotation()
@@ -130,6 +136,7 @@ class GameSceneBase: SKScene {
         cameraNode.position = newPosition
     }
     
+    
     private func handleIngredientContact(_ contact: SKPhysicsContact) {
         let bodies = [contact.bodyA, contact.bodyB]
         
@@ -151,19 +158,10 @@ class GameSceneBase: SKScene {
         /// Remove o ingrediente da cena
         ingredient.collect()
         
-        /// Adiciona a Fila
-        ingredient.push(ingredient.model)
-        
-        /// Chama o closure para atualizar a UI na GameViewController
-        onIngredientCollected?(ingredient.stack)  // Passa a pilha atualizada
-        
         /// Remove da lista de ingredientes ativos no planeta
         if let index = planet.view.ingredients.firstIndex(where: { $0 === ingredient }) {
             planet.view.ingredients.remove(at: index)
         }
-        
-        /// Aqui você pode guardar o ingrediente coletado num inventário futuro
-        print("Ingrediente coletado: \(ingredient.model.name)")
     }
     
     func createMultilineLabel(text: String, maxWidth: CGFloat, fontSize: CGFloat, fontName: String, fontColor: SKColor) -> SKNode {
@@ -254,7 +252,6 @@ extension GameSceneBase: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
-            print("Player colidiu com obstáculo!")
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
@@ -267,7 +264,6 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
-            print("contato ingrediente")
             handleIngredientContact(contact)
         }
     }

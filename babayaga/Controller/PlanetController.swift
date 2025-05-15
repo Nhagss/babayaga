@@ -60,6 +60,12 @@ class PlanetController {
     func addObstacle(angleInDegrees: CGFloat) {
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false)
     }
+    
+    func addEnemySpike(angleInDegrees: CGFloat) {
+        let scale = 1.3
+        let enemySize: CGSize = CGSize(width: 80/scale, height: 80/scale)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
+    }
 
     func addHouse(angleInDegrees: CGFloat) -> Void {
         let scale = 1.3
@@ -88,7 +94,7 @@ class PlanetController {
     
     func makePlanetType(type: PlanetType) {
         
-        let scale = 1.3
+        _ = 1.3
         switch type {
         case .complete:
             addGrass(angleInDegrees: 90)
@@ -106,9 +112,6 @@ class PlanetController {
         case .twoGrass:
             addGrass(angleInDegrees: 340)
             addGrass(angleInDegrees: 100)
-            break
-        default:
-            print("not a planet type")
             break
         }
         

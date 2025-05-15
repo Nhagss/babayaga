@@ -4,46 +4,69 @@
 //
 //  Created by honorio on 08/05/25.
 //
-
-import SpriteKit
 // GameSceneManager.swift
 
 import SpriteKit
 import SwiftUI
+import Combine
 
 class GameSceneManager: ObservableObject {
     @Published var currentScene: GameSceneBase?
     @Published var currentLevel: Int = 1
     @Published var isShowingLevelSelection = false
+    @Published var ingredients = [Ingredient]()
+    @Published var isShowingTransition = false
     
     weak var viewController: GameViewController?
+    
+    var cancellables = Set<AnyCancellable>()
     
     init(viewController: GameViewController? = nil) {
         self.viewController = viewController
     }
     
+    func checkIngredients() {
+        let remaining = ingredients.map(\.remaining).reduce(0, +)
+        if remaining == 0 {
+            showTransition()
+        }
+    }
+    
+    private func showTransition() {
+        isShowingTransition = true
+        
+        // Esconde o overlay depois de 2 segundos e carrega a nova fase
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.isShowingTransition = false
+            self?.nextLevel()
+        }
+    }
+    
     func loadScene(forLevel level: Int) {
-        var newScene: GameSceneBase?
+        guard let viewController = viewController else { return }
+        
+        let newScene: GameSceneBase?
         
         switch level {
         case 1:
-            newScene = PhaseOneScene(size: viewController!.view.bounds.size)
+            newScene = PhaseOneScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 2:
+            newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 3:
+            newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
-            newScene = PhaseOneScene(size: viewController!.view.bounds.size)
+            newScene = nil
         }
         
-//        newScene?.onIngredientCollected = { [weak self] ingredients in
-//            self?.viewController?.updateIngredientUI(with: ingredients)
-//        }
+        guard let scene = newScene else { return }
         
-//        newScene?.onLevelCompleted = { [weak self] in
-//            self?.nextLevel()
-//        }
+        scene.onAllIngredientsCollected = { [weak self] in
+            self?.showTransition()
+        }
         
-        currentScene = newScene
-        viewController?.spriteKitView.presentScene(newScene)
-        
-        // Fecha a tela de seleção ao carregar uma nova fase
+        let transition = SKTransition.crossFade(withDuration: 1.0)
+        currentScene = scene
+        viewController.spriteKitView.presentScene(scene, transition: transition)
         isShowingLevelSelection = false
     }
     
