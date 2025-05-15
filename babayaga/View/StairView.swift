@@ -31,7 +31,7 @@ class StairView: SKShapeNode {
         portal2.size = CGSize(width: 40, height: 50)
         portal2.physicsBody = SKPhysicsBody(rectangleOf: portal2.size)
         portal2.physicsBody?.isDynamic = false
-        portal2.texture = SKTexture(imageNamed: "portal")
+        portal2.texture = SKTexture(imageNamed: "Portal")
         portal2.zPosition = 10
         portal2.zRotation = 1.5
 
@@ -50,7 +50,7 @@ class StairView: SKShapeNode {
                 
         self.path = path
         self.strokeColor = .white
-        self.strokeTexture = SKTexture(imageNamed: "portal")
+        self.strokeTexture = SKTexture(imageNamed: "Portal")
         self.alpha = 1
         self.lineWidth = 4
         self.zPosition = -10
