@@ -112,6 +112,7 @@ class GameSceneBase: SKScene {
         
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
             planetControllers[currentPlanetIndex].isContactingStair = true
+            //som portal
             planetControllers[currentPlanetIndex].slowDownRotation()
             
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
@@ -254,6 +255,18 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
+        //som inimigo
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
+            let xPos = contact.contactPoint.x + 50
+            let yPos = contact.contactPoint.y + 50
+            let position = CGPoint(x: xPos, y: yPos)
+            
+            showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+            
+            planetControllers[currentPlanetIndex].reverseRotation()
+
+        }
+
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.house) {
             let xPos = contact.bodyB.node!.position.x + 100
@@ -271,7 +284,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
         }
 
-        
+        //ingrediente
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
             handleIngredientContact(contact)
         }
