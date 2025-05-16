@@ -30,10 +30,6 @@ class GameViewController: UIViewController {
         
         setupSpriteKitView()
         setupScene()
-        setupUi()
-        setupControls()
-        setupTransitionOverlay()
-        
 #if DEBUG
         configureDebugOptions()
 #endif
@@ -71,7 +67,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setupControls() {
+    func setupControls() {
         controlsView = UIHostingController(rootView: GameControlsView(
             onChangeDirection: { [weak self] in
                 self?.handleDirectionChange()
@@ -114,7 +110,7 @@ class GameViewController: UIViewController {
         spriteKitView.showsNodeCount = true
     }
     
-    private func setupUi() {
+    func setupUi() {
         
         /// Cria o painel de ingredientes
         ingredientPanelView = UIHostingController(
@@ -156,12 +152,16 @@ class GameViewController: UIViewController {
             // Cria o menu SwiftUI
             let menuView = MenuView { [weak self] menuButton in
                 switch menuButton.destination {
+                case .RestartGame:
+                    scene.isPaused = false
+                    self?.restartGame()
+
                 case .GameViewController:
                     scene.isPaused = false
-                    // TODO: Reiniciar jogo!
-                    return
                 case .InitialScreen:
                     self?.router.backToMenu()
+                case .SettingsView:
+                    self?.router.goToSettingsView()
                 }
             } onClose: { [weak self] in
                 scene.isPaused = false
@@ -173,8 +173,9 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setupTransitionOverlay() {
-        let overlayView = UIHostingController(rootView: TransitionOverlayView(level: gameSceneManager.currentLevel))
+    func setupTransitionOverlay() {
+        let grannyAnimation = GrannyAnimation(phaseNumber: gameSceneManager.currentLevel + 1)
+        let overlayView = UIHostingController(rootView: grannyAnimation)
         addChild(overlayView)
         view.addSubview(overlayView.view)
         
@@ -186,7 +187,7 @@ class GameViewController: UIViewController {
             overlayView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        // Esconde inicialmente
+         //Esconde inicialmente
         overlayView.view.isHidden = true
         
         // Vincula a visibilidade ao estado do gameSceneManager
@@ -200,12 +201,14 @@ class GameViewController: UIViewController {
                     animations: {
                         overlayView.view.isHidden = !isShowing
                     },
-                    completion: nil
+                    completion: { _ in
+                        grannyAnimation.play()
+                    }
                 )
             }
             .store(in: &gameSceneManager.cancellables)
     }
-    
+//
     //MARK: Funções de Haptics custom
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
@@ -231,6 +234,16 @@ class GameViewController: UIViewController {
             try player?.start(atTime: 0)
         } catch {
             print("Failed to play pattern: \(error.localizedDescription)")
+        }
+    }
+    
+    func restartGame() {
+        spriteKitView.scene?.removeAllChildren()
+        spriteKitView.scene?.removeAllActions()
+        spriteKitView.presentScene(nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.gameSceneManager.loadScene(forLevel: self.gameSceneManager.currentLevel)
         }
     }
     

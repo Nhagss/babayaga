@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PlayButton: View {
+    @State private var isBlinking = false
+    
     var body: some View {
         VStack {
             ZStack {
@@ -15,13 +17,21 @@ struct PlayButton: View {
                 Image("play")
                 
                 Image("eye.play")
+                    .scaleEffect(y: isBlinking ? 1 : 0, anchor: .center)
+                    .animation(.bouncy(duration: 0.4), value: isBlinking)
                     .padding(.trailing, 10)
+                    .onAppear {
+                        func scheduleNextBlink() {
+                            let delay = Double.random(in: 0.05...2.5)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                isBlinking.toggle()
+                                scheduleNextBlink()
+                            }
+                        }
+                        scheduleNextBlink()
+                    }
                 
             }
-            Text("Jogar")
-                .font(.custom("Quicksand-Regular", size: 27))
-                .foregroundStyle(.white)
-            
         }
     }
 }

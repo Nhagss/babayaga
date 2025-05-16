@@ -44,6 +44,8 @@ class StairView: SKShapeNode {
         path.addLine(to: CGPoint(x: length/2.1, y: 0))
         
         portal2.position = CGPoint(x: path.currentPoint.x - 100, y: path.currentPoint.y)
+        
+        startPlanet.view.playerAnchor.zRotation = startPlanet.view.playerAnchor.zRotation + angle + 5
 
         addChild(portal1)
         addChild(portal2)

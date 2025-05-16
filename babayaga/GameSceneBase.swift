@@ -200,7 +200,7 @@ class GameSceneBase: SKScene {
         return parentNode
     }
     
-    private func showHouseMessage(at position: CGPoint, text: String) {
+    private func showHouseMessage(at position: CGPoint, text: String, for time: TimeInterval) {
         let multilineLabel = createMultilineLabel(text: text, maxWidth: 200, fontSize: 16, fontName: "AvenirNext-Bold", fontColor: .white)
         
         let labelSize = multilineLabel.calculateAccumulatedFrame().size
@@ -236,8 +236,8 @@ class GameSceneBase: SKScene {
         
         bubbleNode.position = position
         self.addChild(bubbleNode)
-        
-        let wait = SKAction.wait(forDuration: 2.0)
+        bubbleNode.zPosition = 100
+        let wait = SKAction.wait(forDuration: time)
         let remove = SKAction.removeFromParent()
         bubbleNode.run(SKAction.sequence([wait, remove]))
     }
@@ -260,12 +260,26 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!")
+            showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!", for: 3)
         }
+        
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.finalHouse) {
+            let xPos = contact.bodyB.node!.position.x + 100
+            let yPos = contact.bodyB.node!.position.y + 100
+            let position = CGPoint(x: xPos, y: yPos)
+            
+            showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
+        }
+
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
             handleIngredientContact(contact)
         }
+    }
+    
+    override func willMove(from view: SKView) {
+        removeAllActions()
+        removeAllChildren()
     }
 }
 

@@ -11,6 +11,7 @@ import SpriteKit
 class PlanetView: SKNode {
     let positioner = SKSpriteNode()
     let world = SKShapeNode(circleOfRadius: 100)
+    let worldBorder = SKShapeNode(circleOfRadius: 35)
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
     let playerNode = PlayerView()
@@ -35,6 +36,12 @@ class PlanetView: SKNode {
         positioner.addChild(orbitAnchor)
         orbitAnchor.addChild(playerAnchor)
         playerAnchor.addChild(playerNode)
+        
+        world.addChild(worldBorder)
+        worldBorder.fillColor = .clear
+        worldBorder.strokeColor = .white
+        worldBorder.glowWidth = 80
+        worldBorder.zPosition = -10
         
         world.fillColor = .black
         world.strokeColor = .clear
@@ -64,8 +71,8 @@ class PlanetView: SKNode {
     
     
     
-    func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, isHouse: Bool = false, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
-        let object = ObjectView(withCollision: withCollision, isHouse: isHouse, texture: texture, size: size)
+    func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, physicsCategory: UInt32 = PhysicsCategory.obstacle, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
+        let object = ObjectView(withCollision: withCollision, physicsCategory: physicsCategory, texture: texture, size: size)
         
         let radius = world.frame.width / 2 + size.height / 2.5 + distanceToPlanet
         let angleInRadians = angleInDegrees * .pi / 180
@@ -103,3 +110,6 @@ class PlanetView: SKNode {
     }
 }
 
+#Preview() {
+    GameViewController()
+}
