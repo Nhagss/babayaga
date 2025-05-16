@@ -152,10 +152,12 @@ class GameViewController: UIViewController {
             // Cria o menu SwiftUI
             let menuView = MenuView { [weak self] menuButton in
                 switch menuButton.destination {
+                case .RestartGame:
+                    scene.isPaused = false
+                    self?.restartGame()
+
                 case .GameViewController:
                     scene.isPaused = false
-                    // TODO: Reiniciar jogo!
-                    return
                 case .InitialScreen:
                     self?.router.backToMenu()
                 case .SettingsView:
@@ -232,6 +234,16 @@ class GameViewController: UIViewController {
             try player?.start(atTime: 0)
         } catch {
             print("Failed to play pattern: \(error.localizedDescription)")
+        }
+    }
+    
+    func restartGame() {
+        spriteKitView.scene?.removeAllChildren()
+        spriteKitView.scene?.removeAllActions()
+        spriteKitView.presentScene(nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.gameSceneManager.loadScene(forLevel: self.gameSceneManager.currentLevel)
         }
     }
     

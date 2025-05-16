@@ -276,6 +276,11 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             handleIngredientContact(contact)
         }
     }
+    
+    override func willMove(from view: SKView) {
+        removeAllActions()
+        removeAllChildren()
+    }
 }
 
 #Preview {
