@@ -16,6 +16,7 @@ class GameViewController: UIViewController {
     var spriteKitView = SKView()
     var gameSceneManager = GameSceneManager()
     var controlsView: UIHostingController<GameControlsView>?
+    
     var ingredientPanelView: UIHostingController<IngredientPanelView>?
     
     let backgroundView = UIHostingController(rootView: BackgroundGame())
@@ -32,9 +33,9 @@ class GameViewController: UIViewController {
         setupScene()
         setupUi()
         setupControls()        
-#if DEBUG
+        #if DEBUG
         configureDebugOptions()
-#endif
+        #endif
     }
     
     private func setupBackground() {
@@ -59,7 +60,7 @@ class GameViewController: UIViewController {
     
     private func setupScene() {
         /// Carrega a primeira fase
-        gameSceneManager.loadScene(forLevel: 1)
+        gameSceneManager.loadScene(forLevel: 2)
         
         // SpriteKit
         if let scene = gameSceneManager.currentScene {
@@ -118,11 +119,11 @@ class GameViewController: UIViewController {
         ingredientPanelView = UIHostingController(
             rootView: IngredientPanelView(gameSceneManager: gameSceneManager)
         )
+        add(ingredientPanelView!)
         guard let ingredientPanelView = ingredientPanelView?.view else { return }
         view.addSubview(ingredientPanelView)
         ingredientPanelView.backgroundColor = .clear
         ingredientPanelView.translatesAutoresizingMaskIntoConstraints = false
-
         
         /// Cria o botão de pause
         let pauseButton = UIButton(type: .system)
@@ -144,6 +145,13 @@ class GameViewController: UIViewController {
             pauseButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16.0),
             pauseButton.topAnchor.constraint(equalTo: ingredientPanelView.centerYAnchor, constant: 15.0)
         ])
+    }
+    
+    func add<T>(_ hosting: UIHostingController<T>) {
+        hosting.sizingOptions = .intrinsicContentSize
+        addChild(hosting)
+        view.addSubview(hosting.view)
+        hosting.didMove(toParent: self)
     }
     
     @objc func openMenuView() {
@@ -208,7 +216,7 @@ class GameViewController: UIViewController {
             }
             .store(in: &gameSceneManager.cancellables)
     }
-//
+
     //MARK: Funções de Haptics custom
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
