@@ -65,10 +65,10 @@ struct InitialScreen: View {
             }
             .navigationDestination(for: Views.self) { view in
                 switch view {
+                case .RestartGame:
+                    GameViewControllerWrapper()
                 case .GameViewController:
                     GameViewControllerWrapper()
-                        .ignoresSafeArea()
-                        .navigationBarBackButtonHidden(true)
                 case .InitialScreen:
                     InitialScreen()
                         .navigationBarBackButtonHidden(true)
