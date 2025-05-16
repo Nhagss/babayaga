@@ -10,7 +10,7 @@ import SpriteKit
 import CoreHaptics
 import Foundation
 struct InitialScreen: View {
-    @ObservedObject private var router = Router.shared
+@ObservedObject private var router = Router.shared
   @State private var engine: CHHapticEngine?
 
     var body: some View {

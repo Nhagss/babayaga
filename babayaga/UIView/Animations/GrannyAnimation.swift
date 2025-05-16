@@ -39,6 +39,7 @@ struct GrannyAnimation: View {
                     .opacity(riveVM.isPlaying ? 1 : 0)
             }
             .onAppear() {
+                //AudioManager.shared.playSound(named: "levelTransition")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(.bouncy(duration: 1)) {
                         animateUp = false
@@ -58,6 +59,7 @@ struct GrannyAnimation: View {
                     }
                 }
             }
+            
 //            .onChange(of: isPlaying) { _, _ in
 //                if isPlaying {
 //                    print("caiu aqui")
