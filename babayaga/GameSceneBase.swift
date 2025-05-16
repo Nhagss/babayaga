@@ -236,7 +236,7 @@ class GameSceneBase: SKScene {
         
         bubbleNode.position = position
         self.addChild(bubbleNode)
-        
+        bubbleNode.zPosition = 100
         let wait = SKAction.wait(forDuration: 2.0)
         let remove = SKAction.removeFromParent()
         bubbleNode.run(SKAction.sequence([wait, remove]))

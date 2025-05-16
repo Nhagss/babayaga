@@ -41,6 +41,8 @@ struct IngredientPanelView: View {
     }
 }
 
+
+//
 //#Preview {
 //    let sample = [
 //        Ingredient(id: 1, name: "Pó de fada", total: 2),

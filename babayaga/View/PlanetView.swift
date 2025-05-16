@@ -11,7 +11,7 @@ import SpriteKit
 class PlanetView: SKNode {
     let positioner = SKSpriteNode()
     let world = SKShapeNode(circleOfRadius: 100)
-    let worldBorder = SKShapeNode(circleOfRadius: 80)
+    let worldBorder = SKShapeNode(circleOfRadius: 35)
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
     let playerNode = PlayerView()
@@ -40,7 +40,7 @@ class PlanetView: SKNode {
         world.addChild(worldBorder)
         worldBorder.fillColor = .clear
         worldBorder.strokeColor = .white
-        worldBorder.glowWidth = 30
+        worldBorder.glowWidth = 80
         worldBorder.zPosition = -10
         
         world.fillColor = .black
