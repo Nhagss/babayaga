@@ -52,6 +52,8 @@ class GameSceneManager: ObservableObject {
             newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 3:
             newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 4:
+            newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
             newScene = nil
         }
@@ -73,6 +75,9 @@ class GameSceneManager: ObservableObject {
     
     func nextLevel() {
         currentLevel += 1
+        loadScene(forLevel: currentLevel)
+    }
+    func restartLevel() {
         loadScene(forLevel: currentLevel)
     }
 }

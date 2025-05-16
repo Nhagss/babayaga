@@ -58,20 +58,28 @@ class PlanetController {
     }
     
     func addObstacle(angleInDegrees: CGFloat) {
-        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.obstacle)
     }
     
     func addEnemySpike(angleInDegrees: CGFloat) {
         let scale = 1.3
         let enemySize: CGSize = CGSize(width: 80/scale, height: 80/scale)
-        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: false, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.obstacle, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
     }
 
     func addHouse(angleInDegrees: CGFloat) -> Void {
         let scale = 1.3
         let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
-        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, isHouse: true, texture: SKTexture(imageNamed: "house"), size: treeSize)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.house, texture: SKTexture(imageNamed: "house"), size: treeSize)
     }
+    
+    func addFinalHouse(angleInDegrees: CGFloat) -> Void {
+        let scale = 1.3
+        let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.finalHouse, texture: SKTexture(imageNamed: "house"), size: treeSize)
+    }
+
+    
     
     func addTree(angleInDegrees: CGFloat) {
         let scale = 1.3

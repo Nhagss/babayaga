@@ -7,13 +7,3 @@
 
 import Foundation
 import SwiftUI
-//
-//enum ViewFactory {
-//    @ViewBuilder
-//    static func viewForDestination(_ destinations: Views) -> some View {
-//        switch destinations {
-//        case .GameViewController:
-//            GameViewControllerWrapper()           
-//        }
-//    }
-//}

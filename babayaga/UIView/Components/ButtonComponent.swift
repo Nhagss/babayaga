@@ -8,23 +8,25 @@
 import SwiftUI
 
 struct ButtonComponent: View {
-    
-    var image: ImageResource
+    var imageName: String
     var action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Circle()
                 .fill(Color.black)
-                .strokeBorder(.white, lineWidth: 2)
-                .frame(width: 80, height: 80) 
-                .overlay {
-                    Image(image)
-                }
+                .overlay(
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(15)
+                )
+                .frame(width: 80, height: 80)
+                .overlay(
+                    Circle().stroke(.white, lineWidth: 2)
+                )
         }
     }
 }
 
-#Preview {
-    ButtonComponent(image: .reverseButton, action: {})
-}
+
