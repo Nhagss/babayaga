@@ -77,15 +77,20 @@ struct InitialScreen: View {
                 }
             }
             .onAppear {
-                AudioManager.shared.playSound(named: "temaPrincipal")
+                if SettingsManager.shared.isMusicEnabled {
+                    AudioManager.shared.playSound(named: "temaPrincipal")
+                }
             }
+
             .ignoresSafeArea()
         }
         .environmentObject(router)
     }
     
     func prepareHaptics() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
+              SettingsManager.shared.isHapticsEnabled else { return }
+
         do {
             engine = try CHHapticEngine()
             try engine?.start()
