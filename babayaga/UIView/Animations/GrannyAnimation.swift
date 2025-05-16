@@ -17,15 +17,21 @@ struct GrannyAnimation: View {
     @State var riveVM: RiveViewModel = RiveViewModel(
         fileName: "GrannyPullsUpCrop"
     )
-
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 VStack(spacing: 0) {
-                    Text("Fase")
-                        .font(.custom("Quicksand-Regular", size: geo.size.width * (animateSize ? 0.15 : 0.15 * 1.6)))
-                    Text("\(phaseNumber)")
-                        .font(.custom("GermaniaOne-Regular", size: geo.size.width * (animateSize ? 0.25 : 0.25 * 1.6)))
+                    if phaseNumber == 4 {
+                        Text("Obrigado por jogar a demo!")
+                            .font(.custom("GermaniaOne-Regular", size: geo.size.width * 0.12))
+                            .multilineTextAlignment(.center)
+                    } else {
+                        Text("Fase")
+                            .font(.custom("Quicksand-Regular", size: geo.size.width * (animateSize ? 0.15 : 0.15 * 1.6)))
+                        Text("\(phaseNumber)")
+                            .font(.custom("GermaniaOne-Regular", size: geo.size.width * (animateSize ? 0.25 : 0.25 * 1.6)))
+                    }
                 }
                 .position(x: geo.size.width/2)
                 .offset(y: geo.size.height * (animateUp ? 1.3 : 0.2))
@@ -58,12 +64,12 @@ struct GrannyAnimation: View {
                     }
                 }
             }
-//            .onChange(of: isPlaying) { _, _ in
-//                if isPlaying {
-//                    print("caiu aqui")
-//                    riveVM.reset()
-//                }
-//            }
+            //            .onChange(of: isPlaying) { _, _ in
+            //                if isPlaying {
+            //                    print("caiu aqui")
+            //                    riveVM.reset()
+            //                }
+            //            }
         }
         
         .background(Background())
@@ -82,5 +88,5 @@ struct GrannyAnimation: View {
 }
 
 #Preview {
-    GrannyAnimation()
+    GrannyAnimation(phaseNumber: 4)
 }

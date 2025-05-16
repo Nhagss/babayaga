@@ -45,7 +45,7 @@ struct InitialScreen: View {
                     }
                     .onAppear(perform: prepareHaptics)
                     
-                    HStack(spacing: 150) {
+                    HStack(alignment:.top ,spacing: 150) {
                         ButtonComponent(imageName: "shinyEye", action: { complexSuccess() })
                             .onAppear(perform: prepareHaptics)
                         

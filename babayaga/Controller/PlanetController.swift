@@ -73,6 +73,14 @@ class PlanetController {
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.house, texture: SKTexture(imageNamed: "house"), size: treeSize)
     }
     
+    func addFinalHouse(angleInDegrees: CGFloat) -> Void {
+        let scale = 1.3
+        let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.finalHouse, texture: SKTexture(imageNamed: "house"), size: treeSize)
+    }
+
+    
+    
     func addTree(angleInDegrees: CGFloat) {
         let scale = 1.3
         let treeSize: CGSize = CGSize(width: 150/scale, height: 200/scale)
