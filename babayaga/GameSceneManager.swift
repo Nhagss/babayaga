@@ -67,6 +67,8 @@ class GameSceneManager: ObservableObject {
         let transition = SKTransition.fade(withDuration: 0)
         currentScene = scene
         viewController.spriteKitView.presentScene(scene, transition: transition)
+        viewController.setupUi()
+        viewController.setupControls()
         viewController.setupTransitionOverlay()
         isShowingLevelSelection = false
     }

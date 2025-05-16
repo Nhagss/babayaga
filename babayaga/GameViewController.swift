@@ -30,8 +30,6 @@ class GameViewController: UIViewController {
         
         setupSpriteKitView()
         setupScene()
-        setupUi()
-        setupControls()        
 #if DEBUG
         configureDebugOptions()
 #endif
@@ -69,7 +67,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setupControls() {
+    func setupControls() {
         controlsView = UIHostingController(rootView: GameControlsView(
             onChangeDirection: { [weak self] in
                 self?.handleDirectionChange()
@@ -112,7 +110,7 @@ class GameViewController: UIViewController {
         spriteKitView.showsNodeCount = true
     }
     
-    private func setupUi() {
+    func setupUi() {
         
         /// Cria o painel de ingredientes
         ingredientPanelView = UIHostingController(
