@@ -111,8 +111,9 @@ class GameSceneBase: SKScene {
         }
         
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
+            print("caiu aqui!")
             planetControllers[currentPlanetIndex].isContactingStair = true
-            //som portal
+            AudioManager.shared.playEffect(named: "portal")
             planetControllers[currentPlanetIndex].slowDownRotation()
             
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
