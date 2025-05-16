@@ -12,16 +12,19 @@ class Router: ObservableObject {
     static var shared: Router = Router()
     
     @Published var path = NavigationPath()
-
+    
     func goToGameScene() {
         path.append(Views.GameViewController.self)
     }
-    
     func goToInitialScreen(){
         path.append(Views.InitialScreen.self)
     }
     
     func backToMenu() {
         path = .init()
+    }
+    
+    func goToSettingsView() {
+        path.append(Views.SettingsView.self)
     }
 }

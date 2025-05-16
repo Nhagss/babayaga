@@ -35,4 +35,8 @@ final class AudioManager {
             print(error)
         }
     }
+    func stopSound() {
+           player?.stop()
+           player = nil
+       }
 }
