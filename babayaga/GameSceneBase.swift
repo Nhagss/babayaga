@@ -150,6 +150,7 @@ class GameSceneBase: SKScene {
             
             if let ingredient = planet.view.ingredients.first(where: { $0.view == ingredienteNode }) {
                 processCollectedIngredient(ingredient, on: planet)
+                AudioManager.shared.playEffect(named: "coleta")
             }
         }
     }
@@ -256,7 +257,6 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
-        //som inimigo
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
             let xPos = contact.contactPoint.x + 50
             let yPos = contact.contactPoint.y + 50

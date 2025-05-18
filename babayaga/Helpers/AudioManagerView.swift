@@ -37,6 +37,21 @@ final class AudioManager {
         }
     }
     
+    func playSoundGranny(named: String) {
+        guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
+            print("Couldn't find \(named).wav")
+            return
+        }
+        
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+            player?.numberOfLoops = 0
+            player?.play()
+        } catch {
+            print(error)
+        }
+    }
+    
     func stopSound() {
        player?.stop()
        player = nil
