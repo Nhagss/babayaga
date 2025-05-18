@@ -72,6 +72,8 @@ class GameSceneBase: SKScene {
         if(planetControllers[currentPlanetIndex].isContactingStair) {
             planetControllers[currentPlanetIndex].isContactingStair = false
             
+            AudioManager.shared.playEffect(named: "portal")
+            
             /// Pause a rotação do planeta atual
             planetControllers[currentPlanetIndex].stopRotation()
             
@@ -111,9 +113,7 @@ class GameSceneBase: SKScene {
         }
         
         if isTouchingStair && !planetControllers[currentPlanetIndex].isContactingStair {
-            print("caiu aqui!")
             planetControllers[currentPlanetIndex].isContactingStair = true
-            AudioManager.shared.playEffect(named: "portal")
             planetControllers[currentPlanetIndex].slowDownRotation()
             
         } else if !isTouchingStair && planetControllers[currentPlanetIndex].isContactingStair {
@@ -261,6 +261,8 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let xPos = contact.contactPoint.x + 50
             let yPos = contact.contactPoint.y + 50
             let position = CGPoint(x: xPos, y: yPos)
+            
+            AudioManager.shared.playEffect(named: "colisão")
             
             showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
             

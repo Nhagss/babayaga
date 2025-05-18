@@ -53,7 +53,7 @@ final class AudioManager {
             secondaryPlayer?.stop()
             secondaryPlayer = try AVAudioPlayer(contentsOf: url)
 //            effectPlayer.volume = 10
-            secondaryPlayer?.numberOfLoops = 1
+            secondaryPlayer?.numberOfLoops = 0
             secondaryPlayer?.play()
             
 //            DispatchQueue.main.asyncAfter(deadline: .now() + effectPlayer.duration) {
