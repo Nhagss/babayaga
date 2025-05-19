@@ -48,6 +48,7 @@ struct LevelsView: View {
                                 }
                             }
                     }
+                    .onAppear(perform: prepareHaptics)
                     .disabled(!isLevelCompleted(level: level))
                 }
             }

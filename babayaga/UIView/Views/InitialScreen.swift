@@ -39,11 +39,12 @@ struct InitialScreen: View {
                     .foregroundStyle(.white)
                 
                 VStack(spacing: 80) {
-                    Button(action: {
+                    Button {
                         complexSuccess()
-                        gameSceneManager.currentLevel = loadLastLevel()
+                        // Se não encontrar nenhum nível salvo, começa do nível 1
+                        gameSceneManager.currentLevel = loadLastLevel() ?? 1
                         router.goToGameScene()
-                    }) {
+                    } label: {
                         PlayButton()
                             .padding(.top, 300)
                     }
@@ -134,9 +135,9 @@ struct InitialScreen: View {
         }
     }
     
-    private func loadLastLevel() -> Int {
-        guard let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int] else {
-            return 0
+    private func loadLastLevel() -> Int? {
+        guard let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int], !encodedData.isEmpty else {
+            return nil
         }
         
         return (encodedData.max() ?? 0) + 1
