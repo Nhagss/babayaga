@@ -16,11 +16,9 @@ class PhaseOneScene: GameSceneBase {
         Ingredient(id: 3, name: "Asa de morcego", total: 1),
     ]
         
-    var gameSceneManager: GameSceneManager?
-
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
         super.init(size: size)
+        self.gameSceneManager = gameSceneManager
         
         DispatchQueue.main.async {
             self.gameSceneManager?.ingredients = self.ingredientesDisponiveis

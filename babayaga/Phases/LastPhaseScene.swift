@@ -9,20 +9,10 @@ import SwiftUI
 
 
 class LastPhaseScene: GameSceneBase {
-    
-    let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Pó de fada", total: 1)
-    ]
-    
-    var gameSceneManager: GameSceneManager?
-    
+            
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
         super.init(size: size)
-        
-        DispatchQueue.main.async {
-            self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
-        }
+        self.gameSceneManager = gameSceneManager
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

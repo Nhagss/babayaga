@@ -14,12 +14,10 @@ class PhaseFiveScene: GameSceneBase {
         Ingredient(id: 2, name: "Pó de fada", total: 2),
         Ingredient(id: 3, name: "Asa de morcego", total: 2)
     ]
-        
-    var gameSceneManager: GameSceneManager?
     
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
         super.init(size: size)
+        self.gameSceneManager = gameSceneManager
         
         DispatchQueue.main.async {
             self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
@@ -85,6 +83,8 @@ class PhaseFiveScene: GameSceneBase {
         planetControllers[0].makePlanetType(type: .threeGrass)
         planetControllers[1].makePlanetType(type: .twoGrass)
         planetControllers[2].makePlanetType(type: .threeGrass)
+        planetControllers[3].makePlanetType(type: .threeGrass)
+        planetControllers[4].makePlanetType(type: .twoGrass)
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
