@@ -204,7 +204,7 @@ class GameViewController: UIViewController {
                     completion: { _ in
                         grannyAnimation.play()
                         if isShowing {
-                            AudioManager.shared.playSound(named: "levelUp")
+                            AudioManager.shared.playSoundGranny(named: "levelUp")
                         } else {
                             AudioManager.shared.playSound(named: "fasesIniciais")
                         }
