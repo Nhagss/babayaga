@@ -33,8 +33,6 @@ class GameViewController: UIViewController {
         
         setupSpriteKitView()
         setupScene()
-        setupUi()
-        setupControls()        
         #if DEBUG
         configureDebugOptions()
         #endif
@@ -73,7 +71,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setupControls() {
+    func setupControls() {
         controlsView = UIHostingController(rootView: GameControlsView(
             onChangeDirection: { [weak self] in
                 self?.handleDirectionChange()
@@ -116,7 +114,7 @@ class GameViewController: UIViewController {
         spriteKitView.showsNodeCount = true
     }
     
-    private func setupUi() {
+    func setupUi() {
         
         /// Cria o painel de ingredientes
         ingredientPanelView = UIHostingController(
@@ -165,10 +163,12 @@ class GameViewController: UIViewController {
             // Cria o menu SwiftUI
             let menuView = MenuView { [weak self] menuButton in
                 switch menuButton.destination {
+                case .RestartGame:
+                    scene.isPaused = false
+                    self?.restartGame()
+
                 case .GameViewController:
                     scene.isPaused = false
-                    // TODO: Reiniciar jogo!
-                    return
                 case .InitialScreen:
                     self?.router.goToRoot()
                 case .SettingsView:
@@ -216,6 +216,11 @@ class GameViewController: UIViewController {
                     },
                     completion: { _ in
                         grannyAnimation.play()
+                        if isShowing {
+                            AudioManager.shared.playSoundGranny(named: "levelUp")
+                        } else {
+                            AudioManager.shared.playSound(named: "fasesIniciais")
+                        }
                     }
                 )
             }
@@ -247,6 +252,16 @@ class GameViewController: UIViewController {
             try player?.start(atTime: 0)
         } catch {
             print("Failed to play pattern: \(error.localizedDescription)")
+        }
+    }
+    
+    func restartGame() {
+        spriteKitView.scene?.removeAllChildren()
+        spriteKitView.scene?.removeAllActions()
+        spriteKitView.presentScene(nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.gameSceneManager.loadScene(forLevel: self.gameSceneManager.currentLevel)
         }
     }
     

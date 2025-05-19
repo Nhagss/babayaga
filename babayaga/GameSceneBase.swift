@@ -72,6 +72,8 @@ class GameSceneBase: SKScene {
         if(planetControllers[currentPlanetIndex].isContactingStair) {
             planetControllers[currentPlanetIndex].isContactingStair = false
             
+            AudioManager.shared.playEffect(named: "portal")
+            
             /// Pause a rotação do planeta atual
             planetControllers[currentPlanetIndex].stopRotation()
             
@@ -148,6 +150,7 @@ class GameSceneBase: SKScene {
             
             if let ingredient = planet.view.ingredients.first(where: { $0.view == ingredienteNode }) {
                 processCollectedIngredient(ingredient, on: planet)
+                AudioManager.shared.playEffect(named: "coleta")
             }
         }
     }
@@ -254,6 +257,19 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
+            let xPos = contact.contactPoint.x + 50
+            let yPos = contact.contactPoint.y + 50
+            let position = CGPoint(x: xPos, y: yPos)
+            
+            AudioManager.shared.playEffect(named: "colisão")
+            
+            showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+            
+            planetControllers[currentPlanetIndex].reverseRotation()
+
+        }
+
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.house) {
             let xPos = contact.bodyB.node!.position.x + 100
@@ -271,10 +287,15 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
         }
 
-        
+        //ingrediente
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
             handleIngredientContact(contact)
         }
+    }
+    
+    override func willMove(from view: SKView) {
+        removeAllActions()
+        removeAllChildren()
     }
 }
 

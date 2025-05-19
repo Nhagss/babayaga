@@ -13,6 +13,7 @@ class PhaseThreeScene: GameSceneBase {
     let ingredientesDisponiveis = [
         Ingredient(id: 1, name: "Pó de fada", total: 1),
         Ingredient(id: 2, name: "Suor de goblin", total: 1),
+        Ingredient(id: 3, name: "Asa de morcego", total: 1)
     ]
         
     var gameSceneManager: GameSceneManager?
@@ -59,6 +60,11 @@ class PhaseThreeScene: GameSceneBase {
         /// Distribui os ingredientes com dificuldade ajustada
         planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 45, onCollect: onCollect)
         planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 270, onCollect: onCollect)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[2], angleInDegrees: 370, onCollect: onCollect)
+        
+        planetControllers[0].addEnemySpike(angleInDegrees: 270)
+        planetControllers[1].addEnemySpike(angleInDegrees: 320)
+        
         
         /// Adiciona obstáculos e ornamentos
         planetControllers[0].addHouse(angleInDegrees: 150)

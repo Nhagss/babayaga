@@ -61,10 +61,11 @@ class PlanetController {
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.obstacle)
     }
     
+    
     func addEnemySpike(angleInDegrees: CGFloat) {
         let scale = 1.3
         let enemySize: CGSize = CGSize(width: 80/scale, height: 80/scale)
-        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.obstacle, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
+        view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.enemySpike, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
     }
 
     func addHouse(angleInDegrees: CGFloat) -> Void {

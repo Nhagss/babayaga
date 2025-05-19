@@ -59,6 +59,10 @@ class GameSceneManager: ObservableObject {
         case 3:
             newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 4:
+            newScene = PhaseFourScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 5:
+            newScene = PhaseFiveScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 6:
             newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
             newScene = nil
@@ -72,6 +76,8 @@ class GameSceneManager: ObservableObject {
         
         let transition = SKTransition.fade(withDuration: 0)
         viewController.spriteKitView.presentScene(scene, transition: transition)
+        viewController.setupUi()
+        viewController.setupControls()
         viewController.setupTransitionOverlay()
         
         DispatchQueue.main.async {
@@ -93,5 +99,9 @@ class GameSceneManager: ObservableObject {
             UserDefaults.standard.set(data, forKey: keyForUserDefaults)
             print("Nível \(item) salvo com sucesso!")
         }
+    }
+    
+    func restartLevel() {
+        loadScene(forLevel: currentLevel)
     }
 }
