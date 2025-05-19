@@ -10,13 +10,12 @@ import SpriteKit
 
 struct IngredientPanelView: View {
     
-    @ObservedObject var gameSceneManager: GameSceneManager
+    @ObservedObject var gameSceneManager = GameSceneManager.shared
     
     var body: some View {
         HStack(spacing: 10) {
             ForEach(gameSceneManager.ingredients, id: \.id) { ingredient in
                 HStack(spacing: 2) {
-                    // Substitua por seu asset .goldCoin1 ou use SF Symbols para teste
                     Image("ingredient\(ingredient.id)")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -40,15 +39,3 @@ struct IngredientPanelView: View {
         )
     }
 }
-
-
-//
-//#Preview {
-//    let sample = [
-//        Ingredient(id: 1, name: "Pó de fada", total: 2),
-//        Ingredient(id: 2, name: "Suor de goblin", total: 3),
-//    ]
-//    
-//    // Testando o componente
-//    IngredientPanelView(model: Model(ingredients: sample))
-//}

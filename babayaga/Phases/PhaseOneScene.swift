@@ -17,9 +17,12 @@ class PhaseOneScene: GameSceneBase {
     ]
         
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        gameSceneManager?.ingredients = ingredientesDisponiveis
         super.init(size: size)
         self.gameSceneManager = gameSceneManager
+        
+        DispatchQueue.main.async {
+            self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
+        }
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

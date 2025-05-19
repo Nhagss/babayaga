@@ -14,14 +14,14 @@ class PhaseFourScene: GameSceneBase {
         Ingredient(id: 2, name: "Pó de fada", total: 1),
         Ingredient(id: 3, name: "Asa de morcego", total: 2)
     ]
-    
-    var totalDeIngredientes: Int
-        
+            
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        gameSceneManager?.ingredients = ingredientesDisponiveis
-        self.totalDeIngredientes = ingredientesDisponiveis.map { $0.total }.reduce(0, +)
         super.init(size: size)
         self.gameSceneManager = gameSceneManager
+        
+        DispatchQueue.main.async {
+            self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
+        }
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

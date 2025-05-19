@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "levelLocked.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
