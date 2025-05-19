@@ -65,23 +65,15 @@ struct GrannyAnimation: View {
                     }
                 }
             }
-            
-//            .onChange(of: isPlaying) { _, _ in
-//                if isPlaying {
-//                    print("caiu aqui")
-//                    riveVM.reset()
-//                }
-//            }
         }
-        
         .background(Background())
     }
     
     func play() {
-        print(riveVM.isPlaying)
+        // print(riveVM.isPlaying)
         riveVM.play()
         riveVM.reset()
-        print(riveVM.isPlaying)
+        // print(riveVM.isPlaying)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             riveVM.stop()

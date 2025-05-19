@@ -11,6 +11,9 @@ import SwiftUI
 import Combine
 
 class GameSceneManager: ObservableObject {
+    
+    static let shared = GameSceneManager()
+    
     @Published var currentScene: GameSceneBase?
     @Published var currentLevel: Int = 1
     @Published var isShowingLevelSelection = false
@@ -23,6 +26,8 @@ class GameSceneManager: ObservableObject {
     
     var cancellables = Set<AnyCancellable>()
     
+    let keyForUserDefaults = "completedLevels"
+        
     init(viewController: GameViewController? = nil) {
         self.viewController = viewController
     }
@@ -32,6 +37,7 @@ class GameSceneManager: ObservableObject {
             onFail?()
             return
         }
+        saveLevel(level: currentLevel)
         showTransition()
     }
     
@@ -60,9 +66,9 @@ class GameSceneManager: ObservableObject {
         case 1:
             newScene = PhaseOneScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 2:
-            newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
-        case 3:
             newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 3:
+            newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 4:
             newScene = PhaseFourScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 5:
@@ -81,18 +87,32 @@ class GameSceneManager: ObservableObject {
         }
         
         let transition = SKTransition.fade(withDuration: 0)
-        currentScene = scene
         viewController.spriteKitView.presentScene(scene, transition: transition)
         viewController.setupUi()
         viewController.setupControls()
         viewController.setupTransitionOverlay()
-        isShowingLevelSelection = false
+        
+        DispatchQueue.main.async {
+            self.currentScene = scene
+            self.isShowingLevelSelection = false
+        }
     }
     
     private func nextLevel() {
         currentLevel += 1
         loadScene(forLevel: currentLevel)
     }
+    
+    private func saveLevel(level item: Int) {
+        var data = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int] ?? []
+        
+        if !data.contains(item) {
+            data.append(item)
+            UserDefaults.standard.set(data, forKey: keyForUserDefaults)
+//            print("Nível \(item) salvo com sucesso!")
+        }
+    }
+    
     private func restartLevel() {
         loadScene(forLevel: currentLevel)
     }

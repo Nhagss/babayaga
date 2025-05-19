@@ -9,17 +9,8 @@ import SwiftUI
 
 
 class LastPhaseScene: GameSceneBase {
-    
-    let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Pó de fada", total: 1),
-        Ingredient(id: 2, name: "Pó de fada", total: 1),
-        Ingredient(id: 3, name: "Asa de morcego", total: 1),
-    ]
-    
-//    var gameSceneManager: GameSceneManager?
-    
+            
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        gameSceneManager?.ingredients = ingredientesDisponiveis
         super.init(size: size)
         self.gameSceneManager = gameSceneManager
     }
@@ -47,7 +38,7 @@ class LastPhaseScene: GameSceneBase {
             gameWorld.addChild(controller.view)
         }
         
-        let onCollect = { [weak self] in
+        _ = { [weak self] in
             guard let self else { return }
             gameSceneManager?.checkIngredients()
         }

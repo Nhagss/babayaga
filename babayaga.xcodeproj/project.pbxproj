@@ -440,9 +440,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2RLCGND43;
+				DEVELOPMENT_TEAM = W8HS7RX76D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -468,9 +469,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R2RLCGND43;
+				DEVELOPMENT_TEAM = W8HS7RX76D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;

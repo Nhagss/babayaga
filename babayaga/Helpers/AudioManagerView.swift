@@ -57,14 +57,14 @@ final class AudioManager {
        player = nil
    }
     func playEffect(named: String) {
-        print(#function)
+//        print(#function)
         guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
             print("Couldn't find \(named).mp3")
             return
         }
 
         do {
-            print("Tocou")
+//            print("Tocou")
             secondaryPlayer?.stop()
             secondaryPlayer = try AVAudioPlayer(contentsOf: url)
 //            effectPlayer.volume = 10
