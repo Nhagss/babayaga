@@ -14,12 +14,14 @@ class GameViewController: UIViewController {
     var router: Router = Router.shared
     var engine: CHHapticEngine?
     var spriteKitView = SKView()
-    var gameSceneManager = GameSceneManager()
+    var gameSceneManager = GameSceneManager.shared
     var controlsView: UIHostingController<GameControlsView>?
     
     var ingredientPanelView: UIHostingController<IngredientPanelView>?
     
     let backgroundView = UIHostingController(rootView: BackgroundGame())
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +62,8 @@ class GameViewController: UIViewController {
     
     private func setupScene() {
         /// Carrega a primeira fase
-        gameSceneManager.loadScene(forLevel: 2)
+        let lastCompletedLevel = gameSceneManager.currentLevel
+        gameSceneManager.loadScene(forLevel: lastCompletedLevel)
         
         // SpriteKit
         if let scene = gameSceneManager.currentScene {
@@ -167,9 +170,11 @@ class GameViewController: UIViewController {
                     // TODO: Reiniciar jogo!
                     return
                 case .InitialScreen:
-                    self?.router.backToMenu()
+                    self?.router.goToRoot()
                 case .SettingsView:
                     self?.router.goToSettingsView()
+                case .LevelsView:
+                    self?.router.goToLevelsView()
                 }
             } onClose: { [weak self] in
                 scene.isPaused = false

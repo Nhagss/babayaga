@@ -12,7 +12,10 @@ import Foundation
 
 struct InitialScreen: View {
     @ObservedObject var router = Router.shared
+    @ObservedObject var gameSceneManager = GameSceneManager.shared
     @State private var engine: CHHapticEngine?
+    
+    let keyForUserDefaults = "completedLevels"
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -37,8 +40,9 @@ struct InitialScreen: View {
                 
                 VStack(spacing: 80) {
                     Button(action: {
-                        router.goToGameScene()
                         complexSuccess()
+                        gameSceneManager.currentLevel = loadLastLevel()
+                        router.goToGameScene()
                     }) {
                         PlayButton()
                             .padding(.top, 300)
@@ -46,19 +50,27 @@ struct InitialScreen: View {
                     .onAppear(perform: prepareHaptics)
                     
                     HStack(alignment:.top ,spacing: 150) {
-                        ButtonComponent(imageName: "shinyEye", action: { complexSuccess() })
+                        VStack {
+                            ButtonComponent(imageName: "levelsIcon") {
+                                complexSuccess()
+                                router.goToLevelsView()
+                            }
                             .onAppear(perform: prepareHaptics)
+                            Text("Níveis")
+                                .font(.custom("Quicksand-Regular", size: 27))
+                                .foregroundStyle(.white)
+                        }
                         
                         // Botão da SettingsView
-                        Button(action: {
-                            router.goToSettingsView()
-                        }) {
-                            VStack {
-                                    ButtonComponent(imageName: "settingsIcon", action: router.goToSettingsView)
-                                Text("Ajustes")
-                                    .font(.custom("Quicksand-Regular", size: 27))
-                                    .foregroundStyle(.white)
+                        VStack {
+                            ButtonComponent(imageName: "settingsIcon") {
+                                complexSuccess()
+                                router.goToSettingsView()
                             }
+                            .onAppear(perform: prepareHaptics)
+                            Text("Ajustes")
+                                .font(.custom("Quicksand-Regular", size: 27))
+                                .foregroundStyle(.white)
                         }
                     }
                 }
@@ -74,6 +86,8 @@ struct InitialScreen: View {
                         .navigationBarBackButtonHidden(true)
                 case .SettingsView:
                     SettingsView()
+                case .LevelsView:
+                    LevelsView()
                 }
             }
             .onAppear {
@@ -114,6 +128,14 @@ struct InitialScreen: View {
         } catch {
             print("Failed to play pattern: \(error.localizedDescription)")
         }
+    }
+    
+    private func loadLastLevel() -> Int {
+        guard let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int] else {
+            return 0
+        }
+        
+        return (encodedData.max() ?? 0) + 1
     }
 }
 

@@ -47,7 +47,7 @@ class LastPhaseScene: GameSceneBase {
             gameWorld.addChild(controller.view)
         }
         
-        let onCollect = { [weak self] in
+        _ = { [weak self] in
             guard let self else { return }
             gameSceneManager?.checkIngredients()
         }

@@ -40,15 +40,3 @@ struct IngredientPanelView: View {
         )
     }
 }
-
-
-//
-//#Preview {
-//    let sample = [
-//        Ingredient(id: 1, name: "Pó de fada", total: 2),
-//        Ingredient(id: 2, name: "Suor de goblin", total: 3),
-//    ]
-//    
-//    // Testando o componente
-//    IngredientPanelView(model: Model(ingredients: sample))
-//}
