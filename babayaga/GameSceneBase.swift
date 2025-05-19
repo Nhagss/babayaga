@@ -278,7 +278,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let position = CGPoint(x: xPos, y: yPos)
             
             gameSceneManager?.goToNextLevel { [weak self] in
-                self?.showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!", for: 3)
+                self?.showHouseMessage(at: position, text: "Volte para a casa para finalizar o nível após coletar todos os ingredientes!", for: 3)
             }
         }
         
