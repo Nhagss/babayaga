@@ -71,5 +71,6 @@ class PhaseOneScene: GameSceneBase {
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
+        planetControllers[0].view.addEnemyBat(delayApparitions: 1)
     }
 }

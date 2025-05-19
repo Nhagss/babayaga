@@ -19,7 +19,7 @@ class PlanetView: SKNode {
     var objects: [ObjectView] = []
     
     var gravityField = SKFieldNode.radialGravityField()
-
+    
     override init() {
         super.init()
         setupView()
@@ -46,7 +46,7 @@ class PlanetView: SKNode {
         world.fillColor = .black
         world.strokeColor = .clear
         positioner.position = .zero
-                
+        
         playerAnchor.physicsBody = SKPhysicsBody(circleOfRadius: 100)
         playerAnchor.physicsBody?.isDynamic = false
         playerAnchor.physicsBody?.friction = 0
@@ -99,9 +99,38 @@ class PlanetView: SKNode {
         
         ingredientView.position = CGPoint(x: x, y: y)
         ingredientView.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
-
+        
         orbitAnchor.addChild(ingredientView)
         ingredients.append(ingredientController)
+    }
+    
+    func addEnemyBat(delayApparitions: Double) {
+        let batAnchor = SKNode()
+        let batView = SKSpriteNode(imageNamed: "enemy-bat")
+        batView.size = CGSize(width: 50, height: 50)
+        batAnchor.addChild(batView)
+        batView.position = CGPoint(x: 0, y: 0)
+        
+        orbitAnchor.addChild(batAnchor)
+        
+        func animateBatCycle() {
+            let pullUpAction = SKAction.move(by: CGVector(dx: 0, dy: world.frame.width), duration: 2)
+            let rotateAction = SKAction.rotate(byAngle: .pi * 2, duration: 4)
+            let hideAction = SKAction.move(by: CGVector(dx: 0, dy: -world.frame.width), duration: 2)
+            
+            batView.run(pullUpAction) {
+                batAnchor.run(rotateAction) {
+                    batView.run(hideAction) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions) {
+                            animateBatCycle() // chama a função recusivamente para repetir
+                        }
+                        
+                    }
+                }
+            }
+        }
+        
+        animateBatCycle()
     }
     
     func rotateOrbitAnchor(angleInDegrees: CGFloat) {
