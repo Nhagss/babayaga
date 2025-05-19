@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import CoreHaptics
 
 struct LevelsView: View {
     @ObservedObject var router = Router.shared
     @ObservedObject var gameSceneManager = GameSceneManager.shared
+    @State private var engine: CHHapticEngine?
+
     private let levels = Array(1...10)
     private let adaptiveColumns = [
         GridItem(.adaptive(minimum: 100))
@@ -24,6 +27,7 @@ struct LevelsView: View {
                 ForEach(levels, id: \.self) { level in
                     Button {
                         if isLevelCompleted(level: level) {
+                            complexSuccess()
                             gameSceneManager.currentLevel = level
                             router.goToGameScene()
                         }
@@ -52,6 +56,35 @@ struct LevelsView: View {
         .vSpacing(.top)
         .background {
             Background()
+        }
+    }
+    
+    private func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
+              SettingsManager.shared.isHapticsEnabled else { return }
+
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("Failed to create engine: \(error.localizedDescription)")
+        }
+    }
+    
+    private func complexSuccess() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
+        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+        let events = [event]
+        
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription)")
         }
     }
     

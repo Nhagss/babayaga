@@ -101,7 +101,7 @@ struct InitialScreen: View {
         .environmentObject(router)
     }
     
-    func prepareHaptics() {
+    private func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
               SettingsManager.shared.isHapticsEnabled else { return }
 
@@ -113,7 +113,7 @@ struct InitialScreen: View {
         }
     }
     
-    func complexSuccess() {
+    private func complexSuccess() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         
         let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)

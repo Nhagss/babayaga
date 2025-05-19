@@ -20,8 +20,11 @@ class LastPhaseScene: GameSceneBase {
     
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
         self.gameSceneManager = gameSceneManager
-        gameSceneManager?.ingredients = ingredientesDisponiveis
         super.init(size: size)
+        
+        DispatchQueue.main.async {
+            self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
+        }
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {
