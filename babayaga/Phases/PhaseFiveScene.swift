@@ -16,14 +16,12 @@ class PhaseFiveScene: GameSceneBase {
     ]
     
     var totalDeIngredientes: Int
-    
-    var gameSceneManager: GameSceneManager?
-    
+        
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
         gameSceneManager?.ingredients = ingredientesDisponiveis
         self.totalDeIngredientes = ingredientesDisponiveis.map { $0.total }.reduce(0, +)
         super.init(size: size)
+        self.gameSceneManager = gameSceneManager
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

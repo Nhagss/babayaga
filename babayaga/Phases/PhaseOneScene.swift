@@ -16,12 +16,10 @@ class PhaseOneScene: GameSceneBase {
         Ingredient(id: 3, name: "Asa de morcego", total: 1),
     ]
         
-    var gameSceneManager: GameSceneManager?
-
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
         gameSceneManager?.ingredients = ingredientesDisponiveis
         super.init(size: size)
+        self.gameSceneManager = gameSceneManager
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

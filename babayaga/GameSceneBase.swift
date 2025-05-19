@@ -21,6 +21,7 @@ class GameSceneBase: SKScene {
     /// Closure para notificar quando todos os ingredientes foram coletados
     var onAllIngredientsCollected: (() -> Void)?
     
+    var gameSceneManager: GameSceneManager?
     
     override func didMove(to view: SKView) {
         
@@ -262,11 +263,11 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.contactPoint.y + 50
             let position = CGPoint(x: xPos, y: yPos)
             
-            AudioManager.shared.playEffect(named: "colisão")
-            
-            showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
-            
-            planetControllers[currentPlanetIndex].reverseRotation()
+            if !(gameSceneManager?.isShowingTransition ?? false) {
+                AudioManager.shared.playEffect(named: "colisão")
+                showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                planetControllers[currentPlanetIndex].reverseRotation()
+            }
 
         }
 
@@ -276,7 +277,9 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!", for: 3)
+            gameSceneManager?.goToNextLevel { [weak self] in
+                self?.showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!", for: 3)
+            }
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.finalHouse) {

@@ -17,6 +17,8 @@ class GameSceneManager: ObservableObject {
     @Published var ingredients = [Ingredient]()
     @Published var isShowingTransition = false
     
+    private var canGoNextLevel: Bool = false
+    
     weak var viewController: GameViewController?
     
     var cancellables = Set<AnyCancellable>()
@@ -25,15 +27,24 @@ class GameSceneManager: ObservableObject {
         self.viewController = viewController
     }
     
+    func goToNextLevel(onFail: (()->Void)? = nil) {
+        guard canGoNextLevel else {
+            onFail?()
+            return
+        }
+        showTransition()
+    }
+    
     func checkIngredients() {
         let remaining = ingredients.map(\.remaining).reduce(0, +)
         if remaining == 0 {
-            showTransition()
+            canGoNextLevel = true
         }
     }
     
     private func showTransition() {
         isShowingTransition = true
+        canGoNextLevel = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.isShowingTransition = false
             self?.nextLevel()
@@ -64,6 +75,7 @@ class GameSceneManager: ObservableObject {
         
         guard let scene = newScene else { return }
         
+        // TODO: Melissa olha se isso faz algo!
         scene.onAllIngredientsCollected = { [weak self] in
             self?.showTransition()
         }
@@ -77,11 +89,11 @@ class GameSceneManager: ObservableObject {
         isShowingLevelSelection = false
     }
     
-    func nextLevel() {
+    private func nextLevel() {
         currentLevel += 1
         loadScene(forLevel: currentLevel)
     }
-    func restartLevel() {
+    private func restartLevel() {
         loadScene(forLevel: currentLevel)
     }
 }
