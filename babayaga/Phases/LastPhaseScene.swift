@@ -11,9 +11,7 @@ import SwiftUI
 class LastPhaseScene: GameSceneBase {
     
     let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Pó de fada", total: 1),
-        Ingredient(id: 2, name: "Pó de fada", total: 1),
-        Ingredient(id: 3, name: "Asa de morcego", total: 1),
+        Ingredient(id: 1, name: "Pó de fada", total: 1)
     ]
     
     var gameSceneManager: GameSceneManager?

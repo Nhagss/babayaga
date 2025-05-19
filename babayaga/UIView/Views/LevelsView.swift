@@ -13,7 +13,7 @@ struct LevelsView: View {
     @ObservedObject var gameSceneManager = GameSceneManager.shared
     @State private var engine: CHHapticEngine?
 
-    private let levels = Array(1...10)
+    private let levels = Array(1...12)
     private let adaptiveColumns = [
         GridItem(.adaptive(minimum: 100))
     ]
