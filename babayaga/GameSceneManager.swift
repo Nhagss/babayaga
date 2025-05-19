@@ -11,6 +11,9 @@ import SwiftUI
 import Combine
 
 class GameSceneManager: ObservableObject {
+    
+    static let shared = GameSceneManager()
+    
     @Published var currentScene: GameSceneBase?
     @Published var currentLevel: Int = 1
     @Published var isShowingLevelSelection = false
@@ -21,6 +24,8 @@ class GameSceneManager: ObservableObject {
     
     var cancellables = Set<AnyCancellable>()
     
+    let keyForUserDefaults = "completedLevels"
+        
     init(viewController: GameViewController? = nil) {
         self.viewController = viewController
     }
@@ -28,6 +33,7 @@ class GameSceneManager: ObservableObject {
     func checkIngredients() {
         let remaining = ingredients.map(\.remaining).reduce(0, +)
         if remaining == 0 {
+            saveLevel(level: currentLevel)
             showTransition()
         }
     }
@@ -69,18 +75,32 @@ class GameSceneManager: ObservableObject {
         }
         
         let transition = SKTransition.fade(withDuration: 0)
-        currentScene = scene
         viewController.spriteKitView.presentScene(scene, transition: transition)
         viewController.setupUi()
         viewController.setupControls()
         viewController.setupTransitionOverlay()
-        isShowingLevelSelection = false
+        
+        DispatchQueue.main.async {
+            self.currentScene = scene
+            self.isShowingLevelSelection = false
+        }
     }
     
     func nextLevel() {
         currentLevel += 1
         loadScene(forLevel: currentLevel)
     }
+    
+    private func saveLevel(level item: Int) {
+        var data = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int] ?? []
+        
+        if !data.contains(item) {
+            data.append(item)
+            UserDefaults.standard.set(data, forKey: keyForUserDefaults)
+            print("Nível \(item) salvo com sucesso!")
+        }
+    }
+    
     func restartLevel() {
         loadScene(forLevel: currentLevel)
     }

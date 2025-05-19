@@ -20,11 +20,24 @@ class Router: ObservableObject {
         path.append(Views.InitialScreen.self)
     }
     
+    func goToSettingsView() {
+        path.append(Views.SettingsView.self)
+    }
+    
+    func goToLevelsView() {
+        path.append(Views.LevelsView.self)
+    }
+    
+    func goBack() {
+        path.removeLast()
+    }
+    
+    func goToRoot() {
+        path.removeLast(path.count)
+    }
+    
     func backToMenu() {
         path = .init()
     }
     
-    func goToSettingsView() {
-        path.append(Views.SettingsView.self)
-    }
 }
