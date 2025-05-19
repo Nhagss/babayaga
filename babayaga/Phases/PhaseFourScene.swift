@@ -81,6 +81,8 @@ class PhaseFourScene: GameSceneBase {
         planetControllers[0].makePlanetType(type: .threeGrass)
         planetControllers[1].makePlanetType(type: .twoGrass)
         planetControllers[2].makePlanetType(type: .threeGrass)
+        planetControllers[3].makePlanetType(type: .twoGrass)
+        
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
