@@ -18,7 +18,7 @@ class Planet {
     }
 
     func slowedSpeed() -> CGFloat {
-        return 0.5 * direction
+        return 0.7 * direction
     }
 
     func regularSpeed() -> CGFloat {

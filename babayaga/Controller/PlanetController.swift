@@ -13,6 +13,10 @@ enum PlanetType {
     case twoGrass, threeGrass, complete
 }
 
+enum RotationDirection {
+    case clockwise, counterClockwise
+}
+
 class PlanetController {
     let id: UUID = UUID()
     let parent: PlanetController?
@@ -61,12 +65,23 @@ class PlanetController {
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.obstacle)
     }
     
-    
     func addEnemySpike(angleInDegrees: CGFloat) {
         let scale = 1.3
         let enemySize: CGSize = CGSize(width: 80/scale, height: 80/scale)
         view.addObject(angleInDegrees: angleInDegrees, withCollision: true, physicsCategory: PhysicsCategory.enemySpike, texture: SKTexture(imageNamed: "inimigoEspinho"), size: enemySize)
     }
+    
+    func addEnemyBat(angleInDegrees: CGFloat, delayApparitions: Double, rotationTimes: CGFloat, rotationDirection: RotationDirection) {
+        view.addEnemyBat(delayApparitions: delayApparitions, rotationTimes: rotationTimes, initialAngle: angleInDegrees, rotationDirection: rotationDirection)
+    }
+    
+    func addMultipleEnemyBat(angleInDegrees: CGFloat, delayApparitions: Double, rotationTimes: CGFloat, numberOfEnemyBat: Int, rotationDirection: RotationDirection) {
+        for i in 0..<numberOfEnemyBat {
+            view.addEnemyBat(delayApparitions: delayApparitions, rotationTimes: rotationTimes, initialAngle: angleInDegrees + CGFloat(i * (360/numberOfEnemyBat)), rotationDirection: rotationDirection)
+        }
+    }
+
+
 
     func addHouse(angleInDegrees: CGFloat) -> Void {
         let scale = 1.3

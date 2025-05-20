@@ -104,32 +104,65 @@ class PlanetView: SKNode {
         ingredients.append(ingredientController)
     }
     
-    func addEnemyBat(delayApparitions: Double) {
+    func addEnemyBat(delayApparitions: Double, rotationTimes: CGFloat, initialAngle: CGFloat, rotationDirection: RotationDirection) {
         let batAnchor = SKNode()
         let batView = SKSpriteNode(imageNamed: "enemy-bat")
-        batView.size = CGSize(width: 50, height: 50)
+        batView.yScale = 0.45
         batAnchor.addChild(batView)
-        batView.position = CGPoint(x: 0, y: 0)
+        batView.position = CGPoint(x: 0, y: -10)
+        batView.zPosition = -100
+        batAnchor.zRotation = initialAngle * .pi / 180
+        let batWarning = SKSpriteNode(imageNamed: "bat-warning")
         
+        if rotationDirection == .counterClockwise {
+            batView.xScale = -0.45
+        } else {
+            batView.xScale = 0.45
+
+        }
+        batWarning.yScale = 1.2
+        batWarning.xScale = 1.3
+        batWarning.position = CGPoint(x: 0, y: world.frame.width/1.3)
+        batWarning.zPosition = -100
+        batAnchor.addChild(batWarning)
+
         orbitAnchor.addChild(batAnchor)
         
         func animateBatCycle() {
-            let pullUpAction = SKAction.move(by: CGVector(dx: 0, dy: world.frame.width), duration: 2)
-            let rotateAction = SKAction.rotate(byAngle: .pi * 2, duration: 4)
-            let hideAction = SKAction.move(by: CGVector(dx: 0, dy: -world.frame.width), duration: 2)
+            let pullUpAction = SKAction.move(by: CGVector(dx: 0, dy: world.frame.width/1.3), duration: 1)
+            pullUpAction.timingMode = .easeIn
+            let factor = rotationDirection == .counterClockwise ? 1 : -1
+            let rotateAction = SKAction.rotate(byAngle: CGFloat(factor) * (.pi * (rotationTimes*2)), duration: 4 * rotationTimes)
+            let hideAction = SKAction.move(by: CGVector(dx: 0, dy: -world.frame.width/1.3), duration: 1)
+            hideAction.timingMode = .easeOut
             
-            batView.run(pullUpAction) {
-                batAnchor.run(rotateAction) {
-                    batView.run(hideAction) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions) {
-                            animateBatCycle() // chama a função recusivamente para repetir
+            batWarning.run(hideAction) {
+                batView.run(pullUpAction) {
+                    batAnchor.run(rotateAction) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions/4) {
+                            batWarning.run(pullUpAction)
                         }
-                        
+                        batView.run(hideAction) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions) {
+                                animateBatCycle() // chama a função recusivamente para repetir
+                            }
+                            
+                        }
                     }
                 }
             }
         }
         
+        let flyUp = SKAction.move(by: CGVector(dx: 0, dy: 15), duration: 0.2)
+        let flyDown = SKAction.move(by: CGVector(dx: 0, dy: -15), duration: 0.3)
+        flyUp.timingMode = .easeOut
+        flyDown.timingMode = .easeOut
+        let sequenceFly = SKAction.sequence([flyUp, flyDown])
+        
+        let flyRepeat = SKAction.repeatForever(sequenceFly)
+        flyRepeat.timingMode = .easeOut
+        batView.run(flyRepeat)
+
         animateBatCycle()
     }
     
