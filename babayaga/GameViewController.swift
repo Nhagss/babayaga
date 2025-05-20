@@ -64,6 +64,17 @@ class GameViewController: UIViewController {
             scene.size = view.bounds.size
             scene.scaleMode = .aspectFill
             scene.backgroundColor = .clear
+
+            // ✅ Etapa 4: Recuperar skin salva
+            let rawValue = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
+            let selectedSkin = CharacterSkin(rawValue: rawValue) ?? .morgana
+            let player = PlayerView(skin: selectedSkin)
+
+            // ✅ Adiciona o player na cena atual
+            scene.addChild(player)
+
+            // Caso precise posicionar o player
+            player.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
         }
     }
     
@@ -160,6 +171,8 @@ class GameViewController: UIViewController {
                     self?.router.backToMenu()
                 case .SettingsView:
                     self?.router.goToSettingsView()
+                case .ChooseCharacter:
+                    ChooseCharacter()
                 }
             } onClose: { [weak self] in
                 scene.isPaused = false

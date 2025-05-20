@@ -9,17 +9,20 @@ import Foundation
 import SpriteKit
 
 class PlayerView: SKNode {
+    private let skin: CharacterSkin
     private let hitboxNode = SKShapeNode(rectOf: CGSize(width: 45, height: 40))
-    override init() {
+
+    init(skin: CharacterSkin) {
+        self.skin = skin
         super.init()
         addChild(hitboxNode)
-        
+
         hitboxNode.fillColor = .clear
         hitboxNode.strokeColor = .clear
-        
+
         let character = createCharacter()
         addChild(character)
-        
+
         setupPhysics()
     }
 
@@ -52,34 +55,28 @@ class PlayerView: SKNode {
     
     ///Mark: Creates the character visually
     func createCharacter() -> SKNode {
-        let center = SKNode()
-        
-        // Torso
-        let torso = SKSpriteNode(texture: SKTexture(imageNamed: "torso"))
-        torso.run(bobbing())
-        torso.run(rotation(byangle: 0.05))
-        torso.position.y = 0
-        center.addChild(torso)
-        
-        // Cabeça
-        let head = SKSpriteNode(texture: SKTexture(imageNamed: "head"))
-        head.setScale(1 / 1.6)
-        head.run(bobbing())
-        head.run(rotation(byangle: 0.02))
-        head.position = CGPoint(x: -15, y: 130)
-        center.addChild(head)
-        
-        // Braços
-        let frontArm = createAnimatedAnchor(image: "frontArm", angle1: 0.8, angle2: -0.8)
-        let backArm = createAnimatedAnchor(image: "backArm", angle1: -0.8, angle2: 0.8)
-        frontArm.position.y = 20
-        backArm.position.y = 20
-        center.addChild(frontArm)
-        center.addChild(backArm)
-        
-        // Pernas
-        let frontFoot = createAnimatedAnchor(image: "foot", angle1: -0.3, angle2: 0.3)
-        let backFoot = createAnimatedAnchor(image: "foot", angle1: 0.3, angle2: -0.3)
+            let center = SKNode()
+            let assets = skin.imageAssets
+            
+            let torso = SKSpriteNode(texture: SKTexture(imageNamed: assets.torso))
+            torso.run(bobbing())
+            torso.run(rotation(byangle: 0.05))
+            torso.position.y = 0
+            center.addChild(torso)
+
+            let head = SKSpriteNode(texture: SKTexture(imageNamed: assets.head))
+            head.setScale(1 / 1.6)
+            head.run(bobbing())
+            head.run(rotation(byangle: 0.02))
+            head.position = CGPoint(x: -15, y: 130)
+            center.addChild(head)
+
+            let frontArm = createAnimatedAnchor(image: assets.frontArm, angle1: 0.8, angle2: -0.8)
+            let backArm = createAnimatedAnchor(image: assets.backArm, angle1: -0.8, angle2: 0.8)
+
+            let frontFoot = createAnimatedAnchor(image: assets.foot, angle1: -0.3, angle2: 0.3)
+            let backFoot = createAnimatedAnchor(image: assets.foot, angle1: 0.3, angle2: -0.3)
+
         frontFoot.position.y = 40
         backFoot.position.y = 40
         center.addChild(frontFoot)

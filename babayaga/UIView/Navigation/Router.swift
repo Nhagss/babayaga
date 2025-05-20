@@ -27,4 +27,7 @@ class Router: ObservableObject {
     func goToSettingsView() {
         path.append(Views.SettingsView.self)
     }
+    func goToChooseCharacter() {
+        path.append(Views.ChooseCharacter.self)
+    }
 }

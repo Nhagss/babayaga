@@ -37,7 +37,7 @@ struct InitialScreen: View {
                 
                 VStack(spacing: 80) {
                     Button(action: {
-                        router.goToGameScene()
+                        router.goToChooseCharacter()
                         complexSuccess()
                     }) {
                         PlayButton()
@@ -74,6 +74,8 @@ struct InitialScreen: View {
                         .navigationBarBackButtonHidden(true)
                 case .SettingsView:
                     SettingsView()
+                case .ChooseCharacter:
+                    ChooseCharacter()
                 }
             }
             .onAppear {

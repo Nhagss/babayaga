@@ -14,7 +14,7 @@ class PlanetView: SKNode {
     let worldBorder = SKShapeNode(circleOfRadius: 35)
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
-    let playerNode = PlayerView()
+    let playerNode = PlayerView(skin: CharacterSkin(rawValue: "morgana") ?? .oppelt)
     var ingredients: [IngredientController] = []
     var objects: [ObjectView] = []
     
