@@ -32,13 +32,20 @@ class GameSceneManager: ObservableObject {
         self.viewController = viewController
     }
     
-    func goToNextLevel(onFail: (()->Void)? = nil) {
+    func goToNextLevel(
+        onFail: (()->Void)? = nil,
+        onSuccess: (()->Void)? = nil
+    ) {
         guard canGoNextLevel else {
             onFail?()
             return
         }
-        saveLevel(level: currentLevel)
-        showTransition()
+        onSuccess?()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            self.saveLevel(level: self.currentLevel)
+            self.showTransition()
+        }
     }
     
     func checkIngredients() {

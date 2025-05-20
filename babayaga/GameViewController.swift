@@ -215,8 +215,8 @@ class GameViewController: UIViewController {
                         overlayView.view.isHidden = !isShowing
                     },
                     completion: { _ in
-                        grannyAnimation.play()
-                        if isShowing {
+                        if isShowing && !grannyAnimation.isPlaying {
+                            grannyAnimation.play()
                             AudioManager.shared.playSoundGranny(named: "levelUp")
                         } else {
                             AudioManager.shared.playSound(named: "fasesIniciais")

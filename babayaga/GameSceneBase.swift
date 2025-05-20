@@ -259,8 +259,8 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
-            let xPos = contact.contactPoint.x + 50
-            let yPos = contact.contactPoint.y + 50
+            let xPos = contact.bodyB.node!.position.x + 110
+            let yPos = contact.bodyB.node!.position.y - 60
             let position = CGPoint(x: xPos, y: yPos)
             
             if !(gameSceneManager?.isShowingTransition ?? false) {
@@ -277,8 +277,10 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            gameSceneManager?.goToNextLevel { [weak self] in
+            gameSceneManager?.goToNextLevel{ [weak self] in
                 self?.showHouseMessage(at: position, text: "Volte para a casa para finalizar o nível após coletar todos os ingredientes!", for: 3)
+            } onSuccess: { [ unowned self ] in
+                self.planetControllers[self.currentPlanetIndex].slowDownRotation()
             }
         }
         
