@@ -47,13 +47,13 @@ class GameSceneManager: ObservableObject {
         
         switch level {
         case 1:
-            newScene = PhaseOneScene(gameSceneManager: self, size: viewController.view.bounds.size)
+            newScene = PhaseOneScene(size: viewController.view.bounds.size, gameSceneManager: self)
         case 2:
-            newScene = PhaseThreeScene(gameSceneManager: self, size: viewController.view.bounds.size)
+            newScene = PhaseThreeScene(size: viewController.view.bounds.size, gameSceneManager: self)
         case 3:
-            newScene = PhaseTwoScene(gameSceneManager: self, size: viewController.view.bounds.size)
+            newScene = PhaseTwoScene(size: viewController.view.bounds.size, gameSceneManager: self)
         case 4:
-            newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
+            newScene = LastPhaseScene(size: viewController.view.bounds.size, gameSceneManager: self)
         default:
             newScene = nil
         }

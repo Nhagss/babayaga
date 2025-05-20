@@ -16,12 +16,9 @@ class LastPhaseScene: GameSceneBase {
         Ingredient(id: 3, name: "Asa de morcego", total: 1),
     ]
     
-    var gameSceneManager: GameSceneManager?
-    
-    init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
-        gameSceneManager?.ingredients = ingredientesDisponiveis
-        super.init(size: size)
+    init(size: CGSize, gameSceneManager: GameSceneManager?) {
+        super.init(gameSceneManager: gameSceneManager!, size: size)
+        self.gameSceneManager?.ingredients = ingredientesDisponiveis
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {

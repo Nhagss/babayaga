@@ -105,27 +105,16 @@ class PlanetView: SKNode {
     }
     
     func addEnemyBat(delayApparitions: Double, rotationTimes: CGFloat, initialAngle: CGFloat, rotationDirection: RotationDirection) {
-        let batAnchor = SKNode()
-        let batView = SKSpriteNode(imageNamed: "enemy-bat")
-        batView.yScale = 0.45
-        batAnchor.addChild(batView)
-        batView.position = CGPoint(x: 0, y: -10)
-        batView.zPosition = -100
-        batAnchor.zRotation = initialAngle * .pi / 180
-        let batWarning = SKSpriteNode(imageNamed: "bat-warning")
-        
+        let enemy = EnemyBatView(textureName: "enemy-bat")
         if rotationDirection == .counterClockwise {
-            batView.xScale = -0.45
+            enemy.sprite.xScale = -0.45
         } else {
-            batView.xScale = 0.45
-
+            enemy.sprite.xScale = 0.45
         }
-        batWarning.yScale = 1.2
-        batWarning.xScale = 1.3
-        batWarning.position = CGPoint(x: 0, y: world.frame.width/1.3)
-        batWarning.zPosition = -100
-        batAnchor.addChild(batWarning)
-
+        let batAnchor = SKNode()
+        batAnchor.addChild(enemy)
+        enemy.startHovering()
+        batAnchor.zRotation = initialAngle * .pi / 180
         orbitAnchor.addChild(batAnchor)
         
         func animateBatCycle() {
@@ -136,13 +125,13 @@ class PlanetView: SKNode {
             let hideAction = SKAction.move(by: CGVector(dx: 0, dy: -world.frame.width/1.3), duration: 1)
             hideAction.timingMode = .easeOut
             
-            batWarning.run(hideAction) {
-                batView.run(pullUpAction) {
+            enemy.warning.run(hideAction) {
+                enemy.sprite.run(pullUpAction) {
                     batAnchor.run(rotateAction) {
                         DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions/4) {
-                            batWarning.run(pullUpAction)
+                            enemy.warning.run(pullUpAction)
                         }
-                        batView.run(hideAction) {
+                        enemy.sprite.run(hideAction) {
                             DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions) {
                                 animateBatCycle() // chama a função recusivamente para repetir
                             }
@@ -161,8 +150,8 @@ class PlanetView: SKNode {
         
         let flyRepeat = SKAction.repeatForever(sequenceFly)
         flyRepeat.timingMode = .easeOut
-        batView.run(flyRepeat)
-
+        enemy.sprite.run(flyRepeat)
+        
         animateBatCycle()
     }
     
