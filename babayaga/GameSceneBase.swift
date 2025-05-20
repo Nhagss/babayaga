@@ -17,7 +17,7 @@ class GameSceneBase: SKScene {
     var nextPlanetID: UUID = UUID()
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
-    
+    var isShowingEnemyMessage: Bool = false
     /// Closure para notificar quando todos os ingredientes foram coletados
     var onAllIngredientsCollected: (() -> Void)?
     
@@ -259,13 +259,19 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
-            let xPos = contact.bodyB.node!.position.x + 110
-            let yPos = contact.bodyB.node!.position.y - 60
+            let xPos = contact.contactPoint.x + 50
+            let yPos = contact.contactPoint.y + 50
             let position = CGPoint(x: xPos, y: yPos)
             
             if !(gameSceneManager?.isShowingTransition ?? false) {
                 AudioManager.shared.playEffect(named: "colisão")
-                showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                if !self.isShowingEnemyMessage {
+                    self.isShowingEnemyMessage = true
+                    showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.isShowingEnemyMessage = false
+                    }
+                }
                 planetControllers[currentPlanetIndex].reverseRotation()
             }
 
