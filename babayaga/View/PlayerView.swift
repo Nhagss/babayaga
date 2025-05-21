@@ -40,7 +40,7 @@ class PlayerView: SKNode {
         
         physicsBody?.categoryBitMask = PhysicsCategory.player
         physicsBody?.collisionBitMask = PhysicsCategory.none
-        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.stair
+        physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.stair | PhysicsCategory.enemyBat
     }
 
     func jump() {
