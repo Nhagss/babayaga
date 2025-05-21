@@ -38,15 +38,17 @@ final class AudioManager {
     }
     
     func playSoundGranny(named: String) {
-        guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
-            print("Couldn't find \(named).wav")
+        guard let url = Bundle.main.url(forResource: named, withExtension: "mp3"),
+                    !(secondaryPlayer?.isPlaying ?? false) else {
+            print("Couldn't find \(named).wav or some sound is playing")
             return
         }
         
         do {
-            player = try AVAudioPlayer(contentsOf: url)
-            player?.numberOfLoops = 0
-            player?.play()
+            secondaryPlayer?.stop()
+            secondaryPlayer = try AVAudioPlayer(contentsOf: url)
+            secondaryPlayer?.numberOfLoops = 0
+            secondaryPlayer?.play()
         } catch {
             print(error)
         }
@@ -57,22 +59,16 @@ final class AudioManager {
        player = nil
    }
     func playEffect(named: String) {
-//        print(#function)
         guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
             print("Couldn't find \(named).mp3")
             return
         }
 
         do {
-//            print("Tocou")
             secondaryPlayer?.stop()
             secondaryPlayer = try AVAudioPlayer(contentsOf: url)
-//            effectPlayer.volume = 10
             secondaryPlayer?.numberOfLoops = 0
             secondaryPlayer?.play()
-            
-//            DispatchQueue.main.asyncAfter(deadline: .now() + effectPlayer.duration) {
-//            }
         } catch {
             print("Error playing effect: \(error)")
         }

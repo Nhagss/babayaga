@@ -17,7 +17,7 @@ class GameSceneBase: SKScene {
     var nextPlanetID: UUID = UUID()
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
-    
+    var isShowingEnemyMessage: Bool = false
     /// Closure para notificar quando todos os ingredientes foram coletados
     var onAllIngredientsCollected: (() -> Void)?
     
@@ -265,7 +265,13 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             
             if !(gameSceneManager?.isShowingTransition ?? false) {
                 AudioManager.shared.playEffect(named: "colisão")
-                showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                if !self.isShowingEnemyMessage {
+                    self.isShowingEnemyMessage = true
+                    showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.isShowingEnemyMessage = false
+                    }
+                }
                 planetControllers[currentPlanetIndex].reverseRotation()
             }
 
@@ -277,8 +283,10 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            gameSceneManager?.goToNextLevel { [weak self] in
+            gameSceneManager?.goToNextLevel{ [weak self] in
                 self?.showHouseMessage(at: position, text: "Volte para a casa para finalizar o nível após coletar todos os ingredientes!", for: 3)
+            } onSuccess: { [ unowned self ] in
+                self.planetControllers[self.currentPlanetIndex].slowDownRotation()
             }
         }
         

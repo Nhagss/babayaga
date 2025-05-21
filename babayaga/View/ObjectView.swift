@@ -19,7 +19,11 @@ class ObjectView: SKSpriteNode {
     }
     
     private func setupPhysics(physicsCategory: UInt32) {
-        physicsBody = SKPhysicsBody(rectangleOf: size)
+        if let texture = texture {
+            physicsBody = SKPhysicsBody(texture: texture, size: size)
+        } else {
+            physicsBody = SKPhysicsBody(rectangleOf: size)            
+        }
         
         physicsBody?.friction = 0
         physicsBody?.isDynamic = true
