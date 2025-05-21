@@ -53,11 +53,19 @@ struct ChooseCharacter: View {
                         }
                         .padding(.trailing, 22)
                     }
+                    
+                    .onAppear {
+                        DispatchQueue.main.async {
+                            proxy.scrollTo(currentIndex, anchor: .center)
+                        }
+                    }
+                    
                     .onChange(of: currentIndex) { newIndex in
                         withAnimation {
                             proxy.scrollTo(newIndex, anchor: .center)
                         }
                     }
+                    
                 }
 
                 Button(action: {

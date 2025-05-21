@@ -79,11 +79,11 @@ class PlayerView: SKNode {
         frontFoot.position.y = 40
         backFoot.position.y = 40
         center.addChild(frontFoot)
-        center.addChild(backFoot)
+        center.addChild(frontFoot)
 
         // Posicionamento dos membros
-        frontArm.children.first?.position = CGPoint(x: 10, y: -30)
-        backArm.children.first?.position = CGPoint(x: -10, y: -30)
+        //frontArm.children.first?.position = CGPoint(x: 10, y: -30)
+        //backArm.children.first?.position = CGPoint(x: -10, y: -30)
         frontFoot.children.first?.position = CGPoint(x: 0, y: -80)
         backFoot.children.first?.position = CGPoint(x: 0, y: -80)
 
@@ -136,4 +136,8 @@ class PlayerView: SKNode {
         let left = SKAction.rotate(byAngle: -byangle, duration: 0.5)
         return SKAction.repeatForever(SKAction.sequence([right, left]))
     }
+}
+
+#Preview {
+    GameViewController()
 }
