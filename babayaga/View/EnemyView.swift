@@ -21,9 +21,9 @@ class EnemyBatView: SKNode {
         sprite.position = CGPoint(x: 0, y: -10)
         addChild(sprite)
         
-        warning.yScale = 1.2
-        warning.xScale = 1.3
-        warning.position = CGPoint(x: 0, y: 160) // assuming world.frame.width / 1.3 ~ 160
+        warning.yScale = 0.2
+        warning.xScale = 0.2
+        warning.position = CGPoint(x: 0, y: 150) // assuming world.frame.width / 1.3 ~ 160
         warning.zPosition = -100
         addChild(warning)
         
@@ -65,4 +65,8 @@ class EnemyBatView: SKNode {
     func hideWarning() {
         warning.isHidden = true
     }
+}
+
+#Preview() {
+    GameViewController()
 }
