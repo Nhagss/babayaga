@@ -8,12 +8,19 @@ import SpriteKit
 import SwiftUI
 
 
-class LastPhaseScene: GameSceneBase {
-            
+class LastPhaseScene: GameSceneBase {            
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
         super.init(size: size)
         self.gameSceneManager = gameSceneManager
     }
+
+    let ingredientesDisponiveis = [
+        Ingredient(id: 1, name: "Pó de fada", total: 1),
+        Ingredient(id: 2, name: "Pó de fada", total: 1),
+        Ingredient(id: 3, name: "Asa de morcego", total: 1),
+    ]
+    
+    
     
     @MainActor required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

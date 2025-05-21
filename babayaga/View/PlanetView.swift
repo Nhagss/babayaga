@@ -19,7 +19,7 @@ class PlanetView: SKNode {
     var objects: [ObjectView] = []
     
     var gravityField = SKFieldNode.radialGravityField()
-
+    
     override init() {
         super.init()
         setupView()
@@ -46,7 +46,7 @@ class PlanetView: SKNode {
         world.fillColor = .black
         world.strokeColor = .clear
         positioner.position = .zero
-                
+        
         playerAnchor.physicsBody = SKPhysicsBody(circleOfRadius: 100)
         playerAnchor.physicsBody?.isDynamic = false
         playerAnchor.physicsBody?.friction = 0
@@ -99,9 +99,60 @@ class PlanetView: SKNode {
         
         ingredientView.position = CGPoint(x: x, y: y)
         ingredientView.zRotation = angleInRadians - orbitAnchor.zRotation - .pi / 2
-
+        
         orbitAnchor.addChild(ingredientView)
         ingredients.append(ingredientController)
+    }
+    
+    func addEnemyBat(delayApparitions: Double, rotationTimes: CGFloat, initialAngle: CGFloat, rotationDirection: RotationDirection) {
+        let enemy = EnemyBatView(textureName: "enemy-bat")
+        if rotationDirection == .counterClockwise {
+            enemy.sprite.xScale = -0.45
+        } else {
+            enemy.sprite.xScale = 0.45
+        }
+        let batAnchor = SKNode()
+        batAnchor.addChild(enemy)
+        enemy.startHovering()
+        batAnchor.zRotation = initialAngle * .pi / 180
+        orbitAnchor.addChild(batAnchor)
+        
+        func animateBatCycle() {
+            let pullUpAction = SKAction.move(by: CGVector(dx: 0, dy: world.frame.width/1.3), duration: 1)
+            pullUpAction.timingMode = .easeIn
+            let factor = rotationDirection == .counterClockwise ? 1 : -1
+            let rotateAction = SKAction.rotate(byAngle: CGFloat(factor) * (.pi * (rotationTimes*2)), duration: 4 * rotationTimes)
+            let hideAction = SKAction.move(by: CGVector(dx: 0, dy: -world.frame.width/1.3), duration: 1)
+            hideAction.timingMode = .easeOut
+            
+            enemy.warning.run(hideAction) {
+                enemy.sprite.run(pullUpAction) {
+                    batAnchor.run(rotateAction) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions/4) {
+                            enemy.warning.run(pullUpAction)
+                        }
+                        enemy.sprite.run(hideAction) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + delayApparitions) {
+                                animateBatCycle() // chama a função recusivamente para repetir
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        let flyUp = SKAction.move(by: CGVector(dx: 0, dy: 15), duration: 0.2)
+        let flyDown = SKAction.move(by: CGVector(dx: 0, dy: -15), duration: 0.3)
+        flyUp.timingMode = .easeOut
+        flyDown.timingMode = .easeOut
+        let sequenceFly = SKAction.sequence([flyUp, flyDown])
+        
+        let flyRepeat = SKAction.repeatForever(sequenceFly)
+        flyRepeat.timingMode = .easeOut
+        enemy.sprite.run(flyRepeat)
+        
+        animateBatCycle()
     }
     
     func rotateOrbitAnchor(angleInDegrees: CGFloat) {

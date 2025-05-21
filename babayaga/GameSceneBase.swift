@@ -10,7 +10,6 @@ import GameplayKit
 import SwiftUI
 
 class GameSceneBase: SKScene {
-    
     var currentPlanetIndex = 0
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
@@ -258,6 +257,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.obstacle) {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
+        
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
             let xPos = contact.contactPoint.x + 50
             let yPos = contact.contactPoint.y + 50
@@ -274,9 +274,15 @@ extension GameSceneBase: SKPhysicsContactDelegate {
                 }
                 planetControllers[currentPlanetIndex].reverseRotation()
             }
-
         }
-
+        
+        if contactBetween(contact, PhysicsCategory.enemyBat, PhysicsCategory.player) {
+            print("Contato com morcego")
+            if contact.bodyA.node?.isHidden == false {
+                print("\(contact.bodyB.node!)")
+                self.gameSceneManager?.restartLevel()
+            }
+        }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.house) {
             let xPos = contact.bodyB.node!.position.x + 100
@@ -297,11 +303,12 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             
             showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
         }
-
+        
         //ingrediente
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
             handleIngredientContact(contact)
         }
+        
     }
     
     override func willMove(from view: SKView) {

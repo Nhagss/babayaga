@@ -120,7 +120,7 @@ class GameSceneManager: ObservableObject {
         }
     }
     
-    private func restartLevel() {
+    func restartLevel() {
         loadScene(forLevel: currentLevel)
     }
 }

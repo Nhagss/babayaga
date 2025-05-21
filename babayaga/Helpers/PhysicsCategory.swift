@@ -16,5 +16,6 @@ struct PhysicsCategory {
     static let house: UInt32 = 0x1 << 5
     static let finalHouse: UInt32 = 0x1 << 6
     static let enemySpike: UInt32 = 0x1 << 7
+    static let enemyBat: UInt32 = 0x1 << 8
     static let none: UInt32 = 0
 }
