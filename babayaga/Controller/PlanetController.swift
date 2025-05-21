@@ -24,12 +24,11 @@ class PlanetController {
         set { model.isContactingStair = newValue }
     }
     
-    init(parent: PlanetController? = nil, model: Planet = Planet(), view: PlanetView = PlanetView()) {
-        
-        self.parent = parent
-        self.model = model
-        self.view = view
-    }
+    init(parent: PlanetController? = nil, model: Planet = Planet(), skin: CharacterSkin) {
+           self.parent = parent
+           self.model = model
+           self.view = PlanetView(skin: skin)
+       }
     
     func startRotation() {
         view.rotate(speed: model.regularSpeed())

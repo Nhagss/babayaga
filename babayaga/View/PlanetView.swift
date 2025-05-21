@@ -14,22 +14,24 @@ class PlanetView: SKNode {
     let worldBorder = SKShapeNode(circleOfRadius: 35)
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
-    let playerNode = PlayerView(skin: CharacterSkin(rawValue: "morgana") ?? .oppelt)
+    let playerNode: PlayerView  // Agora inicializado via init
     var ingredients: [IngredientController] = []
     var objects: [ObjectView] = []
-    
+
     var gravityField = SKFieldNode.radialGravityField()
 
-    override init() {
+    // ✅ Agora recebe a skin escolhida
+    init(skin: CharacterSkin) {
+        self.playerNode = PlayerView(skin: skin)
         super.init()
         setupView()
         rotateOrbitAnchor(angleInDegrees: 0)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupView() {
         addChild(positioner)
         positioner.addChild(world)
@@ -54,23 +56,19 @@ class PlanetView: SKNode {
         playerAnchor.physicsBody?.allowsRotation = true
         
         playerNode.position = CGPoint(x: 0, y: 120)
-        
-        
     }
-    
+
     func rotate(speed: CGFloat) {
         playerAnchor.removeAction(forKey: "rotation")
         let rotateAction = SKAction.rotate(byAngle: speed, duration: 1)
         let repeatAction = SKAction.repeatForever(rotateAction)
         playerAnchor.run(repeatAction, withKey: "rotation")
     }
-    
+
     func stopRotation() {
         playerAnchor.removeAction(forKey: "rotation")
     }
-    
-    
-    
+
     func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, physicsCategory: UInt32 = PhysicsCategory.obstacle, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
         let object = ObjectView(withCollision: withCollision, physicsCategory: physicsCategory, texture: texture, size: size)
         
@@ -86,7 +84,7 @@ class PlanetView: SKNode {
         orbitAnchor.addChild(object)
         objects.append(object)
     }
-    
+
     func addIngredient(model: Ingredient, angleInDegrees: CGFloat, onCollect: @escaping () -> Void) {
         let ingredientController = IngredientController(model: model, onCollect: onCollect)
         let ingredientView = ingredientController.view
@@ -103,13 +101,13 @@ class PlanetView: SKNode {
         orbitAnchor.addChild(ingredientView)
         ingredients.append(ingredientController)
     }
-    
+
     func rotateOrbitAnchor(angleInDegrees: CGFloat) {
         let angleInRadians = angleInDegrees * .pi / 180
         orbitAnchor.zRotation = angleInRadians
     }
 }
 
-#Preview() {
+#Preview{
     GameViewController()
 }

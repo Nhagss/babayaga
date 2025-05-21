@@ -9,7 +9,6 @@ import SwiftUI
 struct ChooseCharacter: View {
     @ObservedObject var router: Router = Router.shared
     @State private var currentIndex = 0
-    let characters = CharacterSkin.allCases
 
     var body: some View {
         ZStack {
@@ -30,7 +29,7 @@ struct ChooseCharacter: View {
                         VStack(spacing: 0) {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 40) {
-                                    ForEach(Array(characters.enumerated()), id: \.offset) { index, skin in
+                                    ForEach(Array(CharacterSkin.allCases.enumerated()), id: \.offset) { index, skin in
                                         VStack(spacing: 0) {
                                             Image(skin.rawValue)
                                                 .resizable()
@@ -48,7 +47,7 @@ struct ChooseCharacter: View {
                         }
 
                         Button(action: {
-                            if currentIndex < characters.count - 1 { currentIndex += 1 }
+                            if currentIndex < CharacterSkin.allCases.count - 1 { currentIndex += 1 }
                         }) {
                             Image("Next")
                         }
@@ -62,7 +61,7 @@ struct ChooseCharacter: View {
                 }
 
                 Button(action: {
-                    let selected = characters[currentIndex]
+                    let selected = CharacterSkin.allCases[currentIndex]
                     UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
                     router.goToGameScene()
                 }) {

@@ -56,24 +56,18 @@ class GameViewController: UIViewController {
     }
     
     private func setupScene() {
-        /// Carrega a primeira fase
         gameSceneManager.loadScene(forLevel: 1)
         
-        // SpriteKit
         if let scene = gameSceneManager.currentScene {
             scene.size = view.bounds.size
             scene.scaleMode = .aspectFill
             scene.backgroundColor = .clear
 
-            // ✅ Etapa 4: Recuperar skin salva
             let rawValue = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
             let selectedSkin = CharacterSkin(rawValue: rawValue) ?? .morgana
+
             let player = PlayerView(skin: selectedSkin)
-
-            // ✅ Adiciona o player na cena atual
             scene.addChild(player)
-
-            // Caso precise posicionar o player
             player.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
         }
     }

@@ -53,41 +53,40 @@ class PlayerView: SKNode {
         run(sequence)
     }
     
-    ///Mark: Creates the character visually
     func createCharacter() -> SKNode {
-            let center = SKNode()
-            let assets = skin.imageAssets
-            
-            let torso = SKSpriteNode(texture: SKTexture(imageNamed: assets.torso))
-            torso.run(bobbing())
-            torso.run(rotation(byangle: 0.05))
-            torso.position.y = 0
-            center.addChild(torso)
+        let center = SKNode()
+        let assets = skin.imageAssets
 
-            let head = SKSpriteNode(texture: SKTexture(imageNamed: assets.head))
-            head.setScale(1 / 1.6)
-            head.run(bobbing())
-            head.run(rotation(byangle: 0.02))
-            head.position = CGPoint(x: -15, y: 130)
-            center.addChild(head)
+        let torso = SKSpriteNode(texture: SKTexture(imageNamed: assets.torso))
+        torso.run(bobbing())
+        torso.run(rotation(byangle: 0.05))
+        torso.position.y = 0
+        center.addChild(torso)
 
-            let frontArm = createAnimatedAnchor(image: assets.frontArm, angle1: 0.8, angle2: -0.8)
-            let backArm = createAnimatedAnchor(image: assets.backArm, angle1: -0.8, angle2: 0.8)
+        let head = SKSpriteNode(texture: SKTexture(imageNamed: assets.head))
+        head.setScale(1 / 1.6)
+        head.run(bobbing())
+        head.run(rotation(byangle: 0.02))
+        head.position = CGPoint(x: -15, y: 130)
+        center.addChild(head)
 
-            let frontFoot = createAnimatedAnchor(image: assets.foot, angle1: -0.3, angle2: 0.3)
-            let backFoot = createAnimatedAnchor(image: assets.foot, angle1: 0.3, angle2: -0.3)
+        let frontArm = createAnimatedAnchor(image: assets.frontArm, angle1: 0.8, angle2: -0.8)
+        let backArm = createAnimatedAnchor(image: assets.backArm, angle1: -0.8, angle2: 0.8)
+
+        let frontFoot = createAnimatedAnchor(image: assets.foot, angle1: -0.3, angle2: 0.3)
+        let backFoot = createAnimatedAnchor(image: assets.backFoot ?? assets.foot, angle1: 0.3, angle2: -0.3)
 
         frontFoot.position.y = 40
         backFoot.position.y = 40
         center.addChild(frontFoot)
         center.addChild(backFoot)
-        
+
         // Posicionamento dos membros
         frontArm.children.first?.position = CGPoint(x: 10, y: -30)
         backArm.children.first?.position = CGPoint(x: -10, y: -30)
         frontFoot.children.first?.position = CGPoint(x: 0, y: -80)
         backFoot.children.first?.position = CGPoint(x: 0, y: -80)
-        
+
         // Escalas
         [frontFoot, backFoot].forEach {
             $0.children.first?.xScale = 1
@@ -106,13 +105,12 @@ class PlayerView: SKNode {
         torso.zPosition = 3
         frontArm.children.first?.zPosition = 4
         head.zPosition = 5
-        
+
         // Escala total
         center.setScale(0.4)
-        
+
         return center
     }
-    
     
     func createAnimatedAnchor(image: String, angle1: CGFloat, angle2: CGFloat) -> SKNode {
         let anchor = SKNode()
@@ -138,9 +136,4 @@ class PlayerView: SKNode {
         let left = SKAction.rotate(byAngle: -byangle, duration: 0.5)
         return SKAction.repeatForever(SKAction.sequence([right, left]))
     }
-    
-}
-
-#Preview {
-    GameViewController()
 }
