@@ -16,6 +16,27 @@ struct ChooseCharacter: View {
                 .ignoresSafeArea()
                 .blur(radius: 3)
             
+            Text("Jogador")
+                .font(.custom("GermaniaOne-Regular", size: 60))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .padding(.bottom, 600)
+            
+            Image("pedestal")
+                .resizable()
+                .frame(width: 147, height: 57)
+                .padding(.top, 210)
+            
+            
+            Button(action: {
+                let selected = CharacterSkin.allCases[currentIndex]
+                UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
+                InitialScreen.startGame()
+            }) {
+                PlayItButton()
+                    .padding(.top, 400)
+            }
+            
             VStack {
                 ScrollViewReader { proxy in
                     HStack {
@@ -30,20 +51,13 @@ struct ChooseCharacter: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 40) {
                                     ForEach(Array(CharacterSkin.allCases.enumerated()), id: \.offset) { index, skin in
-                                        VStack(spacing: 0) {
-                                            Image(skin.rawValue)
-                                                .resizable()
-                                                .frame(width: 250, height: 250)
+                                            PlayerSpriteView(skin: skin)
+                                                .frame(width: 500, height: 500)
                                                 .id(index)
-                                        }
                                     }
                                 }
                                 .padding(.horizontal, 60)
                             }
-                            
-                            Image("pedestal")
-                                .resizable()
-                                .frame(width: 147, height: 57)
                         }
                         
                         Button(action: {
@@ -66,14 +80,6 @@ struct ChooseCharacter: View {
                         }
                     }
                     
-                }
-                
-                Button(action: {
-                    let selected = CharacterSkin.allCases[currentIndex]
-                    UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
-                    InitialScreen.startGame()
-                }) {
-                    PlayItButton()
                 }
             }
         }
