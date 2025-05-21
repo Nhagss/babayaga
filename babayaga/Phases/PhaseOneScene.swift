@@ -16,12 +16,13 @@ class PhaseOneScene: GameSceneBase {
         Ingredient(id: 3, name: "Asa de morcego", total: 1),
     ]
         
-    var gameSceneManager: GameSceneManager?
-
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
-        self.gameSceneManager = gameSceneManager
-        gameSceneManager?.ingredients = ingredientesDisponiveis
         super.init(size: size)
+        self.gameSceneManager = gameSceneManager
+        
+        DispatchQueue.main.async {
+            self.gameSceneManager?.ingredients = self.ingredientesDisponiveis
+        }
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {
@@ -40,7 +41,7 @@ class PhaseOneScene: GameSceneBase {
         let planet1 = PlanetController(skin: skin)
         let planet2 = PlanetController(parent: planet1, skin: skin)
         
-        /// Configuração das posições dos planetas (mais variada)
+        /// Configuração das posições dos planetas (mais variada)set
         planet1.view.position = CGPoint(x: 50, y: -150)
         planet2.view.position = CGPoint(x: -150, y: 300)
         
@@ -74,5 +75,10 @@ class PhaseOneScene: GameSceneBase {
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
+        planetControllers[0].addMultipleEnemyBat(angleInDegrees: 0, delayApparitions: 3, rotationTimes: 1, numberOfEnemyBat: 2, rotationDirection: .counterClockwise)
     }
+}
+
+#Preview {
+    GameViewController()
 }

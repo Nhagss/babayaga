@@ -12,6 +12,7 @@ import AVFAudio
 final class AudioManager {
     @MainActor static let shared = AudioManager()
     private var player: AVAudioPlayer?
+    private var secondaryPlayer: AVAudioPlayer?
     
     init() {
         do {
@@ -35,8 +36,41 @@ final class AudioManager {
             print(error)
         }
     }
+    
+    func playSoundGranny(named: String) {
+        guard let url = Bundle.main.url(forResource: named, withExtension: "mp3"),
+                    !(secondaryPlayer?.isPlaying ?? false) else {
+            print("Couldn't find \(named).wav or some sound is playing")
+            return
+        }
+        
+        do {
+            secondaryPlayer?.stop()
+            secondaryPlayer = try AVAudioPlayer(contentsOf: url)
+            secondaryPlayer?.numberOfLoops = 0
+            secondaryPlayer?.play()
+        } catch {
+            print(error)
+        }
+    }
+    
     func stopSound() {
-           player?.stop()
-           player = nil
-       }
+       player?.stop()
+       player = nil
+   }
+    func playEffect(named: String) {
+        guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
+            print("Couldn't find \(named).mp3")
+            return
+        }
+
+        do {
+            secondaryPlayer?.stop()
+            secondaryPlayer = try AVAudioPlayer(contentsOf: url)
+            secondaryPlayer?.numberOfLoops = 0
+            secondaryPlayer?.play()
+        } catch {
+            print("Error playing effect: \(error)")
+        }
+    }
 }

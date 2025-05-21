@@ -1,20 +1,20 @@
 //
-//  PhaseTwoScene.swift
+//  PhaseFiveScene.swift
 //  babayaga
 //
-//  Created by Melissa Freire Guedes on 14/05/25.
+//  Created by Melissa Freire Guedes on 19/05/25.
 //
 
 import SwiftUI
 import SpriteKit
 
-class PhaseThreeScene: GameSceneBase {
+class PhaseFiveScene: GameSceneBase {
     let ingredientesDisponiveis = [
-        Ingredient(id: 1, name: "Olho de tritão", total: 1),
-        Ingredient(id: 2, name: "Pó de fada", total: 1),
-        Ingredient(id: 3, name: "Asa de morcego", total: 1)
+        Ingredient(id: 1, name: "Olho de tritão", total: 2),
+        Ingredient(id: 2, name: "Pó de fada", total: 2),
+        Ingredient(id: 3, name: "Asa de morcego", total: 2)
     ]
-        
+    
     init(gameSceneManager: GameSceneManager? = nil, size: CGSize) {
         super.init(size: size)
         self.gameSceneManager = gameSceneManager
@@ -39,14 +39,18 @@ class PhaseThreeScene: GameSceneBase {
         let planet1 = PlanetController(skin: skin)
         let planet2 = PlanetController(parent: planet1, skin: skin)
         let planet3 = PlanetController(parent: planet2, skin: skin)
-
+        let planet4 = PlanetController(parent: planet3, skin: skin)
+        let planet5 = PlanetController(parent: planet4, skin: skin)
+        
         /// Configuração das posições dos planetas (mais variada)
         planet1.view.position = CGPoint(x: 50, y: -150)
         planet2.view.position = CGPoint(x: -150, y: 300)
         planet3.view.position = CGPoint(x: 50, y: 600)
+        planet4.view.position = CGPoint(x: -150, y: 900)
+        planet5.view.position = CGPoint(x: 50, y: 1200)
         
         /// Adiciona planetas à lista
-        planetControllers = [planet1, planet2, planet3]
+        planetControllers = [planet1, planet2, planet3, planet4, planet5]
         
         /// Adiciona os planetas à cena
         for controller in planetControllers {
@@ -60,15 +64,19 @@ class PhaseThreeScene: GameSceneBase {
         
         /// Distribui os ingredientes com dificuldade ajustada
         planetControllers[0].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 300, onCollect: onCollect)
-        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 225, onCollect: onCollect)
+        planetControllers[1].view.addIngredient(model: ingredientesDisponiveis[0], angleInDegrees: 225, onCollect: onCollect)
         planetControllers[2].view.addIngredient(model: ingredientesDisponiveis[2], angleInDegrees: 200, onCollect: onCollect)
+        planetControllers[2].view.addIngredient(model: ingredientesDisponiveis[2], angleInDegrees: 300, onCollect: onCollect)
+        planetControllers[3].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 225, onCollect: onCollect)
+        planetControllers[4].view.addIngredient(model: ingredientesDisponiveis[1], angleInDegrees: 300, onCollect: onCollect)
         
         
         //Adiciona o inimigo porco espinho
         planetControllers[0].addEnemySpike(angleInDegrees: -180)
         planetControllers[1].addEnemySpike(angleInDegrees: 180)
         planetControllers[2].addEnemySpike(angleInDegrees: 150)
-
+        planetControllers[3].addEnemySpike(angleInDegrees: 180)
+        planetControllers[4].addEnemySpike(angleInDegrees: 150)
         
         
         /// Adiciona obstáculos e ornamentos
@@ -78,6 +86,8 @@ class PhaseThreeScene: GameSceneBase {
         planetControllers[0].makePlanetType(type: .threeGrass)
         planetControllers[1].makePlanetType(type: .twoGrass)
         planetControllers[2].makePlanetType(type: .threeGrass)
+        planetControllers[3].makePlanetType(type: .threeGrass)
+        planetControllers[4].makePlanetType(type: .twoGrass)
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()

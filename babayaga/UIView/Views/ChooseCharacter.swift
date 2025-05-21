@@ -9,13 +9,13 @@ import SwiftUI
 struct ChooseCharacter: View {
     @ObservedObject var router: Router = Router.shared
     @State private var currentIndex = 0
-
+    
     var body: some View {
         ZStack {
             Background()
                 .ignoresSafeArea()
                 .blur(radius: 3)
-
+            
             VStack {
                 ScrollViewReader { proxy in
                     HStack {
@@ -25,7 +25,7 @@ struct ChooseCharacter: View {
                             Image("Back")
                         }
                         .padding(.leading, 22)
-
+                        
                         VStack(spacing: 0) {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 40) {
@@ -40,12 +40,12 @@ struct ChooseCharacter: View {
                                 }
                                 .padding(.horizontal, 60)
                             }
-
+                            
                             Image("pedestal")
                                 .resizable()
                                 .frame(width: 147, height: 57)
                         }
-
+                        
                         Button(action: {
                             if currentIndex < CharacterSkin.allCases.count - 1 { currentIndex += 1 }
                         }) {
@@ -67,18 +67,18 @@ struct ChooseCharacter: View {
                     }
                     
                 }
-
+                
                 Button(action: {
                     let selected = CharacterSkin.allCases[currentIndex]
                     UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
-                    router.goToGameScene()
+                    InitialScreen.startGame()
                 }) {
                     PlayItButton()
-                }
                 }
             }
         }
     }
+}
 
 #Preview {
     ChooseCharacter()

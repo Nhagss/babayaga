@@ -10,17 +10,17 @@ import GameplayKit
 import SwiftUI
 
 class GameSceneBase: SKScene {
-    
     var currentPlanetIndex = 0
     var gameWorld = SKNode()
     var cameraNode = SKCameraNode()
     var nextPlanetID: UUID = UUID()
     var planetControllers: [PlanetController] = []
     var stairControllers: [StairController] = []
-    
+    var isShowingEnemyMessage: Bool = false
     /// Closure para notificar quando todos os ingredientes foram coletados
     var onAllIngredientsCollected: (() -> Void)?
     
+    var gameSceneManager: GameSceneManager?
     
     override func didMove(to view: SKView) {
         
@@ -71,6 +71,8 @@ class GameSceneBase: SKScene {
     func changePlanet() {
         if(planetControllers[currentPlanetIndex].isContactingStair) {
             planetControllers[currentPlanetIndex].isContactingStair = false
+            
+            AudioManager.shared.playEffect(named: "portal")
             
             /// Pause a rotação do planeta atual
             planetControllers[currentPlanetIndex].stopRotation()
@@ -148,6 +150,7 @@ class GameSceneBase: SKScene {
             
             if let ingredient = planet.view.ingredients.first(where: { $0.view == ingredienteNode }) {
                 processCollectedIngredient(ingredient, on: planet)
+                AudioManager.shared.playEffect(named: "coleta")
             }
         }
     }
@@ -255,12 +258,42 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             planetControllers[currentPlanetIndex].reverseRotation()
         }
         
+        if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.enemySpike) {
+            let xPos = contact.contactPoint.x + 50
+            let yPos = contact.contactPoint.y + 50
+            let position = CGPoint(x: xPos, y: yPos)
+            
+            if !(gameSceneManager?.isShowingTransition ?? false) {
+                AudioManager.shared.playEffect(named: "colisão")
+                if !self.isShowingEnemyMessage {
+                    self.isShowingEnemyMessage = true
+                    showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.isShowingEnemyMessage = false
+                    }
+                }
+                planetControllers[currentPlanetIndex].reverseRotation()
+            }
+        }
+        
+        if contactBetween(contact, PhysicsCategory.enemyBat, PhysicsCategory.player) {
+            print("Contato com morcego")
+            if contact.bodyA.node?.isHidden == false {
+                print("\(contact.bodyB.node!)")
+                self.gameSceneManager?.restartLevel()
+            }
+        }
+        
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.house) {
             let xPos = contact.bodyB.node!.position.x + 100
             let yPos = contact.bodyB.node!.position.y - 30
             let position = CGPoint(x: xPos, y: yPos)
             
-            showHouseMessage(at: position, text: "Você ainda não tem os ingredientes necessários!", for: 3)
+            gameSceneManager?.goToNextLevel{ [weak self] in
+                self?.showHouseMessage(at: position, text: "Volte para a casa para finalizar o nível após coletar todos os ingredientes!", for: 3)
+            } onSuccess: { [ unowned self ] in
+                self.planetControllers[self.currentPlanetIndex].slowDownRotation()
+            }
         }
         
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.finalHouse) {
@@ -270,11 +303,17 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             
             showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
         }
-
         
+        //ingrediente
         if contactBetween(contact, PhysicsCategory.player, PhysicsCategory.ingredient) {
             handleIngredientContact(contact)
         }
+        
+    }
+    
+    override func willMove(from view: SKView) {
+        removeAllActions()
+        removeAllChildren()
     }
 }
 

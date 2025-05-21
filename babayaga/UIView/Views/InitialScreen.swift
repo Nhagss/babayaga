@@ -12,7 +12,10 @@ import Foundation
 
 struct InitialScreen: View {
     @ObservedObject var router = Router.shared
+    @ObservedObject var gameSceneManager = GameSceneManager.shared
     @State private var engine: CHHapticEngine?
+    
+    let keyForUserDefaults = "completedLevels"
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -36,39 +39,50 @@ struct InitialScreen: View {
                     .foregroundStyle(.white)
                 
                 VStack(spacing: 80) {
-                    Button(action: {
+                    Button {
                         router.goToChooseCharacter()
-                        complexSuccess()
-                    }) {
+                    } label: {
                         PlayButton()
                             .padding(.top, 300)
                     }
                     .onAppear(perform: prepareHaptics)
                     
                     HStack(alignment:.top ,spacing: 150) {
-                        ButtonComponent(imageName: "shinyEye", action: { complexSuccess() })
+                        VStack {
+                            ButtonComponent(imageName: "levelsIcon") {
+                                complexSuccess()
+                                router.goToLevelsView()
+                            }
                             .onAppear(perform: prepareHaptics)
+                            Text("Níveis")
+                                .font(.custom("Quicksand-Regular", size: 27))
+                                .foregroundStyle(.white)
+                        }
                         
                         // Botão da SettingsView
-                        Button(action: {
-                            router.goToSettingsView()
-                        }) {
-                            VStack {
-                                    ButtonComponent(imageName: "settingsIcon", action: router.goToSettingsView)
-                                Text("Ajustes")
-                                    .font(.custom("Quicksand-Regular", size: 27))
-                                    .foregroundStyle(.white)
+                        VStack {
+                            ButtonComponent(imageName: "settingsIcon") {
+                                complexSuccess()
+                                router.goToSettingsView()
                             }
+                            .onAppear(perform: prepareHaptics)
+                            Text("Ajustes")
+                                .font(.custom("Quicksand-Regular", size: 27))
+                                .foregroundStyle(.white)
                         }
                     }
                 }
             }
             .navigationDestination(for: Views.self) { view in
                 switch view {
+                case .RestartGame:
+                    GameViewControllerWrapper()
+                        .navigationBarBackButtonHidden(true)
+                        .ignoresSafeArea()
                 case .GameViewController:
                     GameViewControllerWrapper()
-                        .ignoresSafeArea()
                         .navigationBarBackButtonHidden(true)
+                        .ignoresSafeArea()
                 case .InitialScreen:
                     InitialScreen()
                         .navigationBarBackButtonHidden(true)
@@ -76,6 +90,10 @@ struct InitialScreen: View {
                     SettingsView()
                 case .ChooseCharacter:
                     ChooseCharacter()
+                case .LevelsView:
+                    LevelsView()
+                default:
+                    EmptyView()
                 }
             }
             .onAppear {
@@ -83,16 +101,46 @@ struct InitialScreen: View {
                     AudioManager.shared.playSound(named: "temaPrincipal")
                 }
             }
-
+            
             .ignoresSafeArea()
         }
         .environmentObject(router)
     }
     
-    func prepareHaptics() {
+    public static func startGame() {
+        let router = Router.shared
+        let gameSceneManager = GameSceneManager.shared
+        
+        if CHHapticEngine.capabilitiesForHardware().supportsHaptics {
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+            let events = [event]
+            
+            do {
+                let engine = try CHHapticEngine()
+                try engine.start()
+                let player = try engine.makePlayer(with: try CHHapticPattern(events: events, parameters: []))
+                try player.start(atTime: 0)
+            } catch {
+                print("Failed to play pattern: \(error.localizedDescription)")
+            }
+        }
+        
+        let keyForUserDefaults = "completedLevels"
+        if let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int], !encodedData.isEmpty {
+            gameSceneManager.currentLevel = (encodedData.max() ?? 0) + 1
+        } else {
+            gameSceneManager.currentLevel = 1
+        }
+        
+        router.goToGameScene()
+    }
+    
+    private func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
               SettingsManager.shared.isHapticsEnabled else { return }
-
+        
         do {
             engine = try CHHapticEngine()
             try engine?.start()
@@ -101,7 +149,7 @@ struct InitialScreen: View {
         }
     }
     
-    func complexSuccess() {
+    private func complexSuccess() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         
         let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
@@ -117,9 +165,16 @@ struct InitialScreen: View {
             print("Failed to play pattern: \(error.localizedDescription)")
         }
     }
+    
+    private func loadLastLevel() -> Int? {
+        guard let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int], !encodedData.isEmpty else {
+            return nil
+        }
+        
+        return (encodedData.max() ?? 0) + 1
+    }
 }
 
 #Preview {
     InitialScreen()
 }
-

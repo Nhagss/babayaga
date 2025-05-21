@@ -12,7 +12,7 @@ struct GrannyAnimation: View {
     
     @State private var animateUp: Bool = true
     @State private var animateSize: Bool = true
-    @State private var isPlaying: Bool = false
+    @State var isPlaying: Bool = false
     
     @State var riveVM: RiveViewModel = RiveViewModel(
         fileName: "GrannyPullsUpCrop"
@@ -22,7 +22,7 @@ struct GrannyAnimation: View {
         GeometryReader { geo in
             ZStack {
                 VStack(spacing: 0) {
-                    if phaseNumber == 4 {
+                    if phaseNumber == 6 {
                         Text("Obrigado por jogar a demo!")
                             .font(.custom("GermaniaOne-Regular", size: geo.size.width * 0.12))
                             .multilineTextAlignment(.center)
@@ -45,6 +45,8 @@ struct GrannyAnimation: View {
                     .opacity(riveVM.isPlaying ? 1 : 0)
             }
             .onAppear() {
+                play()
+                //AudioManager.shared.playSound(named: "levelTransition")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(.bouncy(duration: 1)) {
                         animateUp = false
@@ -64,24 +66,17 @@ struct GrannyAnimation: View {
                     }
                 }
             }
-            //            .onChange(of: isPlaying) { _, _ in
-            //                if isPlaying {
-            //                    print("caiu aqui")
-            //                    riveVM.reset()
-            //                }
-            //            }
         }
-        
         .background(Background())
     }
     
     func play() {
-        print(riveVM.isPlaying)
+        isPlaying = true
         riveVM.play()
         riveVM.reset()
-        print(riveVM.isPlaying)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isPlaying = false
             riveVM.stop()
         }
     }

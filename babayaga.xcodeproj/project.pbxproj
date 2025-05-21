@@ -443,6 +443,7 @@
 				DEVELOPMENT_TEAM = RDBBF5GZZ8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -471,6 +472,7 @@
 				DEVELOPMENT_TEAM = RDBBF5GZZ8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;

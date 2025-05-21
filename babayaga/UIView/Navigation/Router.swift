@@ -19,6 +19,18 @@ class Router: ObservableObject {
     func goToInitialScreen(){
         path.append(Views.InitialScreen.self)
     }
+        
+    func goToLevelsView() {
+        path.append(Views.LevelsView.self)
+    }
+    
+    func goBack() {
+        path.removeLast()
+    }
+    
+    func goToRoot() {
+        path.removeLast(path.count)
+    }
     
     func backToMenu() {
         path = .init()

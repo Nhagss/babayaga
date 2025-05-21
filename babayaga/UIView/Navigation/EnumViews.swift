@@ -9,11 +9,14 @@ import Foundation
 
 enum Views: Hashable {
     case GameViewController
-
+    
+    case RestartGame
+    
     case InitialScreen
-
+    
     case SettingsView
     
     case ChooseCharacter
     
+    case LevelsView
 }
