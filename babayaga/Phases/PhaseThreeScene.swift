@@ -33,12 +33,9 @@ class PhaseThreeScene: GameSceneBase {
         backgroundColor = .clear
         
         // MARK: Criação dos Planetas
-        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
-        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
-
-        let planet1 = PlanetController(skin: skin)
-        let planet2 = PlanetController(parent: planet1, skin: skin)
-        let planet3 = PlanetController(parent: planet2, skin: skin)
+        let planet1 = PlanetController()
+        let planet2 = PlanetController(parent: planet1)
+        let planet3 = PlanetController(parent: planet2)
 
         /// Configuração das posições dos planetas (mais variada)
         planet1.view.position = CGPoint(x: 50, y: -150)

@@ -21,7 +21,9 @@ class PlanetView: SKNode {
     var gravityField = SKFieldNode.radialGravityField()
     
     // ✅ Agora recebe a skin escolhida
-    init(skin: CharacterSkin) {
+    override init() {
+        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
+        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
         self.playerNode = PlayerView(skin: skin)
         super.init()
         setupView()

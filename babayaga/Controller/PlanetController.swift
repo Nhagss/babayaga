@@ -28,10 +28,10 @@ class PlanetController {
         set { model.isContactingStair = newValue }
     }
     
-    init(parent: PlanetController? = nil, model: Planet = Planet(), skin: CharacterSkin) {
+    init(parent: PlanetController? = nil, model: Planet = Planet()) {
            self.parent = parent
            self.model = model
-           self.view = PlanetView(skin: skin)
+           self.view = PlanetView()
        }
     
     func startRotation() {
