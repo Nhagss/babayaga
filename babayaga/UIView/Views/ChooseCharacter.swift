@@ -16,7 +16,7 @@ struct ChooseCharacter: View {
                 .ignoresSafeArea()
                 .blur(radius: 3)
             
-            Text("Jogador")
+            Text("\(getCharacterName())")
                 .font(.custom("GermaniaOne-Regular", size: 60))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
@@ -26,16 +26,6 @@ struct ChooseCharacter: View {
                 .resizable()
                 .frame(width: 147, height: 57)
                 .padding(.top, 210)
-            
-            
-            Button(action: {
-                let selected = CharacterSkin.allCases[currentIndex]
-                UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
-                InitialScreen.startGame()
-            }) {
-                PlayItButton()
-                    .padding(.top, 400)
-            }
             
             VStack {
                 ScrollViewReader { proxy in
@@ -82,6 +72,27 @@ struct ChooseCharacter: View {
                     
                 }
             }
+            
+            
+            
+            Button {
+                let selected = CharacterSkin.allCases[currentIndex]
+                UserDefaults.standard.set(selected.rawValue, forKey: "selectedSkin")
+                InitialScreen.startGame()
+            } label: {
+                PlayItButton()
+                    .padding(.top, 400)
+            }
+        }
+    }
+    func getCharacterName() -> String {
+        switch currentIndex {
+        case 0:
+            return "Morgana"
+        case 1:
+            return "Rasputin"
+        default:
+            return "Don't have a name yet"
         }
     }
 }
