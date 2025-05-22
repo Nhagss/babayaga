@@ -36,6 +36,9 @@ class PhaseTwoScene: GameSceneBase {
         backgroundColor = .clear
         
         // MARK: Criação dos Planetas
+        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
+        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
+        
         let planet1 = PlanetController()
         let planet2 = PlanetController(parent: planet1)
         

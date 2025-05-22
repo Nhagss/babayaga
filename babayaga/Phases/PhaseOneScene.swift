@@ -35,6 +35,9 @@ class PhaseOneScene: GameSceneBase {
         backgroundColor = .clear
         
         // MARK: Criação dos Planetas
+        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
+        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
+
         let planet1 = PlanetController()
         let planet2 = PlanetController(parent: planet1)
         
@@ -72,7 +75,7 @@ class PhaseOneScene: GameSceneBase {
         
         // 🌍 Inicia a rotação do primeiro planeta para dar mais dinâmica à fase
         planetControllers[0].startRotation()
-        planetControllers[0].addMultipleEnemyBat(angleInDegrees: 0, delayApparitions: 3, rotationTimes: 1, numberOfEnemyBat: 2, rotationDirection: .counterClockwise)
+//        planetControllers[0].addMultipleEnemyBat(angleInDegrees: 0, delayApparitions: 3, rotationTimes: 1, numberOfEnemyBat: 2, rotationDirection: .counterClockwise)
     }
 }
 

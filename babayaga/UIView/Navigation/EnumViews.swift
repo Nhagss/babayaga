@@ -16,6 +16,7 @@ enum Views: Hashable {
     
     case SettingsView
     
-    case LevelsView
+    case ChooseCharacter
     
+    case LevelsView
 }

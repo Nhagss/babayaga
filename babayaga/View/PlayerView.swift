@@ -7,10 +7,13 @@
 
 import Foundation
 import SpriteKit
-
+import SwiftUI
 class PlayerView: SKNode {
+    private let skin: CharacterSkin
     private let hitboxNode = SKShapeNode(rectOf: CGSize(width: 45, height: 40))
-    override init() {
+    
+    init(skin: CharacterSkin) {
+        self.skin = skin
         super.init()
         addChild(hitboxNode)
         
@@ -22,7 +25,7 @@ class PlayerView: SKNode {
         
         setupPhysics()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,7 +45,7 @@ class PlayerView: SKNode {
         physicsBody?.collisionBitMask = PhysicsCategory.none
         physicsBody?.contactTestBitMask = PhysicsCategory.obstacle | PhysicsCategory.stair | PhysicsCategory.enemyBat
     }
-
+    
     func jump() {
         let jumpUp = SKAction.moveBy(x: 0, y: 20, duration: 0.1)
         let jumpDown = SKAction.moveBy(x: 0, y: -20, duration: 0.1)
@@ -50,44 +53,39 @@ class PlayerView: SKNode {
         run(sequence)
     }
     
-    ///Mark: Creates the character visually
     func createCharacter() -> SKNode {
         let center = SKNode()
+        let assets = skin.imageAssets
         
-        // Torso
-        let torso = SKSpriteNode(texture: SKTexture(imageNamed: "torso"))
+        let torso = SKSpriteNode(texture: SKTexture(imageNamed: assets.torso))
         torso.run(bobbing())
         torso.run(rotation(byangle: 0.05))
         torso.position.y = 0
         center.addChild(torso)
         
-        // Cabeça
-        let head = SKSpriteNode(texture: SKTexture(imageNamed: "head"))
+        let head = SKSpriteNode(texture: SKTexture(imageNamed: assets.head))
         head.setScale(1 / 1.6)
         head.run(bobbing())
         head.run(rotation(byangle: 0.02))
         head.position = CGPoint(x: -15, y: 130)
         center.addChild(head)
         
-        // Braços
-        let frontArm = createAnimatedAnchor(image: "frontArm", angle1: 0.8, angle2: -0.8)
-        let backArm = createAnimatedAnchor(image: "backArm", angle1: -0.8, angle2: 0.8)
-        frontArm.position.y = 20
-        backArm.position.y = 20
-        center.addChild(frontArm)
-        center.addChild(backArm)
+        let frontArm = createAnimatedAnchor(image: assets.frontArm, angle1: 0.8, angle2: -0.8)
+        let backArm = createAnimatedAnchor(image: assets.backArm, angle1: -0.8, angle2: 0.8)
         
-        // Pernas
-        let frontFoot = createAnimatedAnchor(image: "foot", angle1: -0.3, angle2: 0.3)
-        let backFoot = createAnimatedAnchor(image: "foot", angle1: 0.3, angle2: -0.3)
+        let frontFoot = createAnimatedAnchor(image: assets.foot, angle1: -0.3, angle2: 0.3)
+        let backFoot = createAnimatedAnchor(image: assets.backFoot ?? assets.foot, angle1: 0.3, angle2: -0.3)
+        
         frontFoot.position.y = 40
         backFoot.position.y = 40
         center.addChild(frontFoot)
         center.addChild(backFoot)
         
         // Posicionamento dos membros
-        frontArm.children.first?.position = CGPoint(x: 10, y: -30)
-        backArm.children.first?.position = CGPoint(x: -10, y: -30)
+        frontArm.children.first?.position = CGPoint(x: 10, y: -20)
+        backArm.children.first?.position = CGPoint(x: -10, y: -20)
+        center.addChild(backArm)
+        center.addChild(frontArm)
         frontFoot.children.first?.position = CGPoint(x: 0, y: -80)
         backFoot.children.first?.position = CGPoint(x: 0, y: -80)
         
@@ -116,7 +114,6 @@ class PlayerView: SKNode {
         return center
     }
     
-    
     func createAnimatedAnchor(image: String, angle1: CGFloat, angle2: CGFloat) -> SKNode {
         let anchor = SKNode()
         let sprite = SKSpriteNode(texture: SKTexture(imageNamed: image))
@@ -141,9 +138,8 @@ class PlayerView: SKNode {
         let left = SKAction.rotate(byAngle: -byangle, duration: 0.5)
         return SKAction.repeatForever(SKAction.sequence([right, left]))
     }
-    
 }
 
-#Preview {
-    GameViewController()
+#Preview() {
+    InitialScreen()
 }

@@ -13,14 +13,13 @@ struct GameControlsView: View {
     
     var body: some View {
         ZStack {
-            Color.clear // Para garantir transparência
-            HStack(spacing: 40) { // Aumentando o espaçamento
+            Color.clear
+            HStack(spacing: 40) {
                 ButtonComponent(imageName: "portal_button", action: onChangePlanet)
                 ButtonComponent(imageName: "reverse_button", action: onChangeDirection)
             }
-            .padding(.horizontal, 40) // Afastando das bordas
+            .padding(.horizontal, 40)
             .padding(.bottom, 50)
-            // Ajustando a altura
         }
         .frame(maxWidth: .infinity)
     }

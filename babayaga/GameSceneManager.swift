@@ -90,6 +90,18 @@ class GameSceneManager: ObservableObject {
             newScene = PhaseNineScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 10:
             newScene = PhaseTenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 11:
+            newScene = PhaseElevenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 12:
+            newScene = PhaseTwelveScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 13:
+            newScene = PhaseThirteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 14:
+            newScene = PhaseFourteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 15:
+            newScene = PhaseFifteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 16:
+            newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
             newScene = nil
         }
