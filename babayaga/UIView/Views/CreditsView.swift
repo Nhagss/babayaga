@@ -40,7 +40,7 @@ struct CreditsView: View {
                     }
                 }
                 NavigationLink(destination: SoundsCredits()) {
-                    Text("Trilha Sonora")
+                    Text("credits_soundtrack")
                         .font(.caption)
                         .foregroundColor(.white)
                         .padding(.vertical)
