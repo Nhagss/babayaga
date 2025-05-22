@@ -19,11 +19,7 @@ class Router: ObservableObject {
     func goToInitialScreen(){
         path.append(Views.InitialScreen.self)
     }
-    
-    func goToSettingsView() {
-        path.append(Views.SettingsView.self)
-    }
-    
+        
     func goToLevelsView() {
         path.append(Views.LevelsView.self)
     }
@@ -40,4 +36,10 @@ class Router: ObservableObject {
         path = .init()
     }
     
+    func goToSettingsView() {
+        path.append(Views.SettingsView.self)
+    }
+    func goToChooseCharacter() {
+        path.append(Views.ChooseCharacter.self)
+    }
 }

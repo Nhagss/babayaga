@@ -14,13 +14,15 @@ class PlanetView: SKNode {
     let worldBorder = SKShapeNode(circleOfRadius: 35)
     let playerAnchor = SKSpriteNode()
     let orbitAnchor = SKSpriteNode()
-    let playerNode = PlayerView()
+    let playerNode: PlayerView  // Agora inicializado via init
     var ingredients: [IngredientController] = []
     var objects: [ObjectView] = []
     
     var gravityField = SKFieldNode.radialGravityField()
     
-    override init() {
+    // ✅ Agora recebe a skin escolhida
+    init(skin: CharacterSkin) {
+        self.playerNode = PlayerView(skin: skin)
         super.init()
         setupView()
         rotateOrbitAnchor(angleInDegrees: 0)
@@ -54,8 +56,6 @@ class PlanetView: SKNode {
         playerAnchor.physicsBody?.allowsRotation = true
         
         playerNode.position = CGPoint(x: 0, y: 120)
-        
-        
     }
     
     func rotate(speed: CGFloat) {
@@ -68,8 +68,6 @@ class PlanetView: SKNode {
     func stopRotation() {
         playerAnchor.removeAction(forKey: "rotation")
     }
-    
-    
     
     func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, physicsCategory: UInt32 = PhysicsCategory.obstacle, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
         let object = ObjectView(withCollision: withCollision, physicsCategory: physicsCategory, texture: texture, size: size)
@@ -161,6 +159,6 @@ class PlanetView: SKNode {
     }
 }
 
-#Preview() {
+#Preview{
     GameViewController()
 }

@@ -40,10 +40,7 @@ struct InitialScreen: View {
                 
                 VStack(spacing: 80) {
                     Button {
-                        complexSuccess()
-                        // Se não encontrar nenhum nível salvo, começa do nível 1
-                        gameSceneManager.currentLevel = loadLastLevel() ?? 1
-                        router.goToGameScene()
+                        router.goToChooseCharacter()
                     } label: {
                         PlayButton()
                             .padding(.top, 300)
@@ -91,8 +88,12 @@ struct InitialScreen: View {
                         .navigationBarBackButtonHidden(true)
                 case .SettingsView:
                     SettingsView()
+                case .ChooseCharacter:
+                    ChooseCharacter()
                 case .LevelsView:
                     LevelsView()
+                default:
+                    EmptyView()
                 }
             }
             .onAppear {
@@ -100,16 +101,46 @@ struct InitialScreen: View {
                     AudioManager.shared.playSound(named: "temaPrincipal")
                 }
             }
-
+            
             .ignoresSafeArea()
         }
         .environmentObject(router)
     }
     
+    public static func startGame() {
+        let router = Router.shared
+        let gameSceneManager = GameSceneManager.shared
+        
+        if CHHapticEngine.capabilitiesForHardware().supportsHaptics {
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+            let events = [event]
+            
+            do {
+                let engine = try CHHapticEngine()
+                try engine.start()
+                let player = try engine.makePlayer(with: try CHHapticPattern(events: events, parameters: []))
+                try player.start(atTime: 0)
+            } catch {
+                print("Failed to play pattern: \(error.localizedDescription)")
+            }
+        }
+        
+        let keyForUserDefaults = "completedLevels"
+        if let encodedData = UserDefaults.standard.array(forKey: keyForUserDefaults) as? [Int], !encodedData.isEmpty {
+            gameSceneManager.currentLevel = (encodedData.max() ?? 0) + 1
+        } else {
+            gameSceneManager.currentLevel = 1
+        }
+        
+        router.goToGameScene()
+    }
+    
     private func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
               SettingsManager.shared.isHapticsEnabled else { return }
-
+        
         do {
             engine = try CHHapticEngine()
             try engine?.start()
@@ -147,4 +178,3 @@ struct InitialScreen: View {
 #Preview {
     InitialScreen()
 }
-
