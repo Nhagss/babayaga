@@ -136,11 +136,20 @@ class GameSceneManager: ObservableObject {
         if !data.contains(item) {
             data.append(item)
             UserDefaults.standard.set(data, forKey: keyForUserDefaults)
-//            print("Nível \(item) salvo com sucesso!")
         }
     }
     
     func restartLevel() {
+        resetIngredients()
+        canGoNextLevel = false
         loadScene(forLevel: currentLevel)
+    }
+    
+    func resetIngredients() {
+        ingredients = ingredients.map { ingredient in
+            let resetIngredient = ingredient
+            resetIngredient.remaining = resetIngredient.total
+            return resetIngredient
+        }
     }
 }
