@@ -21,6 +21,7 @@ class GameSceneBase: SKScene {
     var onAllIngredientsCollected: (() -> Void)?
     
     var gameSceneManager: GameSceneManager?
+    var isDead: Bool = false
     
     override func didMove(to view: SKView) {
         
@@ -103,7 +104,7 @@ class GameSceneBase: SKScene {
         var isTouchingStair = false
         
         for stair in stairControllers {
-            if player.getChacterHitBox.intersects(stair.view) {
+            if player.getChacterHitBox.intersects(stair.view) && isDead == false  {
                 isTouchingStair = true
                 
                 /// Só atualiza o próximo planeta se ainda não estava na escada
@@ -281,8 +282,30 @@ extension GameSceneBase: SKPhysicsContactDelegate {
         if contactBetween(contact, PhysicsCategory.enemyBat, PhysicsCategory.player) {
             print("Contato com morcego")
             if contact.bodyA.node?.isHidden == false {
+                contact.bodyB.isDynamic = false
+                contact.bodyA.isDynamic = false
+                contact.bodyB.node?.physicsBody?.categoryBitMask = 0
+                contact.bodyA.node?.physicsBody?.categoryBitMask = 0
+                contact.bodyB.node?.physicsBody?.collisionBitMask = 0
+                contact.bodyA.node?.physicsBody?.collisionBitMask = 0
+                contact.bodyA.node?.physicsBody?.collisionBitMask = 0
+                contact.bodyB.node?.physicsBody?.collisionBitMask = 0
+                
+                contact.bodyA.collisionBitMask = 0
                 print("\(contact.bodyB.node!)")
-                self.gameSceneManager?.restartLevel()
+                isDead = true
+                self.isPaused = true
+                AudioManager.shared.playEffect(named: "colisão")
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.isPaused = false
+                    
+                    AudioManager.shared.playEffect(named: "portal")
+                    self.planetControllers[self.currentPlanetIndex].view.gameOver()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    self.gameSceneManager?.restartLevel()
+                }
             }
         }
         
