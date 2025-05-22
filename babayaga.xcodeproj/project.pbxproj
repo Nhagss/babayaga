@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F70003B52DD4C3630091B756 /* RiveRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = F70003B42DD4C3630091B756 /* RiveRuntime */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F7EB7AC62DB7BED100DEA835 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,42 @@
 		F7EB7ACF2DB7BED100DEA835 /* babayagaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = babayagaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E91CD18F2DC4FD220066C008 /* Exceptions for "babayaga" folder in "babayagaTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"UIView/Fonts/GermaniaOne-Regular.ttf",
+				"UIView/Fonts/Quicksand-Medium.ttf",
+				"UIView/Fonts/Quicksand-Regular.ttf",
+			);
+			target = F7EB7AC42DB7BED100DEA835 /* babayagaTests */;
+		};
+		E91CD1902DC4FD220066C008 /* Exceptions for "babayaga" folder in "babayagaUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"UIView/Fonts/GermaniaOne-Regular.ttf",
+				"UIView/Fonts/Quicksand-Medium.ttf",
+				"UIView/Fonts/Quicksand-Regular.ttf",
+			);
+			target = F7EB7ACE2DB7BED100DEA835 /* babayagaUITests */;
+		};
+		E91CD1922DC4FD760066C008 /* Exceptions for "babayaga" folder in "babayaga" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F7EB7AAB2DB7BECD00DEA835 /* babayaga */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F7EB7AAE2DB7BECD00DEA835 /* babayaga */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E91CD1922DC4FD760066C008 /* Exceptions for "babayaga" folder in "babayaga" target */,
+				E91CD18F2DC4FD220066C008 /* Exceptions for "babayaga" folder in "babayagaTests" target */,
+				E91CD1902DC4FD220066C008 /* Exceptions for "babayaga" folder in "babayagaUITests" target */,
+			);
 			path = babayaga;
 			sourceTree = "<group>";
 		};
@@ -52,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F70003B52DD4C3630091B756 /* RiveRuntime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +150,7 @@
 			);
 			name = babayaga;
 			packageProductDependencies = (
+				F70003B42DD4C3630091B756 /* RiveRuntime */,
 			);
 			productName = babayaga;
 			productReference = F7EB7AAC2DB7BECD00DEA835 /* babayaga.app */;
@@ -187,14 +226,18 @@
 				};
 			};
 			buildConfigurationList = F7EB7AA72DB7BECD00DEA835 /* Build configuration list for PBXProject "babayaga" */;
-			developmentRegion = en;
+			developmentRegion = "pt-BR";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = F7EB7AA32DB7BECD00DEA835;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F700034F2DD363EE0091B756 /* XCRemoteSwiftPackageReference "rive-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F7EB7AAD2DB7BECD00DEA835 /* Products */;
 			projectDirPath = "";
@@ -274,6 +317,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -337,6 +381,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -397,6 +442,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BCW73GZ93R;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -424,6 +471,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BCW73GZ93R;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = babayaga/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Baba Yaga";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -554,6 +603,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F700034F2DD363EE0091B756 /* XCRemoteSwiftPackageReference "rive-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rive-app/rive-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.8.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F70003B42DD4C3630091B756 /* RiveRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F700034F2DD363EE0091B756 /* XCRemoteSwiftPackageReference "rive-ios" */;
+			productName = RiveRuntime;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F7EB7AA42DB7BECD00DEA835 /* Project object */;
 }

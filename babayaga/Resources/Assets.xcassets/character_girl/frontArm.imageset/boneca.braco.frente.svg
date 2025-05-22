@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61.22 75.35">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #dfc8f6;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #34302d;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill: #efeae6;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .cls-4 {
+        fill: #667e80;
+      }
+    </style>
+  </defs>
+  <g id="Camada_1-2" data-name="Camada 1">
+    <g>
+      <g>
+        <ellipse class="cls-1" cx="14.79" cy="66.52" rx="8.39" ry="6.34" transform="translate(-3.39 .84) rotate(-2.94)"/>
+        <ellipse class="cls-1" cx="30.56" cy="68.51" rx="8.39" ry="6.34" transform="translate(-3.47 1.66) rotate(-2.94)"/>
+        <ellipse class="cls-1" cx="46.43" cy="65.72" rx="8.39" ry="6.34" transform="translate(-3.31 2.46) rotate(-2.94)"/>
+      </g>
+      <path class="cls-2" d="M23.95,5.14L.77,57.58c-.76,1.72.17,3.72,1.97,4.25,7.53,2.21,17.54,4.19,29.34,4.01,10.47-.16,19.43-1.97,26.4-4.01,1.81-.53,2.74-2.52,1.98-4.25L37.27,5.14c-2.74-6.19-10.58-6.19-13.32,0Z"/>
+      <path class="cls-4" d="M58.96,54.18c-.15.07-.31.13-.48.18-6.96,2.04-15.93,3.85-26.4,4.01-11.8.18-21.81-1.81-29.34-4.01-.16-.05-.32-.11-.47-.18L23.95,5.14c2.74-6.19,10.58-6.19,13.32,0l21.68,49.04Z"/>
+      <line class="cls-3" x1="2.27" y1="54.18" x2="23.95" y2="5.14"/>
+    </g>
+  </g>
+</svg>

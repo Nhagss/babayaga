@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 62.12 62.12">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#Gradiente_sem_nome_29);
+        opacity: .58;
+      }
+
+      .cls-2 {
+        opacity: .39;
+      }
+
+      .cls-3 {
+        fill: #d9b79b;
+      }
+    </style>
+    <radialGradient id="Gradiente_sem_nome_29" data-name="Gradiente sem nome 29" cx="31.06" cy="31.06" fx="31.06" fy="31.06" r="31.06" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8b899" stop-opacity=".7"/>
+      <stop offset=".88" stop-color="#383539" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#22232c" stop-opacity=".1"/>
+    </radialGradient>
+  </defs>
+  <g id="fundo_camada_2" data-name="fundo camada 2">
+    <g class="cls-2">
+      <g>
+        <ellipse class="cls-3" cx="18.96" cy="29.64" rx="5.77" ry="10.05" transform="translate(-15.74 35.47) rotate(-66.94)"/>
+        <ellipse class="cls-3" cx="42.72" cy="29.64" rx="10.05" ry="5.77" transform="translate(-8.46 20.47) rotate(-24.59)"/>
+      </g>
+      <circle class="cls-1" cx="31.06" cy="31.06" r="31.06"/>
+    </g>
+  </g>
+</svg>
