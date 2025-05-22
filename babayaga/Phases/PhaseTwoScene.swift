@@ -41,7 +41,6 @@ class PhaseTwoScene: GameSceneBase {
         
         let planet1 = PlanetController()
         let planet2 = PlanetController(parent: planet1)
-        let planet3 = PlanetController(parent: planet2)
         
         /// Configuração das posições dos planetas (mais variada)
         planet1.view.position = CGPoint(x: 50, y: -150)

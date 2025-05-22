@@ -15,7 +15,7 @@ class GameSceneManager: ObservableObject {
     static let shared = GameSceneManager()
     
     @Published var currentScene: GameSceneBase?
-    @Published var currentLevel: Int = 14
+    @Published var currentLevel: Int = 1
     @Published var isShowingLevelSelection = false
     @Published var ingredients = [Ingredient]()
     @Published var isShowingTransition = false
@@ -81,7 +81,15 @@ class GameSceneManager: ObservableObject {
         case 5:
             newScene = PhaseFiveScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 6:
-            newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
+            newScene = PhaseSixScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 7:
+            newScene = PhaseSevenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 8:
+            newScene = PhaseEightScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 9:
+            newScene = PhaseNineScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 10:
+            newScene = PhaseTenScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 11:
             newScene = PhaseElevenScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 12:
@@ -90,6 +98,10 @@ class GameSceneManager: ObservableObject {
             newScene = PhaseThirteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
         case 14:
             newScene = PhaseFourteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 15:
+            newScene = PhaseFifteenScene(gameSceneManager: self, size: viewController.view.bounds.size)
+        case 16:
+            newScene = LastPhaseScene(gameSceneManager: self, size: viewController.view.bounds.size)
         default:
             newScene = nil
         }
