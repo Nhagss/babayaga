@@ -40,6 +40,8 @@ class GameSceneBase: SKScene {
     }
     
     private func setupWorld() {
+        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
+        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
         addChild(gameWorld)
         gameWorld.position = CGPoint(x: frame.minX, y: frame.minY)
     }

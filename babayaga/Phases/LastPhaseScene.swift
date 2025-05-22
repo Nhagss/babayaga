@@ -32,9 +32,7 @@ class LastPhaseScene: GameSceneBase {
         backgroundColor = .clear
         
         // MARK: Criação dos Planetas
-        let rawSkin = UserDefaults.standard.string(forKey: "selectedSkin") ?? "morgana"
-        let skin = CharacterSkin(rawValue: rawSkin) ?? .morgana
-        let planet1 = PlanetController(skin: skin)
+        let planet1 = PlanetController()
         
         /// Configuração das posições dos planetas (mais variada)
         planet1.view.position = CGPoint(x: 0, y: 0)
