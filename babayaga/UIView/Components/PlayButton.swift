@@ -12,27 +12,33 @@ struct PlayButton: View {
     
     var body: some View {
         VStack {
-            ZStack {
-                
-                Image("play")
-                
-                Image("eye.play")
-                    .scaleEffect(y: isBlinking ? 1 : 0, anchor: .center)
-                    .animation(.bouncy(duration: 0.4), value: isBlinking)
-                    .padding(.trailing, 10)
-                    .onAppear {
-                        func scheduleNextBlink() {
-                            let delay = Double.random(in: 0.05...2.5)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                                isBlinking.toggle()
-                                scheduleNextBlink()
-                            }
+            
+            
+                ZStack {
+                    Image("play")
+                    Image("eye.play")
+                        .scaleEffect(y: isBlinking ? 1 : 0, anchor: .center)
+                        .animation(.bouncy(duration: 0.4), value: isBlinking)
+                    
+                        .background {
+                            Color.black
+                                .frame(width: 30, height: 1)
                         }
-                        scheduleNextBlink()
-                    }
+                        .padding(.trailing, 10)
+                        .onAppear {
+                            func scheduleNextBlink() {
+                                let delay = Double.random(in: 0.05...2.5)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                    isBlinking.toggle()
+                                    scheduleNextBlink()
+                                }
+                            }
+                            scheduleNextBlink()
+                        }
+                }
                 
             }
-        }
+        
     }
 }
 
