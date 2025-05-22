@@ -74,7 +74,7 @@ class PlayerView: SKNode {
         let backArm = createAnimatedAnchor(image: assets.backArm, angle1: -0.8, angle2: 0.8)
         
         let frontFoot = createAnimatedAnchor(image: assets.foot, angle1: -0.3, angle2: 0.3)
-        let backFoot = createAnimatedAnchor(image: assets.backFoot ?? assets.foot, angle1: 0.3, angle2: -0.3)
+        let backFoot = createAnimatedAnchor(image: assets.foot ?? assets.foot, angle1: 0.3, angle2: -0.3)
         
         frontFoot.position.y = 40
         backFoot.position.y = 40
