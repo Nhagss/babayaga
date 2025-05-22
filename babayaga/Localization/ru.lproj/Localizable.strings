@@ -1,0 +1,34 @@
+/*
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+//Text()
+"play_it_button_play" = "Играть";
+"settings_grid_credits" = "Авторы";
+"credits_soundtrack" = "Саундтрек";
+"initial_screen_levels" = "Уровни";
+"initial_screen_settings" = "Настройки";
+"levels_view_levels" = "Уровни";
+"thanks_granny" = "Спасибо за игру в демо!";
+"granny_phase" = "Этап";
+
+//showHouseMessage()
+//showHouseMessage()
+"spike_phrase" = "Не трогай меня!";
+"house_phrase" = "Вернись в дом, чтобы завершить уровень после сбора всех ингредиентов!";
+"final_house_phrase" = "Это была демо-версия игры. Теперь вы можете вернуться в меню, используя кнопку в левом верхнем углу экрана!";
+
+//MenuButton()
+//MenuButton()
+"menu_reset" = "Перезапустить уровень";
+"menu_back" = "Назад в меню";
+"menu_resume" = "Продолжить игру";
+
+//SKLabel
+//SKLabel
+"planet_game_over" = "Вы проиграли";

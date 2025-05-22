@@ -1,0 +1,30 @@
+/*
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+"play_it_button_play" = "開始遊戲";
+"settings_grid_credits" = "製作人員";
+"credits_soundtrack" = "原聲音樂";
+"initial_screen_levels" = "關卡";
+"initial_screen_settings" = "設定";
+"levels_view_levels" = "關卡";
+"thanks_granny" = "感謝您遊玩本試玩版！";
+"granny_phase" = "階段";
+
+//showHouseMessage()
+"spike_phrase" = "別碰我，走開！";
+"house_phrase" = "收集所有材料後，返回房子完成關卡！";
+"final_house_phrase" = "這是遊戲的試玩版。您現在可以點擊左上角的選單按鈕返回主選單！";
+
+//MenuButton()
+"menu_reset" = "重設關卡";
+"menu_back" = "返回選單";
+"menu_resume" = "繼續遊戲";
+
+//SKLabel
+"planet_game_over" = "你輸了";

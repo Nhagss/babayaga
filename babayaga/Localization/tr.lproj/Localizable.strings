@@ -1,0 +1,31 @@
+/*
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+//Text()
+"play_it_button_play" = "Oyna";
+"settings_grid_credits" = "Katkıda Bulunanlar";
+"credits_soundtrack" = "Müzik";
+"initial_screen_levels" = "Bölümler";
+"initial_screen_settings" = "Ayarlar";
+"levels_view_levels" = "Bölümler";
+"thanks_granny" = "Demosu oynadığınız için teşekkürler!";
+"granny_phase" = "Aşama";
+
+//showHouseMessage()
+"spike_phrase" = "Dokunma bana, uzak dur!";
+"house_phrase" = "Tüm malzemeleri topladıktan sonra bölümü bitirmek için eve dön!";
+"final_house_phrase" = "Bu oyunun demosuydu. Şimdi sol üst köşedeki menü düğmesini kullanarak menüye dönebilirsin!";
+
+//MenuButton()
+"menu_reset" = "Bölümü yeniden başlat";
+"menu_back" = "Menüye dön";
+"menu_resume" = "Oyuna devam et";
+
+//SKLabel
+"planet_game_over" = "Kaybettin";

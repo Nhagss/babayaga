@@ -1,0 +1,30 @@
+/*
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+"play_it_button_play" = "खेलें";
+"settings_grid_credits" = "क्रेडिट्स";
+"credits_soundtrack" = "साउंडट्रैक";
+"initial_screen_levels" = "स्तर";
+"initial_screen_settings" = "सेटिंग्स";
+"levels_view_levels" = "स्तर";
+"thanks_granny" = "डेमो खेलने के लिए धन्यवाद!";
+"granny_phase" = "चरण";
+
+//showHouseMessage()
+"spike_phrase" = "मुझे मत छुओ, दूर रहो!";
+"house_phrase" = "सभी सामग्री इकट्ठा करने के बाद स्तर पूरा करने के लिए घर लौटें!";
+"final_house_phrase" = "यह गेम का डेमो था। अब आप स्क्रीन के ऊपर बाईं ओर मेनू बटन का उपयोग करके मेनू पर वापस जा सकते हैं!";
+
+//MenuButton()
+"menu_reset" = "स्तर रीसेट करें";
+"menu_back" = "मेनू पर वापस जाएं";
+"menu_resume" = "खेल जारी रखें";
+
+//SKLabel
+"planet_game_over" = "आप हार गए";
