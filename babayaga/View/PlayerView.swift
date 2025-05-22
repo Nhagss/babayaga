@@ -82,8 +82,10 @@ class PlayerView: SKNode {
         center.addChild(backFoot)
         
         // Posicionamento dos membros
-        frontArm.children.first?.position = CGPoint(x: 10, y: -20)
-        backArm.children.first?.position = CGPoint(x: -10, y: -20)
+        frontArm.children.first?.position.y = -20
+        backArm.children.first?.position.y = -20
+        frontArm.position.y = 10
+        backArm.position.y = 10
         center.addChild(backArm)
         center.addChild(frontArm)
         frontFoot.children.first?.position = CGPoint(x: 0, y: -80)
@@ -141,5 +143,5 @@ class PlayerView: SKNode {
 }
 
 #Preview() {
-    InitialScreen()
+    ChooseCharacter()
 }
