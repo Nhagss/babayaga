@@ -80,7 +80,7 @@ class PlanetView: SKNode {
         let getCharacterToCenter = SKAction.move(to: .zero, duration: 2)
         let rotateCharacterBack = SKAction.rotate(toAngle: 0, duration: 1)
         
-        let gameOverLabel = SKLabelNode(text: "Game Over")
+        let gameOverLabel = SKLabelNode(text: NSLocalizedString("planet_game_over", comment: ""))
         gameOverLabel.fontName = "GermaniaOne-Regular"
         gameOverLabel.fontSize = 60
         gameOverLabel.fontColor = .white

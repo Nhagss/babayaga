@@ -54,7 +54,7 @@ struct InitialScreen: View {
                                 router.goToLevelsView()
                             }
                             .onAppear(perform: prepareHaptics)
-                            Text("Níveis")
+                            Text("initial_screen_levels")
                                 .font(.custom("Quicksand-Regular", size: 27))
                                 .foregroundStyle(.white)
                         }
@@ -66,7 +66,7 @@ struct InitialScreen: View {
                                 router.goToSettingsView()
                             }
                             .onAppear(perform: prepareHaptics)
-                            Text("Ajustes")
+                            Text("initial_screen_settings")
                                 .font(.custom("Quicksand-Regular", size: 27))
                                 .foregroundStyle(.white)
                         }

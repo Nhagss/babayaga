@@ -270,7 +270,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
                 AudioManager.shared.playEffect(named: "colisão")
                 if !self.isShowingEnemyMessage {
                     self.isShowingEnemyMessage = true
-                    showHouseMessage(at: position, text: "Vira pra lá, não me encosta!", for: 2)
+                    showHouseMessage(at: position, text: NSLocalizedString("spike_phrase", comment: ""), for: 2)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         self.isShowingEnemyMessage = false
                     }
@@ -315,7 +315,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let position = CGPoint(x: xPos, y: yPos)
             
             gameSceneManager?.goToNextLevel{ [weak self] in
-                self?.showHouseMessage(at: position, text: "Volte para a casa para finalizar o nível após coletar todos os ingredientes!", for: 3)
+                self?.showHouseMessage(at: position, text: NSLocalizedString("house_phrase", comment: ""), for: 3)
             } onSuccess: { [ unowned self ] in
                 self.planetControllers[self.currentPlanetIndex].slowDownRotation()
             }
@@ -326,7 +326,7 @@ extension GameSceneBase: SKPhysicsContactDelegate {
             let yPos = contact.bodyB.node!.position.y + 100
             let position = CGPoint(x: xPos, y: yPos)
             
-            showHouseMessage(at: position, text: "Essa foi a demo do jogo, você pode agora voltar ao menu usando o botão de menu no canto superior esquerdo da tela!", for: 4)
+            showHouseMessage(at: position, text: NSLocalizedString("final_house_phrase", comment: ""), for: 4)
         }
         
         //ingrediente

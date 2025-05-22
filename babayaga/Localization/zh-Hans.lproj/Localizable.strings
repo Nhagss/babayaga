@@ -1,0 +1,23 @@
+// Chinese Simplified (zh-Hans)
+//Text()
+"play_it_button_play" = "开始游戏";
+"settings_grid_credits" = "制作人员";
+"credits_soundtrack" = "原声音乐";
+"initial_screen_levels" = "关卡";
+"initial_screen_settings" = "设置";
+"levels_view_levels" = "关卡";
+"thanks_granny" = "感谢您试玩本演示版！";
+"granny_phase" = "阶段";
+
+//showHouseMessage()
+"spike_phrase" = "别碰我，离远点！";
+"house_phrase" = "收集完所有材料后，回到房子里完成关卡！";
+"final_house_phrase" = "这只是游戏的演示版。您可以点击左上角的菜单按钮返回主菜单！";
+
+//MenuButton()
+"menu_reset" = "重置关卡";
+"menu_back" = "返回菜单";
+"menu_resume" = "继续游戏";
+
+//SKLabel
+"planet_game_over" = "你输了";

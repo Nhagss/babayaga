@@ -27,7 +27,7 @@ struct SettingsGridView: View {
             }
 
             NavigationLink(destination: CreditsView()) {
-                Text("Creditos")
+                Text("settings_grid_credits")
                     .foregroundStyle(.white)
                     .bold()
                     .underline(true , color: .white)

@@ -1,0 +1,34 @@
+/*
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+//Text()
+"play_it_button_play" = "ابدأ";
+"settings_grid_credits" = "الاعتمادات";
+"credits_soundtrack" = "الموسيقى التصويرية";
+"initial_screen_levels" = "المستويات";
+"initial_screen_settings" = "الإعدادات";
+"levels_view_levels" = "المستويات";
+"thanks_granny" = "شكرًا لتجربة النسخة التجريبية!";
+"granny_phase" = "المرحلة";
+
+//showHouseMessage()
+//showHouseMessage()
+"spike_phrase" = "لا تلمسني، ابتعد!";
+"house_phrase" = "ارجع إلى المنزل لإنهاء المستوى بعد جمع جميع المكونات!";
+"final_house_phrase" = "هذه كانت النسخة التجريبية من اللعبة. يمكنك الآن العودة إلى القائمة باستخدام الزر في الزاوية العلوية اليسرى من الشاشة!";
+
+//MenuButton()
+//MenuButton()
+"menu_reset" = "إعادة تشغيل المستوى";
+"menu_back" = "العودة إلى القائمة";
+"menu_resume" = "استئناف اللعبة";
+
+//SKLabel
+//SKLabel
+"planet_game_over" = "لقد خسرت";

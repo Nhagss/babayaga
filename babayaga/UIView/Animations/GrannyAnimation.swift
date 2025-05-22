@@ -23,11 +23,11 @@ struct GrannyAnimation: View {
             ZStack {
                 VStack(spacing: 0) {
                     if phaseNumber == 16 {
-                        Text("Obrigado por jogar a demo!")
+                        Text("thanks_granny")
                             .font(.custom("GermaniaOne-Regular", size: geo.size.width * 0.12))
                             .multilineTextAlignment(.center)
                     } else {
-                        Text("Fase")
+                        Text("granny_phase")
                             .font(.custom("Quicksand-Regular", size: geo.size.width * (animateSize ? 0.15 : 0.15 * 1.6)))
                         Text("\(phaseNumber)")
                             .font(.custom("GermaniaOne-Regular", size: geo.size.width * (animateSize ? 0.25 : 0.25 * 1.6)))

@@ -16,9 +16,9 @@ struct MenuView: View {
     var onClose: (() -> Void)? = nil
     
     let menubuttons: [MenuButton] = [
-        MenuButton(label: "Reiniciar fase", icon: "revolving", destination: .RestartGame),
-        MenuButton(label: "Voltar ao Menu", icon: "home", destination: .InitialScreen),
-        MenuButton(label: "Retornar ao jogo", icon: nil, destination: .GameViewController),
+        MenuButton(label: NSLocalizedString("menu_reset", comment: ""), icon: "revolving", destination: .RestartGame),
+        MenuButton(label: NSLocalizedString("menu_back", comment: ""), icon: "home", destination: .InitialScreen),
+        MenuButton(label: NSLocalizedString("menu_resume", comment: ""), icon: nil, destination: .GameViewController),
     ]
         
     var body: some View {

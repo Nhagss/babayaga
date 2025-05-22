@@ -1,0 +1,30 @@
+/* 
+ Localizable.strings
+ babayaga
+ 
+ Created by Yago Souza Ramos on 5/22/25.
+ 
+ */
+
+//Text()
+"play_it_button_play" = "Jugar";
+"settings_grid_credits" = "Créditos";
+"credits_soundtrack" = "Música";
+"initial_screen_levels" = "Niveles";
+"initial_screen_settings" = "Configuración";
+"levels_view_levels" = "Niveles";
+"thanks_granny" = "¡Gracias por jugar la demo!";
+"granny_phase" = "Fase";
+
+//showHouseMessage()
+"spike_phrase" = "¡Apártate, no me toques!";
+"house_phrase" = "Vuelve a la casa para terminar el nivel después de recolectar todos los ingredientes.";
+"final_house_phrase" = "Esta fue la demo del juego. Ahora puedes volver al menú usando el botón en la esquina superior izquierda de la pantalla.";
+
+//MenuButton()
+"menu_reset" = "Reiniciar nivel";
+"menu_back" = "Volver al menú";
+"menu_resume" = "Reanudar juego";
+
+//SKLabel
+"planet_game_over" = "Perdiste";

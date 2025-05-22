@@ -20,7 +20,7 @@ struct LevelsView: View {
     
     var body: some View {
         VStack {
-            Text("Níveis")
+            Text("levels_view_levels")
                 .font(.custom("GermaniaOne-Regular", size: 60))
                 .foregroundColor(.accent)
             LazyVGrid(columns: adaptiveColumns, spacing: 20) {

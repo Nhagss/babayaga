@@ -17,7 +17,7 @@ struct PlayItButton: View {
                 Circle()
                     .fill(Color.white)
                     .frame(width: 10, height: 10)
-                Text("Jogar")
+                Text("play_it_button_play")
                     .font(.custom("GermaniaOne-Regular", size: 37))
                     .foregroundStyle(Color.white)
                 Circle()
