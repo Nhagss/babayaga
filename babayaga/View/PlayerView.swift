@@ -34,6 +34,10 @@ class PlayerView: SKNode {
         return hitboxNode
     }
     
+    func stopMovement() {
+        removeAllActions()
+    }
+    
     private func setupPhysics() {
         physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 45, height: 40))
         physicsBody?.friction = 0

@@ -22,7 +22,7 @@ struct GrannyAnimation: View {
         GeometryReader { geo in
             ZStack {
                 VStack(spacing: 0) {
-                    if phaseNumber == 6 {
+                    if phaseNumber == 16 {
                         Text("Obrigado por jogar a demo!")
                             .font(.custom("GermaniaOne-Regular", size: geo.size.width * 0.12))
                             .multilineTextAlignment(.center)
@@ -83,5 +83,5 @@ struct GrannyAnimation: View {
 }
 
 #Preview {
-    GrannyAnimation(phaseNumber: 4)
+    GrannyAnimation(phaseNumber: 16)
 }

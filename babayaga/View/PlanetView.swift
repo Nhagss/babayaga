@@ -71,6 +71,36 @@ class PlanetView: SKNode {
         playerAnchor.removeAction(forKey: "rotation")
     }
     
+    func gameOver() {
+        
+        stopRotation()
+        playerNode.stopMovement()
+        playerNode.physicsBody?.isDynamic = false
+        let expandWorld = SKAction.scale(by: 100, duration: 2)
+        let getCharacterToCenter = SKAction.move(to: .zero, duration: 2)
+        let rotateCharacterBack = SKAction.rotate(toAngle: 0, duration: 1)
+        
+        let gameOverLabel = SKLabelNode(text: "Game Over")
+        gameOverLabel.fontName = "GermaniaOne-Regular"
+        gameOverLabel.fontSize = 60
+        gameOverLabel.fontColor = .white
+        gameOverLabel.position = CGPoint(x: 0, y: 0)
+        gameOverLabel.zPosition = 2000
+        gameOverLabel.alpha = 0
+        
+        addChild(gameOverLabel)
+        
+        let fadeIn = SKAction.fadeIn(withDuration: 0.3)
+        let moveUp = SKAction.moveBy(x: 0, y: 150, duration: 2)
+        let group = SKAction.group([fadeIn, moveUp])
+        gameOverLabel.run(group)
+        world.zPosition = 1000
+        playerNode.zPosition = 1001
+        world.run(expandWorld)
+        playerNode.run(getCharacterToCenter)
+        playerAnchor.run(rotateCharacterBack)
+    }
+    
     func addObject(angleInDegrees: CGFloat, withCollision: Bool = false, physicsCategory: UInt32 = PhysicsCategory.obstacle, texture: SKTexture? = nil, size: CGSize = CGSize(width: 50, height: 50), distanceToPlanet: CGFloat = 0) {
         let object = ObjectView(withCollision: withCollision, physicsCategory: physicsCategory, texture: texture, size: size)
         
