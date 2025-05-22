@@ -13,7 +13,7 @@ struct LevelsView: View {
     @ObservedObject var gameSceneManager = GameSceneManager.shared
     @State private var engine: CHHapticEngine?
 
-    private let levels = Array(1...12)
+    private let levels = Array(1...15)
     private let adaptiveColumns = [
         GridItem(.adaptive(minimum: 100))
     ]
@@ -26,7 +26,7 @@ struct LevelsView: View {
             LazyVGrid(columns: adaptiveColumns, spacing: 20) {
                 ForEach(levels, id: \.self) { level in
                     Button {
-                        if isLevelCompleted(level: level) {
+                        if isLevelUnlocked(level: level) {
                             complexSuccess()
                             gameSceneManager.currentLevel = level
                             router.goToGameScene()
@@ -37,7 +37,7 @@ struct LevelsView: View {
                             .strokeBorder(.white, lineWidth: 2)
                             .frame(width: 80, height: 80)
                             .overlay {
-                                if isLevelCompleted(level: level) {
+                                if isLevelUnlocked(level: level) {
                                     Text("\(level)")
                                         .font(.custom("GermaniaOne-Regular", size: 40))
                                         .foregroundColor(.white)
@@ -49,7 +49,7 @@ struct LevelsView: View {
                             }
                     }
                     .onAppear(perform: prepareHaptics)
-                    .disabled(!isLevelCompleted(level: level))
+                    .disabled(!isLevelUnlocked(level: level))
                 }
             }
             .padding()
@@ -89,9 +89,10 @@ struct LevelsView: View {
         }
     }
     
-    private func isLevelCompleted(level item: Int) -> Bool {
-        let encodedData = UserDefaults.standard.array(forKey: gameSceneManager.keyForUserDefaults) as? [Int] ?? []
-        return encodedData.contains(item)
+    private func isLevelUnlocked(level: Int) -> Bool {
+        let completedLevels = UserDefaults.standard.array(forKey: gameSceneManager.keyForUserDefaults) as? [Int] ?? []
+        let highestCompleted = completedLevels.max() ?? 0
+        return level <= highestCompleted + 1
     }
 }
 
