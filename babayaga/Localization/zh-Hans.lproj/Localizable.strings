@@ -21,3 +21,8 @@
 
 //SKLabel
 "planet_game_over" = "你输了";
+
+"sound_credit_license" = "许可：";
+"sound_credit_license_link" = "Creative Commons Attribution 4.0";
+"sound_credit_source" = "来源：";
+"sound_credit_artist" = "艺术家：";

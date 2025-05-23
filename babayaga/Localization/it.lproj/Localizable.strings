@@ -28,3 +28,8 @@
 
 //SKLabel
 "planet_game_over" = "Hai perso";
+
+"sound_credit_license" = "Licenza:";
+"sound_credit_license_link" = "Creative Commons Attribution 4.0";
+"sound_credit_source" = "Fonte:";
+"sound_credit_artist" = "Artista:";

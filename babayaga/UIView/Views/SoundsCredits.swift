@@ -61,15 +61,15 @@ struct SoundsCredits: View {
                             .font(.headline)
                             .foregroundColor(.white)
                         
-                        Text("Licença:")
+                        Text("sound_credit_license")
                             .foregroundColor(.white)
                         Link(destination: URL(string: credit.license)!) {
-                            Text("Creative Commons Attribution 4.0")
+                            Text("sound_credit_license_link")
                                 .foregroundColor(.blue)
                                 .underline()
                         }
                         
-                        Text("Fonte:")
+                        Text("sound_credit_source")
                             .foregroundColor(.white)
                         Link(destination: URL(string: credit.source)!) {
                             Text(credit.source)
@@ -77,7 +77,7 @@ struct SoundsCredits: View {
                                 .underline()
                         }
                         
-                        Text("Artista:")
+                        Text("sound_credit_artist")
                             .foregroundColor(.white)
                         Link(destination: URL(string: credit.artistURL)!) {
                             Text(credit.artistName)
