@@ -13,6 +13,7 @@ final class AudioManager {
     @MainActor static let shared = AudioManager()
     private var player: AVAudioPlayer?
     private var secondaryPlayer: AVAudioPlayer?
+    var isMusicEnabled: Bool = true
     
     init() {
         do {
@@ -23,6 +24,7 @@ final class AudioManager {
         }
     }
     func playSound(named: String) {
+        guard isMusicEnabled else { return }
         guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
             print("Couldn't find \(named).wav")
             return
@@ -39,7 +41,7 @@ final class AudioManager {
     
     func playSoundGranny(named: String) {
         guard let url = Bundle.main.url(forResource: named, withExtension: "mp3"),
-                    !(secondaryPlayer?.isPlaying ?? false) else {
+              !(secondaryPlayer?.isPlaying ?? false) else {
             print("Couldn't find \(named).wav or some sound is playing")
             return
         }
@@ -55,15 +57,15 @@ final class AudioManager {
     }
     
     func stopSound() {
-       player?.stop()
-       player = nil
-   }
+        player?.stop()
+        player = nil
+    }
     func playEffect(named: String) {
         guard let url = Bundle.main.url(forResource: named, withExtension: "mp3") else {
             print("Couldn't find \(named).mp3")
             return
         }
-
+        
         do {
             secondaryPlayer?.stop()
             secondaryPlayer = try AVAudioPlayer(contentsOf: url)

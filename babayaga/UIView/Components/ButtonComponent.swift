@@ -17,19 +17,22 @@ struct ButtonComponent: View {
     }
 
     var body: some View {
-        Button(action: action) {
-            Circle()
-                .fill(Color.black)
-                .overlay(
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(15)
-                )
-                .frame(width: 80, height: 80)
-                .overlay(
-                    Circle().stroke(.white, lineWidth: 2)
-                )
+        VStack {
+            Button(action: action) {
+                Circle()
+                    .fill(Color.black)
+                    .overlay(
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(15)
+                    )
+                
+                    .frame(width: 80, height: 80)
+                    .overlay(
+                        Circle().stroke(.white, lineWidth: 2)
+                    )
+            }
         }
     }
 }

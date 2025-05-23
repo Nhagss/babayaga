@@ -13,7 +13,7 @@ import Foundation
 struct InitialScreen: View {
     @ObservedObject var router = Router.shared
     @ObservedObject var gameSceneManager = GameSceneManager.shared
-    @State private var engine: CHHapticEngine?
+    @State public static var engine: CHHapticEngine?
     
     let keyForUserDefaults = "completedLevels"
     
@@ -45,15 +45,13 @@ struct InitialScreen: View {
                         PlayButton()
                             .padding(.top, 300)
                     }
-                    .onAppear(perform: prepareHaptics)
                     
                     HStack(alignment:.top ,spacing: 150) {
                         VStack {
                             ButtonComponent(imageName: "levelsIcon") {
-                                complexSuccess()
+                                InitialScreen.complexSuccess()
                                 router.goToLevelsView()
                             }
-                            .onAppear(perform: prepareHaptics)
                             Text("initial_screen_levels")
                                 .font(.custom("Quicksand-Regular", size: 27))
                                 .foregroundStyle(.white)
@@ -62,10 +60,9 @@ struct InitialScreen: View {
                         // Botão da SettingsView
                         VStack {
                             ButtonComponent(imageName: "settingsIcon") {
-                                complexSuccess()
+                                InitialScreen.complexSuccess()
                                 router.goToSettingsView()
                             }
-                            .onAppear(perform: prepareHaptics)
                             Text("initial_screen_settings")
                                 .font(.custom("Quicksand-Regular", size: 27))
                                 .foregroundStyle(.white)
@@ -100,6 +97,7 @@ struct InitialScreen: View {
                 if SettingsManager.shared.isMusicEnabled {
                     AudioManager.shared.playSound(named: "temaPrincipal")
                 }
+                InitialScreen.prepareHaptics()
             }
             
             .ignoresSafeArea()
@@ -137,32 +135,34 @@ struct InitialScreen: View {
         router.goToGameScene()
     }
     
-    private func prepareHaptics() {
+    public static func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
               SettingsManager.shared.isHapticsEnabled else { return }
         
         do {
-            engine = try CHHapticEngine()
-            try engine?.start()
+            InitialScreen.engine = try CHHapticEngine()
+            try InitialScreen.engine?.start()
         } catch {
             print("Failed to create engine: \(error.localizedDescription)")
         }
     }
     
-    private func complexSuccess() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+    public static func complexSuccess() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
+              SettingsManager.shared.isHapticsEnabled else { return }
         
-        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 3)
-        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 3)
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity , value: 1.0)
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1.0)
         let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
-        let events = [event]
         
         do {
-            let pattern = try CHHapticPattern(events: events, parameters: [])
-            let player = try engine?.makePlayer(with: pattern)
-            try player?.start(atTime: 0)
+            let engine = try CHHapticEngine()
+            try engine.start()
+            let pattern = try CHHapticPattern(events: [event], parameters: [])
+            let player = try engine.makePlayer(with: pattern)
+            try player.start(atTime: 0)
         } catch {
-            print("Failed to play pattern: \(error.localizedDescription)")
+            print("Failed to play haptic pattern: \(error.localizedDescription)")
         }
     }
     
