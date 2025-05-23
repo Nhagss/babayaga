@@ -29,3 +29,8 @@
 
 //SKLabel
 "planet_game_over" = "Kaybettin";
+
+"sound_credit_license" = "Lisans:";
+"sound_credit_license_link" = "Creative Commons Attribution 4.0";
+"sound_credit_source" = "Kaynak:";
+"sound_credit_artist" = "Sanatçı:";

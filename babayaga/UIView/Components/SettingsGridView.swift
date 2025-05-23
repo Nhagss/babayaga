@@ -8,6 +8,7 @@ import SwiftUI
 
 struct SettingsGridView: View {
     let assets: [String] = ["headphone", "music", "haptics", "shinyEye", "shinyEye", "shinyEye"]
+    let names: [String] = ["menu-sound-effects", "menu-music", "menu-haptics", "", "", ""]
     @Binding var buttonFrames: [CGRect]
     
     @EnvironmentObject var settings: SettingsManager
@@ -38,17 +39,48 @@ struct SettingsGridView: View {
     @ViewBuilder
     func buttonView(index: Int) -> some View {
         ZStack {
+            let isDisabled: Bool = {
+                switch index {
+                case 1: return !settings.isMusicEnabled
+                case 2: return !settings.isHapticsEnabled
+                default: return false
+                }
+            }()
+            
             ButtonComponent(imageName: assets[index], action: {
                 switch index {
                 case 1:
                     settings.isMusicEnabled.toggle()
+                    AudioManager.shared.isMusicEnabled = settings.isMusicEnabled
+                    if !settings.isMusicEnabled {
+                        AudioManager.shared.stopSound()
+                    }
                 case 2:
                     settings.isHapticsEnabled.toggle()
+                    if settings.isHapticsEnabled {
+                        InitialScreen.complexSuccess()
+                    }
                 default:
                     break
                 }
             })
-            .padding(.bottom, index % 2 == 0 ? 50 : 0)
+            
+            .overlay(
+                Group {
+                    if isDisabled {
+                        Rectangle()
+                            .fill(.clear)
+                            .cornerRadius(10)
+                            .overlay {
+                                Rectangle()
+                                    .foregroundStyle(.white)
+                                    .frame(height: 2)
+                                    .rotationEffect(.init(degrees: -45))
+                            }
+                    }
+                }
+                    .frame(alignment: .center)
+            )
             .background {
                 GeometryReader { geo in
                     Color.clear.onAppear {
@@ -58,8 +90,12 @@ struct SettingsGridView: View {
                     }
                 }
             }
+            .padding(.bottom, index % 2 == 0 ? 50 : 0)
         }
     }
 }
 
 
+#Preview {
+    SettingsView()
+}

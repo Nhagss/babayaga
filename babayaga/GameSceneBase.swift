@@ -25,6 +25,7 @@ class GameSceneBase: SKScene {
     
     override func didMove(to view: SKView) {
         
+        InitialScreen.prepareHaptics()
         setupCamera()
         setupWorld()
         setupPlanets()
