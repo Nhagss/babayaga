@@ -197,11 +197,13 @@ Acompanhe a jornada da família, proteja-os com magia defensiva e alterne a rota
 </ul>
 
 
+### 🐕‍🦺 Contribuidores  
 
-<h2>🐕‍🦺 Contribuidores</h2>
-<p>Obrigado a todos que fortalecem este projeto! 💛</p>
-
-
+- **Daniel Oppelt** — [LinkedIn](https://www.linkedin.com/in/danieloppelt)  
+- **Honório Filho** — [LinkedIn](https://www.linkedin.com/in/honoriofilho)  
+- **João Roberto** — [LinkedIn](https://www.linkedin.com/in/joaorbrto)  
+- **Melissa Guedes** — [LinkedIn](https://www.linkedin.com/in/melissafguedes)  
+- **Yago Souza** — [LinkedIn](https://www.linkedin.com/in/yago-souza-ramos-621670211)
 
 <h2>📄 Licença</h2>
 <p>Projeto sob a <strong>MIT License</strong>.</p>
