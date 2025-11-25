@@ -197,7 +197,7 @@ Acompanhe a jornada da família, proteja-os com magia defensiva e alterne a rota
 </ul>
 
 
-### 🐕‍🦺 Contribuidores  
+### 💻 Contribuidores  
 
 - **Daniel Oppelt** — [LinkedIn](https://www.linkedin.com/in/danieloppelt)  
 - **Honório Filho** — [LinkedIn](https://www.linkedin.com/in/honoriofilho)  
